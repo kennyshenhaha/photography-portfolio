@@ -61,10 +61,12 @@
         .portfolio-card {
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
         }
         .portfolio-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 40px rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
         }
         .portfolio-card img {
             transition: transform 0.8s ease;
@@ -84,6 +86,7 @@
                 Visual Paranoia & Logic Engineering
             </div>
 
+            <!-- 播放按鈕 -->
             <a href="https://www.youtube.com/watch?v=R8OsDnJ_6wI" target="_blank" class="play-btn-pulse relative inline-block mb-12 group outline-none">
                 <div class="w-32 h-32 md:w-48 md:h-48 bg-white/5 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center transition-all duration-500 group-hover:bg-yellow-500/10">
                     <div class="w-24 h-24 md:w-36 md:h-36 bg-[#D4AF37] rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(212,175,55,0.4)]">
@@ -107,7 +110,7 @@
         </div>
     </section>
 
-    <!-- 第二部分：作品集內容 (取代原本的 iframe) -->
+    <!-- 第二部分：作品集內容 (已移除 iframe，直接顯示內容) -->
     <section id="portfolio" class="bg-[#0a0a0a] py-24 relative">
         <div class="max-w-7xl mx-auto px-6">
             <div class="mb-20">
@@ -117,12 +120,12 @@
                 <p class="mt-4 text-gray-500 font-light tracking-widest pl-10">SELECTED PHOTOGRAPHY & FILMS</p>
             </div>
             
-            <!-- 作品網格 -->
+            <!-- 作品網格：直接連結到你 GitHub 中的圖片檔案 -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- 運用你目錄中的圖片 -->
+                
                 <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
                     <img src="Photo-01.jpg" alt="Work 01" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
                         <span class="text-[#D4AF37] text-sm tracking-widest mb-2">STILL LIFE</span>
                         <h3 class="text-xl font-bold uppercase">Project Alpha</h3>
                     </div>
@@ -130,7 +133,7 @@
 
                 <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
                     <img src="Photo-02.jpg" alt="Work 02" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
                         <span class="text-[#D4AF37] text-sm tracking-widest mb-2">PORTRAIT</span>
                         <h3 class="text-xl font-bold uppercase">Vision of Noir</h3>
                     </div>
@@ -138,12 +141,35 @@
 
                 <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
                     <img src="Photo-03.jpg" alt="Work 03" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
                         <span class="text-[#D4AF37] text-sm tracking-widest mb-2">URBAN</span>
                         <h3 class="text-xl font-bold uppercase">City Flow</h3>
                     </div>
                 </div>
-                <!-- 可以依此類推增加 Photo-04 到 Photo-07 -->
+
+                <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
+                    <img src="Photo-04.jpg" alt="Work 04" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                        <span class="text-[#D4AF37] text-sm tracking-widest mb-2">FASHION</span>
+                        <h3 class="text-xl font-bold uppercase">Modern Identity</h3>
+                    </div>
+                </div>
+
+                <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
+                    <img src="Photo-05.jpg" alt="Work 05" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                        <span class="text-[#D4AF37] text-sm tracking-widest mb-2">CINEMATIC</span>
+                        <h3 class="text-xl font-bold uppercase">The Last Frame</h3>
+                    </div>
+                </div>
+
+                <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
+                    <img src="Photo-06.jpg" alt="Work 06" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                        <span class="text-[#D4AF37] text-sm tracking-widest mb-2">DOCUMENTARY</span>
+                        <h3 class="text-xl font-bold uppercase">Real World</h3>
+                    </div>
+                </div>
             </div>
 
             <!-- 底部頁尾 -->
