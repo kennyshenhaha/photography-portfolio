@@ -88,19 +88,8 @@
         .slide img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* 改為 contain 確保照片完整不被切到頭尾 */
+            object-fit: contain; /* 確保照片完整不被切到 */
             background: #000;
-        }
-
-        /* 輪播文字 */
-        .slide-info {
-            position: absolute;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            z-index: 20;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.8);
         }
 
         /* 控制按鈕 */
@@ -140,7 +129,7 @@
 
     <div class="frame-ui"></div>
 
-    <!-- 第一部分：啟動入口 (原本的樣式) -->
+    <!-- 第一部分：啟動入口 -->
     <section class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="bg-glow"></div>
         <div class="z-10 text-center px-4">
@@ -171,70 +160,42 @@
         </div>
     </section>
 
-    <!-- 第二部分：輪播播放器 -->
+    <!-- 第二部分：輪播播放器 (已移除所有標題文字) -->
     <section id="works-slider" class="slider-section">
         
         <!-- Slide 1 -->
         <div class="slide active">
             <img src="Photo-01.jpg" alt="Work 01">
-            <div class="slide-info">
-                <span class="text-[#D4AF37] tracking-[0.4em] text-xs uppercase mb-2 block">PROJECT 01</span>
-                <h3 class="text-3xl font-bold tracking-widest uppercase">Visual Narrative</h3>
-            </div>
         </div>
 
         <!-- Slide 2 -->
         <div class="slide">
             <img src="Photo-02.jpg" alt="Work 02">
-            <div class="slide-info">
-                <span class="text-[#D4AF37] tracking-[0.4em] text-xs uppercase mb-2 block">PROJECT 02</span>
-                <h3 class="text-3xl font-bold tracking-widest uppercase">Light & Shadow</h3>
-            </div>
         </div>
 
         <!-- Slide 3 -->
         <div class="slide">
             <img src="Photo-03.jpg" alt="Work 03">
-            <div class="slide-info">
-                <span class="text-[#D4AF37] tracking-[0.4em] text-xs uppercase mb-2 block">PROJECT 03</span>
-                <h3 class="text-3xl font-bold tracking-widest uppercase">Urban Motion</h3>
-            </div>
         </div>
 
         <!-- Slide 4 -->
         <div class="slide">
             <img src="Photo-04.jpg" alt="Work 04">
-            <div class="slide-info">
-                <span class="text-[#D4AF37] tracking-[0.4em] text-xs uppercase mb-2 block">PROJECT 04</span>
-                <h3 class="text-3xl font-bold tracking-widest uppercase">Cinematic Frames</h3>
-            </div>
         </div>
 
         <!-- Slide 5 -->
         <div class="slide">
             <img src="Photo-05.jpg" alt="Work 05">
-            <div class="slide-info">
-                <span class="text-[#D4AF37] tracking-[0.4em] text-xs uppercase mb-2 block">PROJECT 05</span>
-                <h3 class="text-3xl font-bold tracking-widest uppercase">Aesthetic Flow</h3>
-            </div>
         </div>
 
         <!-- Slide 6 -->
         <div class="slide">
             <img src="Photo-06.jpg" alt="Work 06">
-            <div class="slide-info">
-                <span class="text-[#D4AF37] tracking-[0.4em] text-xs uppercase mb-2 block">PROJECT 06</span>
-                <h3 class="text-3xl font-bold tracking-widest uppercase">Final Chapter</h3>
-            </div>
         </div>
 
         <!-- Slide 7 -->
         <div class="slide">
             <img src="Photo-07.jpg" alt="Work 07">
-            <div class="slide-info">
-                <span class="text-[#D4AF37] tracking-[0.4em] text-xs uppercase mb-2 block">PROJECT 07</span>
-                <h3 class="text-3xl font-bold tracking-widest uppercase">Beyond Vision</h3>
-            </div>
         </div>
 
         <!-- 控制按鈕 -->
