@@ -18,21 +18,21 @@
             overflow-x: hidden;
         }
 
-        /* 琥珀金漸層 */
         .gold-text {
             background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 50%, #B8860B 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* 背景光暈動畫 */
         .bg-glow {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 600px;
-            height: 600px;
+            width: 80vw;
+            height: 80vw;
+            max-width: 600px;
+            max-height: 600px;
             background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
             z-index: 0;
             animation: pulse 4s infinite ease-in-out;
@@ -43,10 +43,6 @@
             50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
         }
 
-        /* 播放按鈕脈衝效果 */
-        .play-btn-pulse {
-            position: relative;
-        }
         .play-btn-pulse::after {
             content: '';
             position: absolute;
@@ -62,101 +58,107 @@
             100% { transform: scale(1.8); opacity: 0; }
         }
 
-        .hover-scale {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .portfolio-card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
         }
-        .hover-scale:hover {
+        .portfolio-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.1);
+        }
+        .portfolio-card img {
+            transition: transform 0.8s ease;
+        }
+        .portfolio-card:hover img {
             transform: scale(1.1);
-            filter: brightness(1.2);
-        }
-
-        /* 全屏首頁 */
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        /* 下滑指示器 */
-        .scroll-hint {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            opacity: 0.6;
-            animation: bounce 2s infinite;
-            cursor: pointer;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
-            40% {transform: translateX(-50%) translateY(-10px);}
-            60% {transform: translateX(-50%) translateY(-5px);}
         }
     </style>
 </head>
 <body>
 
     <!-- 第一部分：啟動入口 -->
-    <section class="hero">
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="bg-glow"></div>
         <div class="z-10 text-center px-4">
-            <div class="mb-8 tracking-[0.5em] text-sm md:text-base text-gray-400 font-light opacity-80 uppercase">
+            <div class="mb-8 tracking-[0.5em] text-xs md:text-sm text-gray-400 font-light opacity-80 uppercase">
                 Visual Paranoia & Logic Engineering
             </div>
 
-            <!-- 播放按鈕：直接跳轉 YouTube -->
-            <a href="https://www.youtube.com/watch?v=R8OsDnJ_6wI" target="_blank" class="play-btn-pulse inline-block mb-12 group outline-none">
-                <div class="w-32 h-32 md:w-48 md:h-48 bg-white/5 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center hover-scale group-hover:bg-gold-500/20">
+            <a href="https://www.youtube.com/watch?v=R8OsDnJ_6wI" target="_blank" class="play-btn-pulse relative inline-block mb-12 group outline-none">
+                <div class="w-32 h-32 md:w-48 md:h-48 bg-white/5 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center transition-all duration-500 group-hover:bg-yellow-500/10">
                     <div class="w-24 h-24 md:w-36 md:h-36 bg-[#D4AF37] rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(212,175,55,0.4)]">
                         <i class="fa-solid fa-play text-black text-4xl md:text-6xl translate-x-1"></i>
                     </div>
                 </div>
             </a>
 
-            <h1 class="text-6xl md:text-8xl font-bold tracking-tighter mb-4">
+            <h1 class="text-5xl md:text-8xl font-bold tracking-tighter mb-4">
                 SHOW<span class="gold-text">REEL</span>
             </h1>
             
-            <div class="text-xl md:text-2xl font-light tracking-[0.3em] text-white/90 mb-12">
+            <div class="text-lg md:text-2xl font-light tracking-[0.3em] text-white/90 mb-12">
                 2026 影像作品精選
             </div>
         </div>
 
-        <div class="scroll-hint text-[#D4AF37]" onclick="document.getElementById('details').scrollIntoView()">
-            <span class="text-xs tracking-widest uppercase block mb-2">View Portfolio</span>
-            <i class="fa-solid fa-chevron-down"></i>
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-center opacity-60 animate-bounce cursor-pointer" onclick="document.getElementById('portfolio').scrollIntoView()">
+            <span class="text-[10px] tracking-[0.3em] uppercase block mb-2 text-[#D4AF37]">Scroll to Explore</span>
+            <i class="fa-solid fa-chevron-down text-[#D4AF37]"></i>
         </div>
     </section>
 
-    <!-- 第二部分：嵌入詳細作品頁 -->
-    <section id="details" class="bg-[#0a0a0a] py-20 min-h-screen">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-10 border-l-4 border-[#D4AF37] pl-6 uppercase tracking-wider">
-                Detailed <span class="gold-text">Works</span>
-            </h2>
+    <!-- 第二部分：作品集內容 (取代原本的 iframe) -->
+    <section id="portfolio" class="bg-[#0a0a0a] py-24 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mb-20">
+                <h2 class="text-3xl font-bold border-l-4 border-[#D4AF37] pl-6 uppercase tracking-wider">
+                    Detailed <span class="gold-text">Works</span>
+                </h2>
+                <p class="mt-4 text-gray-500 font-light tracking-widest pl-10">SELECTED PHOTOGRAPHY & FILMS</p>
+            </div>
             
-            <!-- 使用 Iframe 嵌入詳細頁面 -->
-            <div class="rounded-xl overflow-hidden border border-white/10 bg-black shadow-2xl">
-                <iframe src="kenny_portfolio.html" class="w-full h-[85vh]" frameborder="0"></iframe>
+            <!-- 作品網格 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 運用你目錄中的圖片 -->
+                <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
+                    <img src="Photo-01.jpg" alt="Work 01" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                        <span class="text-[#D4AF37] text-sm tracking-widest mb-2">STILL LIFE</span>
+                        <h3 class="text-xl font-bold uppercase">Project Alpha</h3>
+                    </div>
+                </div>
+
+                <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
+                    <img src="Photo-02.jpg" alt="Work 02" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                        <span class="text-[#D4AF37] text-sm tracking-widest mb-2">PORTRAIT</span>
+                        <h3 class="text-xl font-bold uppercase">Vision of Noir</h3>
+                    </div>
+                </div>
+
+                <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
+                    <img src="Photo-03.jpg" alt="Work 03" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                        <span class="text-[#D4AF37] text-sm tracking-widest mb-2">URBAN</span>
+                        <h3 class="text-xl font-bold uppercase">City Flow</h3>
+                    </div>
+                </div>
+                <!-- 可以依此類推增加 Photo-04 到 Photo-07 -->
             </div>
 
             <!-- 底部頁尾 -->
-            <footer class="mt-20 pt-10 border-t border-white/5 text-center">
-                <div class="text-gray-500 tracking-[0.3em] text-sm uppercase mb-6">Kenny Shen | 沈思諺</div>
-                <div class="flex justify-center gap-8 text-2xl text-gray-400">
-                    <a href="mailto:yenhengphoto@gmail.com" class="hover:text-[#D4AF37] transition-colors"><i class="fa-solid fa-envelope"></i></a>
-                    <a href="https://www.instagram.com/yenheng_photo" target="_blank" class="hover:text-[#D4AF37] transition-colors"><i class="fa-brands fa-instagram"></i></a>
+            <footer class="mt-32 pt-16 border-t border-white/5 text-center">
+                <div class="text-gray-500 tracking-[0.4em] text-sm uppercase mb-8">Kenny Shen | 沈思諺</div>
+                <div class="flex justify-center gap-12 text-2xl text-gray-400">
+                    <a href="mailto:yenhengphoto@gmail.com" class="hover:text-[#D4AF37] transition-all hover:scale-110"><i class="fa-solid fa-envelope"></i></a>
+                    <a href="https://www.instagram.com/yenheng_photo" target="_blank" class="hover:text-[#D4AF37] transition-all hover:scale-110"><i class="fa-brands fa-instagram"></i></a>
                 </div>
-                <div class="mt-8 text-[10px] text-gray-700 uppercase tracking-widest">© 2026 All Rights Reserved.</div>
+                <div class="mt-12 text-[10px] text-gray-700 uppercase tracking-[0.5em]">© 2026 All Rights Reserved.</div>
             </footer>
         </div>
     </section>
 
     <!-- 裝飾邊框 -->
-    <div class="fixed inset-8 border border-white/5 pointer-events-none z-50"></div>
+    <div class="fixed inset-4 md:inset-8 border border-white/5 pointer-events-none z-50"></div>
 </body>
 </html>
