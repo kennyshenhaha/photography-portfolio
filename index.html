@@ -24,6 +24,7 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* 第一屏背景發光 */
         .bg-glow {
             position: absolute;
             top: 50%;
@@ -58,27 +59,88 @@
             100% { transform: scale(1.8); opacity: 0; }
         }
 
-        .portfolio-card {
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        /* 輪播容器樣式 */
+        .slider-section {
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            background: #000;
             overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out, transform 1.2s ease;
+            transform: scale(1.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* 改為 contain 確保照片完整不被切到頭尾 */
+            background: #000;
+        }
+
+        /* 輪播文字 */
+        .slide-info {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 20;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+        }
+
+        /* 控制按鈕 */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 30;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover { background: #D4AF37; color: #000; }
+        .prev-btn { left: 40px; }
+        .next-btn { right: 40px; }
+
+        /* 裝飾框 */
+        .frame-ui {
+            position: fixed;
+            inset: 20px;
             border: 1px solid rgba(255,255,255,0.05);
-        }
-        .portfolio-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.1);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-        }
-        .portfolio-card img {
-            transition: transform 0.8s ease;
-        }
-        .portfolio-card:hover img {
-            transform: scale(1.1);
+            pointer-events: none;
+            z-index: 100;
         }
     </style>
 </head>
 <body>
 
-    <!-- 第一部分：啟動入口 -->
+    <div class="frame-ui"></div>
+
+    <!-- 第一部分：啟動入口 (原本的樣式) -->
     <section class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="bg-glow"></div>
         <div class="z-10 text-center px-4">
@@ -86,7 +148,6 @@
                 Visual Paranoia & Logic Engineering
             </div>
 
-            <!-- 播放按鈕 -->
             <a href="https://www.youtube.com/watch?v=R8OsDnJ_6wI" target="_blank" class="play-btn-pulse relative inline-block mb-12 group outline-none">
                 <div class="w-32 h-32 md:w-48 md:h-48 bg-white/5 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center transition-all duration-500 group-hover:bg-yellow-500/10">
                     <div class="w-24 h-24 md:w-36 md:h-36 bg-[#D4AF37] rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(212,175,55,0.4)]">
@@ -95,7 +156,7 @@
                 </div>
             </a>
 
-            <h1 class="text-5xl md:text-8xl font-bold tracking-tighter mb-4">
+            <h1 class="text-6xl md:text-8xl font-bold tracking-tighter mb-4">
                 SHOW<span class="gold-text">REEL</span>
             </h1>
             
@@ -104,87 +165,103 @@
             </div>
         </div>
 
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-center opacity-60 animate-bounce cursor-pointer" onclick="document.getElementById('portfolio').scrollIntoView()">
-            <span class="text-[10px] tracking-[0.3em] uppercase block mb-2 text-[#D4AF37]">Scroll to Explore</span>
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-center opacity-60 animate-bounce cursor-pointer" onclick="document.getElementById('works-slider').scrollIntoView()">
+            <span class="text-[10px] tracking-[0.3em] uppercase block mb-2 text-[#D4AF37]">Scroll to Works</span>
             <i class="fa-solid fa-chevron-down text-[#D4AF37]"></i>
         </div>
     </section>
 
-    <!-- 第二部分：作品集內容 (已移除 iframe，直接顯示內容) -->
-    <section id="portfolio" class="bg-[#0a0a0a] py-24 relative">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="mb-20">
-                <h2 class="text-3xl font-bold border-l-4 border-[#D4AF37] pl-6 uppercase tracking-wider">
-                    Detailed <span class="gold-text">Works</span>
-                </h2>
-                <p class="mt-4 text-gray-500 font-light tracking-widest pl-10">SELECTED PHOTOGRAPHY & FILMS</p>
+    <!-- 第二部分：輪播播放器 -->
+    <section id="works-slider" class="slider-section">
+        
+        <!-- Slide 1 -->
+        <div class="slide active">
+            <img src="Photo-01.jpg" alt="Work 01">
+            <div class="slide-info">
+                <span class="text-[#D4AF37] tracking-[0.4em] text-xs uppercase mb-2 block">PROJECT 01</span>
+                <h3 class="text-3xl font-bold tracking-widest uppercase">Visual Narrative</h3>
             </div>
-            
-            <!-- 作品網格：直接連結到你 GitHub 中的圖片檔案 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
-                    <img src="Photo-01.jpg" alt="Work 01" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
-                        <span class="text-[#D4AF37] text-sm tracking-widest mb-2">STILL LIFE</span>
-                        <h3 class="text-xl font-bold uppercase">Project Alpha</h3>
-                    </div>
-                </div>
+        </div>
 
-                <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
-                    <img src="Photo-02.jpg" alt="Work 02" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
-                        <span class="text-[#D4AF37] text-sm tracking-widest mb-2">PORTRAIT</span>
-                        <h3 class="text-xl font-bold uppercase">Vision of Noir</h3>
-                    </div>
-                </div>
-
-                <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
-                    <img src="Photo-03.jpg" alt="Work 03" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
-                        <span class="text-[#D4AF37] text-sm tracking-widest mb-2">URBAN</span>
-                        <h3 class="text-xl font-bold uppercase">City Flow</h3>
-                    </div>
-                </div>
-
-                <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
-                    <img src="Photo-04.jpg" alt="Work 04" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
-                        <span class="text-[#D4AF37] text-sm tracking-widest mb-2">FASHION</span>
-                        <h3 class="text-xl font-bold uppercase">Modern Identity</h3>
-                    </div>
-                </div>
-
-                <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
-                    <img src="Photo-05.jpg" alt="Work 05" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
-                        <span class="text-[#D4AF37] text-sm tracking-widest mb-2">CINEMATIC</span>
-                        <h3 class="text-xl font-bold uppercase">The Last Frame</h3>
-                    </div>
-                </div>
-
-                <div class="portfolio-card aspect-[4/5] bg-neutral-900 rounded-lg group relative">
-                    <img src="Photo-06.jpg" alt="Work 06" class="w-full h-full object-cover opacity-80 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
-                        <span class="text-[#D4AF37] text-sm tracking-widest mb-2">DOCUMENTARY</span>
-                        <h3 class="text-xl font-bold uppercase">Real World</h3>
-                    </div>
-                </div>
+        <!-- Slide 2 -->
+        <div class="slide">
+            <img src="Photo-02.jpg" alt="Work 02">
+            <div class="slide-info">
+                <span class="text-[#D4AF37] tracking-[0.4em] text-xs uppercase mb-2 block">PROJECT 02</span>
+                <h3 class="text-3xl font-bold tracking-widest uppercase">Light & Shadow</h3>
             </div>
+        </div>
 
-            <!-- 底部頁尾 -->
-            <footer class="mt-32 pt-16 border-t border-white/5 text-center">
-                <div class="text-gray-500 tracking-[0.4em] text-sm uppercase mb-8">Kenny Shen | 沈思諺</div>
-                <div class="flex justify-center gap-12 text-2xl text-gray-400">
-                    <a href="mailto:yenhengphoto@gmail.com" class="hover:text-[#D4AF37] transition-all hover:scale-110"><i class="fa-solid fa-envelope"></i></a>
-                    <a href="https://www.instagram.com/yenheng_photo" target="_blank" class="hover:text-[#D4AF37] transition-all hover:scale-110"><i class="fa-brands fa-instagram"></i></a>
-                </div>
-                <div class="mt-12 text-[10px] text-gray-700 uppercase tracking-[0.5em]">© 2026 All Rights Reserved.</div>
-            </footer>
+        <!-- Slide 3 -->
+        <div class="slide">
+            <img src="Photo-03.jpg" alt="Work 03">
+            <div class="slide-info">
+                <span class="text-[#D4AF37] tracking-[0.4em] text-xs uppercase mb-2 block">PROJECT 03</span>
+                <h3 class="text-3xl font-bold tracking-widest uppercase">Urban Motion</h3>
+            </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide">
+            <img src="Photo-04.jpg" alt="Work 04">
+            <div class="slide-info">
+                <span class="text-[#D4AF37] tracking-[0.4em] text-xs uppercase mb-2 block">PROJECT 04</span>
+                <h3 class="text-3xl font-bold tracking-widest uppercase">Cinematic Frames</h3>
+            </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide">
+            <img src="Photo-05.jpg" alt="Work 05">
+            <div class="slide-info">
+                <span class="text-[#D4AF37] tracking-[0.4em] text-xs uppercase mb-2 block">PROJECT 05</span>
+                <h3 class="text-3xl font-bold tracking-widest uppercase">Aesthetic Flow</h3>
+            </div>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="slide">
+            <img src="Photo-06.jpg" alt="Work 06">
+            <div class="slide-info">
+                <span class="text-[#D4AF37] tracking-[0.4em] text-xs uppercase mb-2 block">PROJECT 06</span>
+                <h3 class="text-3xl font-bold tracking-widest uppercase">Final Chapter</h3>
+            </div>
+        </div>
+
+        <!-- Slide 7 -->
+        <div class="slide">
+            <img src="Photo-07.jpg" alt="Work 07">
+            <div class="slide-info">
+                <span class="text-[#D4AF37] tracking-[0.4em] text-xs uppercase mb-2 block">PROJECT 07</span>
+                <h3 class="text-3xl font-bold tracking-widest uppercase">Beyond Vision</h3>
+            </div>
+        </div>
+
+        <!-- 控制按鈕 -->
+        <button class="nav-btn prev-btn" onclick="changeSlide(-1)"><i class="fa-solid fa-arrow-left"></i></button>
+        <button class="nav-btn next-btn" onclick="changeSlide(1)"><i class="fa-solid fa-arrow-right"></i></button>
+
+        <!-- 頁面腳部資訊 -->
+        <div class="absolute bottom-8 right-12 z-50 text-[10px] text-gray-500 tracking-[0.3em] uppercase">
+            Kenny Shen Portfolio © 2026
         </div>
     </section>
 
-    <!-- 裝飾邊框 -->
-    <div class="fixed inset-4 md:inset-8 border border-white/5 pointer-events-none z-50"></div>
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function changeSlide(direction) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + direction + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        // 支援鍵盤左右鍵切換
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+    </script>
 </body>
 </html>
