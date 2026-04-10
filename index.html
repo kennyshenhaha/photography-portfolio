@@ -74,7 +74,6 @@
             z-index: 1;
         }
 
-        /* 按鈕掃光效果 */
         .metal-btn::before {
             content: '';
             position: absolute;
@@ -88,17 +87,12 @@
             z-index: 2;
         }
 
-        /* 滑鼠碰到時播放按鈕掃光 */
         .group:hover .metal-btn::before {
             left: 150%;
             transition: 0.8s ease-in-out;
         }
 
-        .metal-btn:active {
-            transform: scale(0.92);
-        }
-
-        /* 背景呼吸微光 - 已補上動畫定義 */
+        /* 背景呼吸微光 */
         .bg-glow {
             position: absolute;
             top: 50%;
@@ -117,19 +111,11 @@
             animation: pulse-glow 8s infinite ease-in-out;
         }
 
-        /* 呼吸動畫關鍵影格 */
         @keyframes pulse-glow {
-            0%, 100% { 
-                transform: translate(-50%, -50%) scale(0.9); 
-                opacity: 0.5; 
-            }
-            50% { 
-                transform: translate(-50%, -50%) scale(1.1); 
-                opacity: 0.8; 
-            }
+            0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
         }
 
-        /* 播放提示箭頭 - 45 度角指向中心 */
         .click-hint {
             position: absolute;
             top: -25px; 
@@ -164,30 +150,45 @@
             100% { transform: scale(1.6); opacity: 0; }
         }
 
-        /* 滾動指引 */
-        .scroll-indicator {
-            position: absolute;
-            bottom: 3rem;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
+        /* 滾動指引容器：確保文字與線條對齊 */
+        .info-stack {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* 靜止的姓名 */
+        .name-brand {
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.6em;
+            color: rgba(255, 255, 255, 0.3);
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        /* 會動的指引部分 */
+        .scroll-trigger {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             cursor: pointer;
-            z-index: 50;
-            transition: all 0.5s;
             opacity: 0.5;
+            transition: opacity 0.4s;
             animation: bounce-gentle 2.5s infinite ease-in-out;
         }
 
-        .scroll-indicator:hover {
+        .scroll-trigger:hover {
             opacity: 1;
-            color: #f3e5ab; 
         }
 
         .scroll-line {
             width: 1px;
-            height: 60px;
+            height: 35px;
             background: rgba(255, 255, 255, 0.1);
-            margin: 12px auto 0;
+            margin-top: 15px;
             position: relative;
             overflow: hidden;
         }
@@ -204,8 +205,8 @@
         }
 
         @keyframes bounce-gentle {
-            0%, 100% { transform: translate(-50%, 0); }
-            50% { transform: translate(-50%, 10px); }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
         }
 
         @keyframes line-sweep {
@@ -233,34 +234,8 @@
             justify-content: center;
         }
 
-        .slide.active {
-            opacity: 1;
-            transform: scale(1);
-            z-index: 10;
-        }
-
-        .slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .loading-spinner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #fff;
-            font-size: 2rem;
-            z-index: 50;
-            animation: spin 1s infinite linear;
-            display: none;
-        }
-
-        @keyframes spin {
-            from { transform: translate(-50%, -50%) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
+        .slide.active { opacity: 1; transform: scale(1); z-index: 10; }
+        .slide img { width: 100%; height: 100%; object-fit: contain; }
 
         .nav-btn {
             position: absolute;
@@ -308,14 +283,13 @@
         <!-- 呼吸背景光 -->
         <div class="bg-glow"></div>
         
-        <div class="z-10 text-center px-4">
+        <div class="z-10 text-center px-4 mt-[-2vh]">
             <div class="mb-10 tracking-[0.6em] text-[10px] md:text-xs text-gray-500 font-light opacity-80 uppercase">
                 Visual Paranoia & Logic Engineering
             </div>
 
             <!-- 播放按鈕 -->
             <a href="https://www.youtube.com/watch?v=R8OsDnJ_6wI" target="_blank" class="play-btn-pulse relative inline-block mb-14 group outline-none">
-                <!-- 指引箭頭 (45度) -->
                 <div class="click-hint group-hover:opacity-0 transition-opacity duration-300">
                     <i class="fa-solid fa-arrow-down-long"></i>
                 </div>
@@ -332,27 +306,28 @@
                 <span class="titanium-text">PORTFOLIO</span>
             </h1>
             
-            <div class="flex flex-col items-center gap-3">
-                <div class="sub-title-ch text-sm md:text-base text-white/60">
+            <!-- 文字資訊區 -->
+            <div class="info-stack">
+                <div class="sub-title-ch text-sm md:text-base text-white/60 mb-2">
                     2026 影像作品精選
                 </div>
-                <div class="text-[10px] tracking-[0.6em] text-white/25 uppercase font-light">
+                
+                <!-- 靜止的姓名 -->
+                <div class="name-brand">
                     Kenny Shen
                 </div>
-            </div>
-        </div>
 
-        <!-- 滾動提示 -->
-        <div class="scroll-indicator" onclick="document.getElementById('works-slider').scrollIntoView()">
-            <span class="text-[9px] tracking-[0.4em] uppercase block font-medium">Scroll to explore</span>
-            <div class="scroll-line"></div>
+                <!-- 僅滾動提示與線條動態 -->
+                <div class="scroll-trigger" onclick="document.getElementById('works-slider').scrollIntoView()">
+                    <span class="text-[9px] tracking-[0.4em] uppercase block font-medium">Scroll to explore</span>
+                    <div class="scroll-line"></div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- 影像輪播區 -->
     <section id="works-slider" class="slider-section">
-        <div id="global-spinner" class="loading-spinner"><i class="fa-solid fa-circle-notch"></i></div>
-
         <div class="slide active"><img src="Photo-01.jpg" alt="Work 01"></div>
         <div class="slide"><img src="Photo-02.jpg" alt="Work 02"></div>
         <div class="slide"><img src="Photo-03.jpg" alt="Work 03"></div>
@@ -376,32 +351,15 @@
     <script>
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
-        const spinner = document.getElementById('global-spinner');
         const pageDisplay = document.getElementById('current-page');
-
-        function updateSpinner() {
-            const activeImg = slides[currentSlide].querySelector('img');
-            if (activeImg.complete) {
-                spinner.style.display = 'none';
-            } else {
-                spinner.style.display = 'block';
-                activeImg.addEventListener('load', () => {
-                    if (slides[currentSlide].querySelector('img') === activeImg) {
-                        spinner.style.display = 'none';
-                    }
-                }, { once: true });
-            }
-        }
 
         function changeSlide(direction) {
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + direction + slides.length) % slides.length;
             slides[currentSlide].classList.add('active');
             pageDisplay.innerText = (currentSlide + 1).toString().padStart(2, '0');
-            updateSpinner();
         }
 
-        window.addEventListener('load', updateSpinner);
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') changeSlide(-1);
             if (e.key === 'ArrowRight') changeSlide(1);
