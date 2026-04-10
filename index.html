@@ -69,37 +69,6 @@
             transition: 0.8s ease-in-out;
         }
 
-        /* 影片彈窗樣式 */
-        #video-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 2000;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            width: 90%;
-            max-width: 1000px;
-            aspect-ratio: 16/9;
-            position: relative;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: -50px;
-            right: 0;
-            color: #fff;
-            font-size: 2rem;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .close-modal:hover { transform: rotate(90deg); color: #f3e5ab; }
-
         /* 背景發光 */
         .bg-glow {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -124,7 +93,7 @@
             100% { transform: scale(1.6); opacity: 0; }
         }
 
-        /* 精確修復：指示箭頭樣式 (對應截圖中的簡潔細箭頭) */
+        /* 指示箭頭樣式 */
         .indicator-arrow {
             position: absolute;
             top: 5px;
@@ -133,9 +102,7 @@
             height: 24px;
             z-index: 20;
             pointer-events: none;
-            /* 顏色與發光感 */
             filter: drop-shadow(0 0 3px rgba(243, 229, 171, 0.5));
-            /* 讓它指向左下角並帶有細微動畫 */
             animation: arrow-swivel 6s infinite ease-in-out;
         }
 
@@ -143,7 +110,7 @@
             width: 100%;
             height: 100%;
             fill: none;
-            stroke: #f3e5ab; /* 淡淡的金屬色 */
+            stroke: #f3e5ab;
             stroke-width: 1.5;
             stroke-linecap: round;
             stroke-linejoin: round;
@@ -156,18 +123,59 @@
             75% { transform: rotate(-10deg) scale(1.05); }
         }
 
-        /* 引導滾動區塊 */
+        /* 引導滾動區塊 - 新增 Hover 狀態 */
         .scroll-trigger { 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             cursor: pointer; 
-            opacity: 0.5; 
+            opacity: 0.4; 
+            transition: all 0.5s ease;
             animation: bounce-gentle 2.5s infinite ease-in-out; 
         }
 
-        .scroll-line { width: 1px; height: 35px; background: rgba(255, 255, 255, 0.1); margin-top: 15px; position: relative; overflow: hidden; }
-        .scroll-line::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent, #fff, transparent); animation: line-sweep 2s infinite ease-in-out; }
+        .scroll-trigger:hover {
+            opacity: 1;
+            transform: translateY(5px);
+        }
+
+        .scroll-trigger span {
+            transition: color 0.5s ease;
+        }
+
+        .scroll-trigger:hover span {
+            color: #f3e5ab; /* 懸停時文字變為鈦金光澤色 */
+        }
+
+        .scroll-line { 
+            width: 1px; 
+            height: 35px; 
+            background: rgba(255, 255, 255, 0.1); 
+            margin-top: 15px; 
+            position: relative; 
+            overflow: hidden; 
+            transition: all 0.5s ease;
+        }
+
+        .scroll-trigger:hover .scroll-line {
+            height: 50px; /* 懸停時線條拉長 */
+            background: rgba(243, 229, 171, 0.3);
+        }
+
+        .scroll-line::after { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: linear-gradient(to bottom, transparent, #fff, transparent); 
+            animation: line-sweep 2s infinite ease-in-out; 
+        }
+
+        .scroll-trigger:hover .scroll-line::after {
+            background: linear-gradient(to bottom, transparent, #f3e5ab, transparent);
+        }
 
         @keyframes bounce-gentle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
         @keyframes line-sweep { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
@@ -187,29 +195,17 @@
 
     <div class="frame-ui"></div>
 
-    <!-- 影片彈窗 (Modal) -->
-    <div id="video-modal">
-        <div class="modal-content">
-            <div class="close-modal" onclick="closeVideo()"><i class="fa-solid fa-xmark"></i></div>
-            <div style="padding:56.25% 0 0 0;position:relative;">
-                <iframe id="vimeo-player" src="https://player.vimeo.com/video/1181996554?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="作品集"></iframe>
-            </div>
-        </div>
-    </div>
-
     <section class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="bg-glow"></div>
         <div class="z-10 text-center px-4 mt-[-2vh]">
-            <!-- 頂部標語 -->
             <div class="mb-10">
                 <div class="tracking-[0.6em] text-[10px] md:text-xs text-gray-500 font-light opacity-80 uppercase">
                     Visual Paranoia & Logic Engineering
                 </div>
             </div>
 
-            <!-- 播放按鈕與指示箭頭 -->
+            <!-- 播放按鈕區：改為直接跳轉 YouTube 網址 -->
             <div class="relative inline-block mb-14 group">
-                <!-- 指示箭頭：使用 SVG 繪製簡潔細線箭頭 (指向左下方 45度) -->
                 <div class="indicator-arrow">
                     <svg viewBox="0 0 24 24">
                         <line x1="20" y1="4" x2="6" y2="18"></line>
@@ -217,11 +213,12 @@
                     </svg>
                 </div>
                 
-                <div onclick="openVideo()" class="play-btn-pulse relative w-32 h-32 md:w-44 md:h-44 bg-white/5 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center transition-all duration-700 group-hover:bg-white/10 group-hover:border-white/20 cursor-pointer outline-none">
+                <!-- 使用 a 標籤直接導向 Youtube -->
+                <a href="https://www.youtube.com/watch?v=R8OsDnJ_6wI" target="_blank" class="play-btn-pulse relative w-32 h-32 md:w-44 md:h-44 bg-white/5 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center transition-all duration-700 group-hover:bg-white/10 group-hover:border-white/20 cursor-pointer outline-none decoration-none">
                     <div class="metal-btn w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center">
                         <i class="fa-solid fa-play text-black/80 text-3xl md:text-5xl translate-x-1"></i>
                     </div>
-                </div>
+                </a>
             </div>
 
             <h1 class="text-6xl md:text-[7.5rem] font-bold tracking-tight mb-4 leading-none">
@@ -234,7 +231,7 @@
                     <div class="name-brand">Kenny Shen</div>
                 </div>
 
-                <!-- 引導滾動 -->
+                <!-- 具備懸停亮起效果的滾動提示 -->
                 <div class="scroll-trigger" onclick="document.getElementById('works-slider').scrollIntoView()">
                     <span class="text-[9px] tracking-[0.4em] uppercase block font-medium">Scroll to explore</span>
                     <div class="scroll-line"></div>
@@ -264,24 +261,7 @@
         </div>
     </section>
 
-    <script src="https://player.vimeo.com/api/player.js"></script>
     <script>
-        // 影片彈窗控制
-        const modal = document.getElementById('video-modal');
-        const vimeoIframe = document.getElementById('vimeo-player');
-
-        function openVideo() {
-            modal.style.display = 'flex';
-        }
-
-        function closeVideo() {
-            modal.style.display = 'none';
-            // 停止播放：重置 src
-            const currentSrc = vimeoIframe.src;
-            vimeoIframe.src = '';
-            vimeoIframe.src = currentSrc;
-        }
-
         // 輪播控制
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
@@ -297,7 +277,6 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') changeSlide(-1);
             if (e.key === 'ArrowRight') changeSlide(1);
-            if (e.key === 'Escape') closeVideo();
         });
     </script>
 </body>
