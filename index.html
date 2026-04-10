@@ -91,7 +91,6 @@
             height: 100%;
             object-fit: contain;
             background: #000;
-            /* 圖片載入前的淡入效果 */
             transition: opacity 0.5s ease;
         }
 
@@ -102,9 +101,11 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: #D4AF37;
-            font-size: 2rem;
-            z-index: 5;
+            font-size: 2.5rem;
+            z-index: 50;
             animation: spin 1s infinite linear;
+            pointer-events: none;
+            display: none; /* 預設隱藏，由 JS 控制顯示 */
         }
 
         @keyframes spin {
@@ -117,7 +118,7 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            z-index: 30;
+            z-index: 60;
             background: rgba(255,255,255,0.05);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.1);
@@ -183,11 +184,11 @@
     <!-- 第二部分：輪播播放器 -->
     <section id="works-slider" class="slider-section">
         
-        <div class="loading-spinner"><i class="fa-solid fa-circle-notch"></i></div>
+        <div id="global-spinner" class="loading-spinner"><i class="fa-solid fa-circle-notch"></i></div>
 
         <!-- Slide 1 -->
         <div class="slide active">
-            <img src="Photo-01.jpg" alt="Work 01" onload="this.parentElement.querySelector('.loading-spinner')?.remove()">
+            <img src="Photo-01.jpg" alt="Work 01">
         </div>
 
         <!-- Slide 2 -->
@@ -233,22 +234,20 @@
     <script>
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
-        const sliderSection = document.getElementById('works-slider');
+        const spinner = document.getElementById('global-spinner');
 
-        // 建立一個簡單的載入顯示邏輯
-        function checkImageLoaded(index) {
-            const img = slides[index].querySelector('img');
-            if (!img.complete) {
-                // 如果還沒載入完，顯示 Spinner
-                if (!sliderSection.querySelector('.loading-spinner')) {
-                    const spinner = document.createElement('div');
-                    spinner.className = 'loading-spinner';
-                    spinner.innerHTML = '<i class="fa-solid fa-circle-notch"></i>';
-                    sliderSection.appendChild(spinner);
-                }
+        function updateSpinner() {
+            const activeImg = slides[currentSlide].querySelector('img');
+            if (activeImg.complete) {
+                spinner.style.display = 'none';
             } else {
-                // 載入完了，移除 Spinner
-                sliderSection.querySelector('.loading-spinner')?.remove();
+                spinner.style.display = 'block';
+                // 監聽單次載入完成
+                activeImg.addEventListener('load', () => {
+                    if (slides[currentSlide].querySelector('img') === activeImg) {
+                        spinner.style.display = 'none';
+                    }
+                }, { once: true });
             }
         }
 
@@ -256,17 +255,11 @@
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + direction + slides.length) % slides.length;
             slides[currentSlide].classList.add('active');
-            checkImageLoaded(currentSlide);
+            updateSpinner();
         }
 
-        // 監聽所有圖片載入事件
-        document.querySelectorAll('.slide img').forEach(img => {
-            img.onload = function() {
-                if (this.parentElement.classList.contains('active')) {
-                    sliderSection.querySelector('.loading-spinner')?.remove();
-                }
-            };
-        });
+        // 初始化檢查第一張圖
+        window.addEventListener('load', updateSpinner);
 
         // 支援鍵盤左右鍵切換
         document.addEventListener('keydown', (e) => {
