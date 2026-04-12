@@ -27,7 +27,7 @@
         /* 雜誌感網格系統 */
         .magazine-grid {
             display: grid;
-            grid-template-columns: repeat(12, 1fr); /* 12欄系統，方便比例分配 */
+            grid-template-columns: repeat(12, 1fr);
             gap: 1.5rem;
             max-width: 1600px;
             margin: 0 auto;
@@ -59,27 +59,29 @@
         }
         .wedding-item:hover .overlay { opacity: 1; }
 
-        /* 雜誌風格排版佈置 (桌面端) */
+        /* 雜誌風格排版佈置 (桌面端修正) */
         @media (min-width: 1025px) {
-            /* 1. 飯店大景 (寬屏開頭) */
-            .item-01 { grid-column: span 8; aspect-ratio: 16 / 7; }
-            /* 2. 婚戒 (窄長細節) */
-            .item-02 { grid-column: span 4; aspect-ratio: 3 / 4; }
-            /* 3. 情感時刻 (核心大圖) */
-            .item-03 { grid-column: span 6; grid-row: span 2; aspect-ratio: 4 / 5; }
-            /* 4. 梳妝 */
-            .item-04 { grid-column: span 3; aspect-ratio: 1 / 1; }
-            /* 5. 婚鞋 */
-            .item-05 { grid-column: span 3; aspect-ratio: 1 / 1; }
-            /* 6. 男生整理 (橫向) */
-            .item-06 { grid-column: span 6; aspect-ratio: 3 / 2; }
-            /* 7. 交手細節 */
+            /* 第一排：01 大圖與 02/04 組合 */
+            .item-01 { grid-column: span 8; grid-row: span 2; height: 100%; }
+            .item-02 { grid-column: span 4; aspect-ratio: 4 / 3.45; }
+            .item-04 { grid-column: span 4; aspect-ratio: 4 / 3.45; }
+
+            /* 第二排：03 直式大圖與 06/05 組合 */
+            .item-03 { grid-column: span 5; grid-row: span 2; }
+            .item-06 { grid-column: span 7; aspect-ratio: 16 / 9; }
+            .item-05 { grid-column: span 7; aspect-ratio: 16 / 9; }
+
+            /* 第三排：07 08 09 保持整齊正方形三格 */
             .item-07 { grid-column: span 4; aspect-ratio: 1 / 1; }
-            /* 8. 溫馨時刻 */
             .item-08 { grid-column: span 4; aspect-ratio: 1 / 1; }
-            /* 9. 大合照 (滿寬結尾) */
             .item-09 { grid-column: span 4; aspect-ratio: 1 / 1; }
         }
+
+        /* 針對照片細節修正裁切點 (02~06) */
+        .item-03 img { object-position: center 20%; } /* 新人臉部 */
+        .item-02 img { object-position: center; }    /* 婚戒 */
+        .item-06 img { object-position: center 20%; } /* 男生臉部 */
+        .item-05 img { object-position: center 40%; } /* 婚鞋 */
 
         /* 行動端 */
         @media (max-width: 1024px) {
@@ -122,64 +124,64 @@
 
     <main class="magazine-grid mb-40 animate-fade-in" style="animation-delay: 0.2s;">
         
-        <!-- 1. 飯店大景 - 故事開場 (佔據寬位) -->
+        <!-- 01 飯店大景 -->
         <div class="wedding-item item-01">
-            <img src="Wedding-01.jpg" alt="Wedding Venue">
+            <img src="20250704-DSC07500.jpg" alt="Wedding Venue">
             <div class="overlay">
                 <span class="text-[9px] tracking-[0.4em] text-[#f3e5ab] mb-2 uppercase">The Beginning</span>
                 <h3 class="text-xl font-bold">Wedding Project</h3>
             </div>
         </div>
 
-        <!-- 2. 婚戒 (窄位) -->
+        <!-- 02 婚戒 -->
         <div class="wedding-item item-02">
-            <img src="Wedding-02.jpg" alt="Rings">
-            <div class="overlay"><h3 class="text-lg font-bold"></h3></div>
+            <img src="20250704-DSC07531.jpg" alt="Rings">
+            <div class="overlay"><h3 class="text-lg font-bold">永恆承諾</h3></div>
         </div>
 
-        <!-- 3. 新人情感大圖 (直式大圖，跨兩行) -->
+        <!-- 04 梳妝 -->
+        <div class="wedding-item item-04">
+            <img src="20250704-DSC07926.jpg" alt="Makeup">
+            <div class="overlay"><h3 class="text-sm font-bold">期待瞬間</h3></div>
+        </div>
+
+        <!-- 03 新人情感大圖 -->
         <div class="wedding-item item-03">
-            <img src="Wedding-03.jpg" alt="Emotional Moment">
+            <img src="20250704-DSC08260.jpg" alt="Emotional Moment">
             <div class="overlay">
                 <span class="text-[9px] tracking-[0.4em] text-[#f3e5ab] mb-2 uppercase">The Vow</span>
-                <h3 class="text-2xl font-bold"></h3>
+                <h3 class="text-2xl font-bold">真摯告白</h3>
             </div>
         </div>
 
-        <!-- 4. 梳妝 (正方) -->
-        <div class="wedding-item item-04">
-            <img src="Wedding-04.jpg" alt="Makeup">
-            <div class="overlay"><h3 class="text-sm font-bold"></h3></div>
-        </div>
-
-        <!-- 5. 婚鞋 (正方) -->
-        <div class="wedding-item item-05">
-            <img src="Wedding-05.jpg" alt="Shoes">
-            <div class="overlay"><h3 class="text-sm font-bold"></h3></div>
-        </div>
-
-        <!-- 6. 男生整理 (橫向長圖) -->
+        <!-- 06 男生整理 -->
         <div class="wedding-item item-06">
-            <img src="Wedding-06.jpg" alt="Groom Prep">
-            <div class="overlay"><h3 class="text-lg font-bold"></h3></div>
+            <img src="20250704-DSC07810.jpg" alt="Groom Prep">
+            <div class="overlay"><h3 class="text-lg font-bold">紳士細節</h3></div>
         </div>
 
-        <!-- 7. 交手儀式 1 (DSC08053) -->
+        <!-- 05 婚鞋 -->
+        <div class="wedding-item item-05">
+            <img src="20250704-DSC07570.jpg" alt="Shoes">
+            <div class="overlay"><h3 class="text-sm font-bold">優雅步伐</h3></div>
+        </div>
+
+        <!-- 07 交手儀式 -->
         <div class="wedding-item item-07">
-            <img src="Wedding-07.jpg" alt="Hand over">
-            <div class="overlay"><h3 class="text-sm font-bold"></h3></div>
+            <img src="20250704-DSC08053.jpg" alt="Hand over">
+            <div class="overlay"><h3 class="text-sm font-bold">信任與交付</h3></div>
         </div>
 
-        <!-- 8. 交手儀式 2 (DSC08493) -->
+        <!-- 08 溫暖互動 -->
         <div class="wedding-item item-08">
-            <img src="Wedding-08.jpg" alt="Interaction">
-            <div class="overlay"><h3 class="text-sm font-bold"></h3></div>
+            <img src="20250704-DSC08493.jpg" alt="Interaction">
+            <div class="overlay"><h3 class="text-sm font-bold">溫暖時刻</h3></div>
         </div>
 
-        <!-- 9. 結尾大合照 (DSC08754) -->
+        <!-- 09 圓滿合影 -->
         <div class="wedding-item item-09">
-            <img src="Wedding-09.jpg" alt="Group Photo">
-            <div class="overlay"><h3 class="text-sm font-bold"></h3></div>
+            <img src="20250704-DSC08754.jpg" alt="Group Photo">
+            <div class="overlay"><h3 class="text-sm font-bold">完美收尾</h3></div>
         </div>
 
     </main>
