@@ -24,7 +24,7 @@
             z-index: -1; pointer-events: none;
         }
 
-        /* 雜誌感網格系統 */
+        /* 雜誌感網格系統：回歸標準 Grid 避免固定高度導致跑版 */
         .magazine-grid {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
@@ -50,45 +50,42 @@
 
         .wedding-item:hover img { transform: scale(1.08); }
 
-        /* 僅用於 01 的資訊浮層 */
         .overlay-main {
             position: absolute; inset: 0;
             background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
             display: flex; flex-direction: column; justify-content: flex-end;
             padding: 2rem;
-            opacity: 1;
         }
 
-        /* 雜誌風格排版佈置 - 修正對齊邏輯 */
+        /* 雜誌風格排版佈置 - 使用 Grid Area 確保對齊 */
         @media (min-width: 1025px) {
-            /* 第一排高度統一由 01 撐開 */
-            .row-1-group { grid-column: span 12; display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; height: 80vh; }
-            .item-01 { grid-column: span 8; height: 100%; }
-            .side-stack { grid-column: span 4; display: flex; flex-direction: column; gap: 1.5rem; height: 100%; }
-            .item-02, .item-04 { height: calc(50% - 0.75rem); }
+            /* 第一排：01 佔 8 欄 2 列，02/04 佔右邊 4 欄各 1 列 */
+            .item-01 { grid-column: span 8; grid-row: span 2; aspect-ratio: 4 / 3; }
+            .item-02 { grid-column: span 4; aspect-ratio: 16 / 11; }
+            .item-04 { grid-column: span 4; aspect-ratio: 16 / 11; }
 
-            /* 第二排高度統一 */
-            .row-2-group { grid-column: span 12; display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; height: 90vh; }
-            .item-03 { grid-column: span 5; height: 100%; }
-            .side-stack-2 { grid-column: span 7; display: flex; flex-direction: column; gap: 1.5rem; height: 100%; }
-            .item-06, .item-05 { height: calc(50% - 0.75rem); }
+            /* 第二排：03 佔 5 欄 2 列，06/05 佔右邊 7 欄各 1 列 */
+            .item-03 { grid-column: span 5; grid-row: span 2; aspect-ratio: 3 / 4; }
+            .item-06 { grid-column: span 7; aspect-ratio: 16 / 9; }
+            .item-05 { grid-column: span 7; aspect-ratio: 16 / 9; }
 
-            /* 第三排：正方形三格 */
-            .item-07, .item-08, .item-09 { grid-column: span 4; aspect-ratio: 1 / 1; }
+            /* 第三排：均分三列 */
+            .item-07 { grid-column: span 4; aspect-ratio: 1 / 1; }
+            .item-08 { grid-column: span 4; aspect-ratio: 1 / 1; }
+            .item-09 { grid-column: span 4; aspect-ratio: 1 / 1; }
         }
 
-        /* 針對照片細節修正裁切點 */
+        /* 針對照片細節修正裁切點 (依據您的需求調整) */
         .item-03 img { object-position: center; }       /* 03 置中 */
-        .item-02 img { object-position: center; }    
         .item-04 img { object-position: center 5%; }    /* 04 往上，確保頭部完整 */
+        .item-02 img { object-position: center; }    
         .item-06 img { object-position: center 20%; } 
         .item-05 img { object-position: center 40%; } 
 
-        /* 行動端 */
+        /* 行動端：改為單欄式避免擠壓 */
         @media (max-width: 1024px) {
             .magazine-grid { grid-template-columns: 1fr; }
-            .wedding-item { aspect-ratio: 3 / 2; margin-bottom: 0.5rem; }
-            .row-1-group, .row-2-group, .side-stack, .side-stack-2 { display: contents; }
+            .wedding-item { aspect-ratio: 4 / 3; margin-bottom: 0.5rem; }
         }
 
         /* 導覽列 */
@@ -126,41 +123,33 @@
 
     <main class="magazine-grid mb-40 animate-fade-in" style="animation-delay: 0.2s;">
         
-        <!-- 第一排組合：01 大圖與 (02+04) -->
-        <div class="row-1-group">
-            <div class="wedding-item item-01">
-                <img src="Wedding-01.jpg" alt="Wedding Venue">
-                <div class="overlay-main">
-                    <span class="text-[9px] tracking-[0.4em] text-[#f3e5ab] mb-2 uppercase">The Beginning</span>
-                    <h3 class="text-xl font-bold">Wedding Project</h3>
-                </div>
-            </div>
-            <div class="side-stack">
-                <div class="wedding-item item-02">
-                    <img src="Wedding-02.jpg" alt="Wedding 02">
-                </div>
-                <div class="wedding-item item-04">
-                    <img src="Wedding-04.jpg" alt="Wedding 04">
-                </div>
+        <!-- 第一區塊：01 與 02, 04 -->
+        <div class="wedding-item item-01">
+            <img src="Wedding-01.jpg" alt="Wedding Venue">
+            <div class="overlay-main">
+                <span class="text-[9px] tracking-[0.4em] text-[#f3e5ab] mb-2 uppercase">The Beginning</span>
+                <h3 class="text-xl font-bold">Wedding Project</h3>
             </div>
         </div>
-
-        <!-- 第二排組合：03 直式大圖與 (06+05) -->
-        <div class="row-2-group">
-            <div class="wedding-item item-03">
-                <img src="Wedding-03.jpg" alt="Wedding 03">
-            </div>
-            <div class="side-stack-2">
-                <div class="wedding-item item-06">
-                    <img src="Wedding-06.jpg" alt="Wedding 06">
-                </div>
-                <div class="wedding-item item-05">
-                    <img src="Wedding-05.jpg" alt="Wedding 05">
-                </div>
-            </div>
+        <div class="wedding-item item-02">
+            <img src="Wedding-02.jpg" alt="Wedding 02">
+        </div>
+        <div class="wedding-item item-04">
+            <img src="Wedding-04.jpg" alt="Wedding 04">
         </div>
 
-        <!-- 第三排：正方形三連格 -->
+        <!-- 第二區塊：03 與 06, 05 -->
+        <div class="wedding-item item-03">
+            <img src="Wedding-03.jpg" alt="Wedding 03">
+        </div>
+        <div class="wedding-item item-06">
+            <img src="Wedding-06.jpg" alt="Wedding 06">
+        </div>
+        <div class="wedding-item item-05">
+            <img src="Wedding-05.jpg" alt="Wedding 05">
+        </div>
+
+        <!-- 第三區塊：底部三格 -->
         <div class="wedding-item item-07">
             <img src="Wedding-07.jpg" alt="Wedding 07">
         </div>
