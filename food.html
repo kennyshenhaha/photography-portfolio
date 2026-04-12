@@ -30,32 +30,40 @@
         .grid-container {
             display: grid;
             grid-template-columns: 1.5fr 1fr 1fr; /* 三欄佈局 */
-            gap: 1.5rem;
+            gap: 1.5rem; /* 統一的間距基準 */
             max-width: 1600px;
             margin: 0 auto;
+            align-items: stretch;
         }
 
-        /* 針對桌機版的絕對對齊邏輯 */
+        /* 桌機版絕對對齊邏輯 */
         @media (min-width: 1025px) {
-            /* 讓左、中、右三欄的高度基礎一致 */
-            .col-left, .col-side {
-                display: grid;
-                grid-template-rows: repeat(6, 1fr); /* 將高度切分為 6 等份，方便對齊 */
+            .col-left {
+                display: flex;
+                flex-direction: column;
                 gap: 1.5rem;
             }
 
-            /* 左側兩張大圖：每張佔據 3 份 (3+3=6) */
-            .col-left .food-item {
-                grid-row: span 3;
+            .col-side {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
             }
 
-            /* 右側三張小圖：每張佔據 2 份 (2+2+2=6) */
+            /* 左側兩張大圖：平分右側三張圖的總高度 */
+            .col-left .food-item {
+                flex: 1; 
+                min-height: 0; /* 確保 flex 能縮小圖片 */
+            }
+
+            /* 右側三張小圖：維持 1:1 正方形作為高度基準 */
             .col-side .food-item {
-                grid-row: span 2;
-                aspect-ratio: 1 / 1; /* 維持正方形 */
+                aspect-ratio: 1 / 1;
+                flex: none; /* 固定比例，不隨 flex 伸長 */
             }
         }
 
+        /* 行動裝置排版 */
         @media (max-width: 1024px) {
             .grid-container {
                 grid-template-columns: 1fr;
@@ -146,27 +154,27 @@
         <div class="h-[1px] w-12 bg-[#f3e5ab] mt-6 opacity-60"></div>
     </header>
 
-    <!-- 網格區：採用 6 行基準網格確保絕對對齊 -->
+    <!-- 網格區：透過 Flex 分配確保 Food-01/02 對齊右側三圖總高度 -->
     <main class="grid-container mb-40 animate-fade-in" style="animation-delay: 0.2s;">
         
-        <!-- 左邊：2張大圖 (每張佔 3 行) -->
+        <!-- 左邊：2張大圖 (自動縮放以對齊) -->
         <div class="col-left">
             <div class="food-item">
                 <img src="Food-01.jpg" alt="Food 01">
                 <div class="overlay">
                     <span class="text-[9px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Signature</span>
-                    <h3 class="text-lg font-bold">Featured Dish 01</h3>
+                    <h3 class="text-lg font-bold">Dessert Project 01</h3>
                 </div>
             </div>
             <div class="food-item">
                 <img src="Food-02.jpg" alt="Food 02">
                 <div class="overlay">
-                    <h3 class="text-lg font-bold">Featured Dish 02</h3>
+                    <h3 class="text-lg font-bold">02</h3>
                 </div>
             </div>
         </div>
 
-        <!-- 中間：3張小圖 (每張佔 2 行) -->
+        <!-- 中間：3張小圖 (緊密排列，作為高度基準) -->
         <div class="col-side">
             <div class="food-item">
                 <img src="Food-03.jpg" alt="Food 03">
@@ -182,7 +190,7 @@
             </div>
         </div>
 
-        <!-- 右邊：3張小圖 (每張佔 2 行) -->
+        <!-- 右邊：3張小圖 (緊密排列，作為高度基準) -->
         <div class="col-side">
             <div class="food-item">
                 <img src="Food-06.jpg" alt="Food 06">
