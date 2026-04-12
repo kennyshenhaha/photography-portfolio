@@ -74,13 +74,12 @@
             z-index: 2;
         }
 
-        /* 滑鼠碰到（group-hover）時觸發掃光 */
         .group:hover .metal-btn::before {
             left: 150%;
             transition: 0.8s ease-in-out;
         }
 
-        /* 底部導覽列樣式 */
+        /* 底部導覽列樣式 - 增加過渡效果 */
         .category-nav {
             position: fixed;
             bottom: 40px;
@@ -89,12 +88,27 @@
             display: flex;
             gap: 12px;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(15, 15, 15, 0.4);
             padding: 8px;
             border-radius: 50px;
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 當導覽列處於作品集區塊時，略微縮小並提高透明度，避免遮擋 */
+        .category-nav.scrolled {
+            bottom: 20px;
+            background: rgba(10, 10, 10, 0.2);
+            transform: translateX(-50%) scale(0.9);
+            opacity: 0.5;
+        }
+        
+        .category-nav.scrolled:hover {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+            background: rgba(15, 15, 15, 0.6);
         }
 
         .nav-item {
@@ -106,6 +120,7 @@
             text-decoration: none;
             transition: all 0.4s ease;
             cursor: pointer;
+            white-space: nowrap;
         }
 
         .nav-item:hover {
@@ -113,13 +128,7 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
-        .nav-item.active {
-            color: #000;
-            background: #f3e5ab; /* 鈦金色為選中狀態 */
-            font-weight: 700;
-        }
-
-        /* 背景發光 - 強化版本 */
+        /* 背景發光 */
         .bg-glow {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 120vw; height: 120vw; max-width: 1200px;
@@ -154,16 +163,28 @@
             position: relative; 
             background: #000; 
             overflow: hidden; 
-            /* 修正關鍵：增加捲動邊距防止頂部被遮擋或不對齊 */
-            scroll-margin-top: 0;
+            /* 修正關鍵：確保滾動後內容完整顯示，底部預留給導覽列的空間 */
+            padding-bottom: 100px;
         }
+        
         .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s; transform: scale(1.05); display: flex; align-items: center; justify-content: center; }
         .slide.active { opacity: 1; transform: scale(1); z-index: 10; }
-        .slide img { width: 100%; height: 100%; object-fit: contain; }
+        .slide img { width: 100%; height: 80%; object-fit: contain; }
 
         .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 60; background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); color: white; width: 55px; height: 55px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
         .nav-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-50%) scale(1.1); }
         
+        /* 頁碼位置微調，避開導覽列 */
+        .page-indicator {
+            position: absolute;
+            bottom: 45px;
+            left: 50px;
+            z-index: 50;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.2em;
+        }
+
         .frame-ui { position: fixed; inset: 25px; border: 1px solid rgba(255,255,255,0.03); pointer-events: none; z-index: 100; }
     </style>
 </head>
@@ -172,7 +193,7 @@
     <div class="frame-ui"></div>
 
     <!-- 底部導覽列 -->
-    <nav class="category-nav">
+    <nav class="category-nav" id="main-nav">
         <a onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})" class="nav-item">作品集</a>
         <a href="https://youtu.be/YLsqzahcr3g" target="_blank" class="nav-item">美髮商業</a>
         <a href="food.html" class="nav-item">美食影像</a>
@@ -224,7 +245,7 @@
         <button class="nav-btn prev-btn left-12" onclick="changeSlide(-1)"><i class="fa-solid fa-arrow-left"></i></button>
         <button class="nav-btn next-btn right-12" onclick="changeSlide(1)"><i class="fa-solid fa-arrow-right"></i></button>
 
-        <div class="absolute bottom-10 left-12 z-50 text-[10px] text-white/30 tracking-[0.2em]">
+        <div class="page-indicator">
             <span id="current-page">01</span> / 07
         </div>
     </section>
@@ -233,6 +254,16 @@
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
         const pageDisplay = document.getElementById('current-page');
+        const nav = document.getElementById('main-nav');
+
+        // 滾動監聽：當滾動超過首頁高度，讓導覽列變淡並下移
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > window.innerHeight * 0.5) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
 
         function changeSlide(direction) {
             slides[currentSlide].classList.remove('active');
