@@ -76,9 +76,10 @@
             .item-09 { grid-column: span 4; aspect-ratio: 1 / 1; }
         }
 
-        /* 針對照片細節修正裁切點 (02~06) */
-        .item-03 img { object-position: center 20%; } 
+        /* 針對照片細節修正裁切點 */
+        .item-03 img { object-position: center; }       /* 修正：03 置中 */
         .item-02 img { object-position: center; }    
+        .item-04 img { object-position: center 5%; }    /* 修正：04 往上，確保頭部完整 */
         .item-06 img { object-position: center 20%; } 
         .item-05 img { object-position: center 40%; } 
 
@@ -123,7 +124,7 @@
 
     <main class="magazine-grid mb-40 animate-fade-in" style="animation-delay: 0.2s;">
         
-        <!-- 01 飯店大景 - 唯一有字的項目 -->
+        <!-- 01 飯店大景 -->
         <div class="wedding-item item-01">
             <img src="Wedding-01.jpg" alt="Wedding Venue">
             <div class="overlay-main">
@@ -137,14 +138,14 @@
             <img src="Wedding-02.jpg" alt="Wedding 02">
         </div>
 
-        <!-- 04 梳妝 -->
-        <div class="wedding-item item-04">
-            <img src="Wedding-04.jpg" alt="Wedding 04">
-        </div>
-
         <!-- 03 新人情感大圖 -->
         <div class="wedding-item item-03">
             <img src="Wedding-03.jpg" alt="Wedding 03">
+        </div>
+        
+        <!-- 04 梳妝 -->
+        <div class="wedding-item item-04">
+            <img src="Wedding-04.jpg" alt="Wedding 04">
         </div>
 
         <!-- 06 男生整理 -->
