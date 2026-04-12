@@ -1,183 +1,206 @@
-<style>
-    body {
-        background-color: #050505;
-        color: #fff;
-        font-family: 'Urbanist', 'Noto Sans TC', sans-serif;
-        scroll-behavior: smooth;
-    }
-
-    /* 延續鈦金屬氛圍的輝光 */
-    .bg-glow {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: radial-gradient(circle at 10% 10%, rgba(243, 229, 171, 0.05) 0%, transparent 50%),
-                    radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
-        z-index: -1; pointer-events: none;
-    }
-
-    /* 作品集網格樣式 */
-    .food-grid-item {
-        position: relative;
-        overflow: hidden;
-        border-radius: 4px;
-        background: #111;
-        transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KENNY SHEN | FOOD PHOTOGRAPHY</title>
+    <!-- 引入字體與圖示 -->
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    .food-grid-item:hover {
-        transform: translateY(-8px);
-    }
+    <style>
+        body {
+            background-color: #050505;
+            color: #fff;
+            font-family: 'Urbanist', 'Noto Sans TC', sans-serif;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
 
-    .food-grid-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.8s ease, filter 0.5s ease;
-        filter: grayscale(20%);
-    }
+        /* 輝光背景 */
+        .bg-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 10% 10%, rgba(243, 229, 171, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+            z-index: -1; pointer-events: none;
+        }
 
-    .food-grid-item:hover img {
-        transform: scale(1.08);
-        filter: grayscale(0%);
-    }
+        /* 網格核心容器 */
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            grid-auto-flow: dense;
+        }
 
-    /* 作品資訊浮層 */
-    .overlay {
-        position: absolute; inset: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
-        opacity: 0; transition: opacity 0.4s ease;
-        display: flex; flex-direction: column; justify-content: flex-end;
-        padding: 20px;
-    }
+        @media (min-width: 1024px) {
+            .masonry-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
 
-    .food-grid-item:hover .overlay {
-        opacity: 1;
-    }
+        /* 作品單元 */
+        .food-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            background: #111;
+            transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        .food-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            z-index: 20;
+        }
 
-    /* 導覽列樣式 (與主頁一致) */
-    .category-nav {
-        position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
-        display: flex; gap: 12px; z-index: 1000;
-        background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 50px;
-        backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-    }
+        .food-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
 
-    .nav-item {
-        padding: 10px 24px; border-radius: 40px; font-size: 13px;
-        letter-spacing: 0.1em; color: rgba(255,255,255,0.6);
-        text-decoration: none; transition: all 0.4s ease; cursor: pointer;
-    }
+        .food-item:hover img {
+            transform: scale(1.05);
+        }
 
-    .nav-item:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
-    .nav-item.active { color: #000; background: #f3e5ab; font-weight: 700; }
+        /* 比例設定 */
+        .item-large { grid-column: span 2; grid-row: span 2; aspect-ratio: 1/1; } /* 大方塊 */
+        .item-tall { grid-row: span 2; aspect-ratio: 2/3; } /* 直長塊 */
+        .item-wide { grid-column: span 2; aspect-ratio: 16/9; } /* 橫長塊 */
+        .item-square { aspect-ratio: 1/1; } /* 標準方塊 */
 
-    /* 頁面進入動畫 */
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+        /* 資訊浮層 */
+        .overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 70%);
+            opacity: 0; transition: opacity 0.4s ease;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            padding: 1.5rem;
+        }
 
-    .animate-fade-in {
-        animation: fadeInUp 1s ease forwards;
-    }
-</style>
+        .food-item:hover .overlay {
+            opacity: 1;
+        }
 
+        /* 導覽列 */
+        .category-nav {
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 12px; z-index: 1000;
+            background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 50px;
+            backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-<div class="bg-glow"></div>
+        .nav-item {
+            padding: 10px 24px; border-radius: 40px; font-size: 13px;
+            letter-spacing: 0.1em; color: rgba(255,255,255,0.6);
+            text-decoration: none; transition: all 0.4s ease;
+        }
 
-<!-- 標題區 -->
-<header class="mb-16 animate-fade-in">
-    <a href="index.html" class="text-xs tracking-[0.4em] text-white/40 hover:text-white transition-colors mb-4 inline-block uppercase">
-        <i class="fa-solid fa-arrow-left mr-2"></i> Back to Main
-    </a>
-    <h1 class="text-4xl md:text-6xl font-bold tracking-tight mt-4">
-        美食影像 <span class="text-white/20 ml-4 font-light italic text-2xl md:text-4xl">Culinary Visuals</span>
-    </h1>
-    <div class="h-[1px] w-20 bg-[#f3e5ab] mt-8 opacity-50"></div>
-</header>
+        .nav-item:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+        .nav-item.active { color: #000; background: #f3e5ab; font-weight: 700; }
 
-<!-- 攝影網格區 (共 8 張照片) -->
-<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-32 animate-fade-in" style="animation-delay: 0.2s;">
-    
-    <!-- 作品 01 - 主視覺大圖 -->
-    <div class="food-grid-item aspect-[16/9] md:col-span-2 lg:col-span-2 lg:row-span-2">
-        <img src="Food-01.jpg" alt="Food 01">
-        <div class="overlay">
-            <span class="text-[10px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Signature</span>
-            <h3 class="text-xl font-bold">精選食藝首選</h3>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in { animation: fadeInUp 1s ease forwards; }
+    </style>
+</head>
+<body class="p-6 md:p-12 lg:p-20">
+
+    <div class="bg-glow"></div>
+
+    <header class="mb-12 animate-fade-in">
+        <a href="index.html" class="text-[10px] tracking-[0.4em] text-white/40 hover:text-white transition-colors mb-4 inline-block uppercase">
+            <i class="fa-solid fa-arrow-left mr-2"></i> Back to Main
+        </a>
+        <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
+            美食影像 <span class="text-white/20 ml-2 font-light italic text-xl md:text-3xl">Culinary Visuals</span>
+        </h1>
+        <div class="h-[1px] w-12 bg-[#f3e5ab] mt-6 opacity-60"></div>
+    </header>
+
+    <!-- 優化後的網格區 -->
+    <section class="masonry-grid mb-40 animate-fade-in" style="animation-delay: 0.2s;">
+        
+        <!-- 01 主圖 -->
+        <div class="food-item item-large">
+            <img src="Food-01.jpg" alt="Food 01">
+            <div class="overlay">
+                <span class="text-[9px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Signature</span>
+                <h3 class="text-lg font-bold">精選食藝</h3>
+            </div>
         </div>
-    </div>
 
-    <!-- 作品 02 -->
-    <div class="food-grid-item aspect-square">
-        <img src="Food-02.jpg" alt="Food 02">
-        <div class="overlay">
-            <span class="text-[10px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Gourmet</span>
-            <h3 class="text-lg font-bold">旬之味</h3>
+        <!-- 02 -->
+        <div class="food-item item-square">
+            <img src="Food-02.jpg" alt="Food 02">
+            <div class="overlay">
+                <h3 class="text-sm font-bold">旬之味</h3>
+            </div>
         </div>
-    </div>
 
-    <!-- 作品 03 -->
-    <div class="food-grid-item aspect-square">
-        <img src="Food-03.jpg" alt="Food 03">
-        <div class="overlay">
-            <span class="text-[10px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Gourmet</span>
-            <h3 class="text-lg font-bold">火候的藝術</h3>
+        <!-- 03 -->
+        <div class="food-item item-square">
+            <img src="Food-03.jpg" alt="Food 03">
+            <div class="overlay">
+                <h3 class="text-sm font-bold">火候</h3>
+            </div>
         </div>
-    </div>
 
-    <!-- 作品 04 -->
-    <div class="food-grid-item aspect-square">
-        <img src="Food-04.jpg" alt="Food 04">
-        <div class="overlay">
-            <span class="text-[10px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Fine Dining</span>
-            <h3 class="text-lg font-bold">層次之美</h3>
+        <!-- 04 直長圖增加變化 -->
+        <div class="food-item item-tall">
+            <img src="Food-04.jpg" alt="Food 04">
+            <div class="overlay">
+                <h3 class="text-sm font-bold">層次感</h3>
+            </div>
         </div>
-    </div>
 
-    <!-- 作品 05 -->
-    <div class="food-grid-item aspect-square">
-        <img src="Food-05.jpg" alt="Food 05">
-        <div class="overlay">
-            <span class="text-[10px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Commercial</span>
-            <h3 class="text-lg font-bold">極簡構圖</h3>
+        <!-- 05 -->
+        <div class="food-item item-square">
+            <img src="Food-05.jpg" alt="Food 05">
+            <div class="overlay">
+                <h3 class="text-sm font-bold">極簡</h3>
+            </div>
         </div>
-    </div>
 
-    <!-- 作品 06 -->
-    <div class="food-grid-item aspect-[4/5] md:col-span-2">
-        <img src="Food-06.jpg" alt="Food 06">
-        <div class="overlay">
-            <span class="text-[10px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Lifestyle</span>
-            <h3 class="text-lg font-bold">餐桌上的風景</h3>
+        <!-- 06 寬圖 -->
+        <div class="food-item item-wide">
+            <img src="Food-06.jpg" alt="Food 06">
+            <div class="overlay">
+                <h3 class="text-sm font-bold">餐桌敘事</h3>
+            </div>
         </div>
-    </div>
 
-    <!-- 作品 07 -->
-    <div class="food-grid-item aspect-square">
-        <img src="Food-07.jpg" alt="Food 07">
-        <div class="overlay">
-            <span class="text-[10px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Detail</span>
-            <h3 class="text-lg font-bold">食材肌理</h3>
+        <!-- 07 -->
+        <div class="food-item item-square">
+            <img src="Food-07.jpg" alt="Food 07">
+            <div class="overlay">
+                <h3 class="text-sm font-bold">細節</h3>
+            </div>
         </div>
-    </div>
 
-    <!-- 作品 08 -->
-    <div class="food-grid-item aspect-square">
-        <img src="Food-08.jpg" alt="Food 08">
-        <div class="overlay">
-            <span class="text-[10px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Atmosphere</span>
-            <h3 class="text-lg font-bold">光影氛圍</h3>
+        <!-- 08 -->
+        <div class="food-item item-square">
+            <img src="Food-08.jpg" alt="Food 08">
+            <div class="overlay">
+                <h3 class="text-sm font-bold">光影</h3>
+            </div>
         </div>
-    </div>
 
-</section>
+    </section>
 
-<!-- 底部導覽列 -->
-<nav class="category-nav">
-    <a href="index.html" class="nav-item">作品集</a>
-    <a href="https://youtu.be/YLsqzahcr3g" target="_blank" class="nav-item">美髮商業</a>
-    <a href="food.html" class="nav-item active">美食影像</a>
-    <a href="wedding.html" class="nav-item">婚禮攝影</a>
-</nav>
+    <!-- 底部導覽列 -->
+    <nav class="category-nav">
+        <a href="index.html" class="nav-item">作品集</a>
+        <a href="https://youtu.be/YLsqzahcr3g" target="_blank" class="nav-item">美髮商業</a>
+        <a href="food.html" class="nav-item active">美食影像</a>
+        <a href="wedding.html" class="nav-item">婚禮攝影</a>
+    </nav>
 
+</body>
+</html>
