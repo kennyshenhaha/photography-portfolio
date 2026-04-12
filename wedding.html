@@ -14,7 +14,6 @@
             color: #fff;
             font-family: 'Urbanist', 'Noto Sans TC', sans-serif;
             scroll-behavior: smooth;
-            overflow-x: hidden;
         }
 
         .bg-glow {
@@ -24,16 +23,13 @@
             z-index: -1; pointer-events: none;
         }
 
-        /* 雜誌感網格系統：回歸標準 Grid 避免固定高度導致跑版 */
-        .magazine-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 1.5rem;
+        .container-custom {
             max-width: 1600px;
             margin: 0 auto;
+            padding: 0 1.5rem;
         }
 
-        /* 每一項的基礎樣式 */
+        /* 統一項目樣式 */
         .wedding-item {
             position: relative;
             overflow: hidden;
@@ -44,49 +40,19 @@
         }
 
         .wedding-item img {
-            width: 100%; height: 100%; object-fit: cover;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             transition: transform 1.2s ease;
         }
 
-        .wedding-item:hover img { transform: scale(1.08); }
-
-        .overlay-main {
-            position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
-            display: flex; flex-direction: column; justify-content: flex-end;
-            padding: 2rem;
+        .wedding-item:hover img {
+            transform: scale(1.05);
         }
 
-        /* 雜誌風格排版佈置 - 使用 Grid Area 確保對齊 */
-        @media (min-width: 1025px) {
-            /* 第一排：01 佔 8 欄 2 列，02/04 佔右邊 4 欄各 1 列 */
-            .item-01 { grid-column: span 8; grid-row: span 2; aspect-ratio: 4 / 3; }
-            .item-02 { grid-column: span 4; aspect-ratio: 16 / 11; }
-            .item-04 { grid-column: span 4; aspect-ratio: 16 / 11; }
-
-            /* 第二排：03 佔 5 欄 2 列，06/05 佔右邊 7 欄各 1 列 */
-            .item-03 { grid-column: span 5; grid-row: span 2; aspect-ratio: 3 / 4; }
-            .item-06 { grid-column: span 7; aspect-ratio: 16 / 9; }
-            .item-05 { grid-column: span 7; aspect-ratio: 16 / 9; }
-
-            /* 第三排：均分三列 */
-            .item-07 { grid-column: span 4; aspect-ratio: 1 / 1; }
-            .item-08 { grid-column: span 4; aspect-ratio: 1 / 1; }
-            .item-09 { grid-column: span 4; aspect-ratio: 1 / 1; }
-        }
-
-        /* 針對照片細節修正裁切點 (依據您的需求調整) */
-        .item-03 img { object-position: center; }       /* 03 置中 */
-        .item-04 img { object-position: center 5%; }    /* 04 往上，確保頭部完整 */
-        .item-02 img { object-position: center; }    
-        .item-06 img { object-position: center 20%; } 
-        .item-05 img { object-position: center 40%; } 
-
-        /* 行動端：改為單欄式避免擠壓 */
-        @media (max-width: 1024px) {
-            .magazine-grid { grid-template-columns: 1fr; }
-            .wedding-item { aspect-ratio: 4 / 3; margin-bottom: 0.5rem; }
-        }
+        /* 裁切點專用修正 */
+        .img-03 { object-position: center !important; } /* 03 絕對置中 */
+        .img-04 { object-position: center 5% !important; } /* 04 往上移，留住新娘頭部 */
 
         /* 導覽列 */
         .category-nav {
@@ -100,64 +66,76 @@
             letter-spacing: 0.1em; color: rgba(255,255,255,0.6);
             text-decoration: none; transition: all 0.4s ease;
         }
-        .nav-item:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
         .nav-item.active { color: #000; background: #f3e5ab; font-weight: 700; }
 
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in { animation: fadeInUp 1s ease forwards; }
     </style>
 </head>
-<body class="p-6 md:p-12 lg:p-20">
+<body class="py-12 md:py-20">
 
     <div class="bg-glow"></div>
 
-    <header class="mb-20 animate-fade-in">
+    <header class="container-custom mb-16 animate-fade-in">
         <a href="index.html" class="text-[10px] tracking-[0.4em] text-white/40 hover:text-white transition-colors mb-4 inline-block uppercase">
             <i class="fa-solid fa-arrow-left mr-2"></i> Back to Main
         </a>
         <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-4">
             婚禮攝影 <span class="text-white/20 ml-2 font-light italic text-xl md:text-3xl">Wedding Moments</span>
         </h1>
-        <p class="text-white/40 text-sm tracking-[0.2em] uppercase">The Art of Storytelling through Light and Love</p>
     </header>
 
-    <main class="magazine-grid mb-40 animate-fade-in" style="animation-delay: 0.2s;">
+    <main class="container-custom flex flex-col gap-6 mb-40 animate-fade-in">
         
-        <!-- 第一區塊：01 與 02, 04 -->
-        <div class="wedding-item item-01">
-            <img src="Wedding-01.jpg" alt="Wedding Venue">
-            <div class="overlay-main">
-                <span class="text-[9px] tracking-[0.4em] text-[#f3e5ab] mb-2 uppercase">The Beginning</span>
-                <h3 class="text-xl font-bold">Wedding Project</h3>
+        <!-- 第一排：01 大景左 + (02, 04) 右 -->
+        <div class="flex flex-col lg:flex-row gap-6">
+            <div class="w-full lg:w-2/3">
+                <div class="wedding-item aspect-[4/3] lg:aspect-auto lg:h-full">
+                    <img src="Wedding-01.jpg" alt="Wedding 01">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-8">
+                        <span class="text-[9px] tracking-[0.4em] text-[#f3e5ab] mb-2 uppercase">The Beginning</span>
+                        <h3 class="text-xl font-bold">Wedding Project</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full lg:w-1/3 flex flex-col gap-6">
+                <div class="wedding-item aspect-[16/11]">
+                    <img src="Wedding-02.jpg" alt="Wedding 02">
+                </div>
+                <div class="wedding-item aspect-[16/11]">
+                    <img src="Wedding-04.jpg" alt="Wedding 04" class="img-04">
+                </div>
             </div>
         </div>
-        <div class="wedding-item item-02">
-            <img src="Wedding-02.jpg" alt="Wedding 02">
-        </div>
-        <div class="wedding-item item-04">
-            <img src="Wedding-04.jpg" alt="Wedding 04">
+
+        <!-- 第二排：03 直式左 + (06, 05) 右 -->
+        <div class="flex flex-col lg:flex-row gap-6">
+            <div class="w-full lg:w-[41.6%]">
+                <div class="wedding-item aspect-[3/4] lg:aspect-auto lg:h-full">
+                    <img src="Wedding-03.jpg" alt="Wedding 03" class="img-03">
+                </div>
+            </div>
+            <div class="w-full lg:w-[58.4%] flex flex-col gap-6">
+                <div class="wedding-item aspect-[16/9]">
+                    <img src="Wedding-06.jpg" alt="Wedding 06">
+                </div>
+                <div class="wedding-item aspect-[16/9]">
+                    <img src="Wedding-05.jpg" alt="Wedding 05">
+                </div>
+            </div>
         </div>
 
-        <!-- 第二區塊：03 與 06, 05 -->
-        <div class="wedding-item item-03">
-            <img src="Wedding-03.jpg" alt="Wedding 03">
-        </div>
-        <div class="wedding-item item-06">
-            <img src="Wedding-06.jpg" alt="Wedding 06">
-        </div>
-        <div class="wedding-item item-05">
-            <img src="Wedding-05.jpg" alt="Wedding 05">
-        </div>
-
-        <!-- 第三區塊：底部三格 -->
-        <div class="wedding-item item-07">
-            <img src="Wedding-07.jpg" alt="Wedding 07">
-        </div>
-        <div class="wedding-item item-08">
-            <img src="Wedding-08.jpg" alt="Wedding 08">
-        </div>
-        <div class="wedding-item item-09">
-            <img src="Wedding-09.jpg" alt="Wedding 09">
+        <!-- 第三排：07, 08, 09 均分 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="wedding-item aspect-square">
+                <img src="Wedding-07.jpg" alt="Wedding 07">
+            </div>
+            <div class="wedding-item aspect-square">
+                <img src="Wedding-08.jpg" alt="Wedding 08">
+            </div>
+            <div class="wedding-item aspect-square">
+                <img src="Wedding-09.jpg" alt="Wedding 09">
+            </div>
         </div>
 
     </main>
