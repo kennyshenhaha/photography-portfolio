@@ -41,7 +41,7 @@
             100% { background-position-x: -60%, 0%, 0%; }
         }
 
-        /* 銀色金屬拉絲質感按鈕 */
+        /* 銀色金屬拉絲質感按鈕 + 掃光效果 */
         .metal-btn {
             position: relative;
             background: 
@@ -54,35 +54,90 @@
             z-index: 1;
         }
 
+        /* 掃光層 */
         .metal-btn::before {
             content: '';
             position: absolute;
-            top: 0; left: -150%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
-            transform: skewX(-30deg);
+            top: 0;
+            left: -150%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                110deg,
+                transparent 0%,
+                transparent 40%,
+                rgba(255, 255, 255, 0.7) 50%,
+                transparent 60%,
+                transparent 100%
+            );
             transition: 0s;
             z-index: 2;
         }
 
+        /* 滑鼠碰到（group-hover）時觸發掃光 */
         .group:hover .metal-btn::before {
             left: 150%;
             transition: 0.8s ease-in-out;
         }
 
-        /* 背景發光 */
+        /* 底部導覽列樣式 */
+        .category-nav {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border-radius: 50px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .nav-item {
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-size: 13px;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item.active {
+            color: #000;
+            background: #f3e5ab; /* 鈦金色為選中狀態 */
+            font-weight: 700;
+        }
+
+        /* 背景發光 - 強化版本 */
         .bg-glow {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 100vw; height: 100vw; max-width: 900px; max-height: 900px;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.15) 0%, rgba(243, 229, 171, 0.1) 20%, transparent 50%);
-            z-index: 0; pointer-events: none; animation: pulse-glow 8s infinite ease-in-out;
+            width: 120vw; height: 120vw; max-width: 1200px;
+            background: radial-gradient(
+                circle at center, 
+                rgba(255, 255, 255, 0.25) 0%, 
+                rgba(243, 229, 171, 0.15) 25%, 
+                rgba(243, 229, 171, 0.05) 50%, 
+                transparent 70%
+            );
+            z-index: 0; pointer-events: none; animation: pulse-glow 10s infinite ease-in-out;
         }
 
         @keyframes pulse-glow {
-            0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.5; }
-            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+            0%, 100% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.6; }
+            50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
         }
 
-        /* 播放按鈕外圈漣漪 */
         .play-btn-pulse::after {
             content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%;
             border: 1px solid rgba(255, 255, 255, 0.2); animation: ring 2.5s infinite;
@@ -93,93 +148,6 @@
             100% { transform: scale(1.6); opacity: 0; }
         }
 
-        /* 指示箭頭樣式 */
-        .indicator-arrow {
-            position: absolute;
-            top: 5px;
-            right: -10px;
-            width: 24px;
-            height: 24px;
-            z-index: 20;
-            pointer-events: none;
-            filter: drop-shadow(0 0 3px rgba(243, 229, 171, 0.5));
-            animation: arrow-swivel 6s infinite ease-in-out;
-        }
-
-        .indicator-arrow svg {
-            width: 100%;
-            height: 100%;
-            fill: none;
-            stroke: #f3e5ab;
-            stroke-width: 1.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        @keyframes arrow-swivel {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            25% { transform: rotate(-15deg) scale(1.05); }
-            50% { transform: rotate(15deg) scale(0.95); }
-            75% { transform: rotate(-10deg) scale(1.05); }
-        }
-
-        /* 引導滾動區塊 - 新增 Hover 狀態 */
-        .scroll-trigger { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            cursor: pointer; 
-            opacity: 0.4; 
-            transition: all 0.5s ease;
-            animation: bounce-gentle 2.5s infinite ease-in-out; 
-        }
-
-        .scroll-trigger:hover {
-            opacity: 1;
-            transform: translateY(5px);
-        }
-
-        .scroll-trigger span {
-            transition: color 0.5s ease;
-        }
-
-        .scroll-trigger:hover span {
-            color: #f3e5ab; /* 懸停時文字變為鈦金光澤色 */
-        }
-
-        .scroll-line { 
-            width: 1px; 
-            height: 35px; 
-            background: rgba(255, 255, 255, 0.1); 
-            margin-top: 15px; 
-            position: relative; 
-            overflow: hidden; 
-            transition: all 0.5s ease;
-        }
-
-        .scroll-trigger:hover .scroll-line {
-            height: 50px; /* 懸停時線條拉長 */
-            background: rgba(243, 229, 171, 0.3);
-        }
-
-        .scroll-line::after { 
-            content: ''; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: linear-gradient(to bottom, transparent, #fff, transparent); 
-            animation: line-sweep 2s infinite ease-in-out; 
-        }
-
-        .scroll-trigger:hover .scroll-line::after {
-            background: linear-gradient(to bottom, transparent, #f3e5ab, transparent);
-        }
-
-        @keyframes bounce-gentle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
-        @keyframes line-sweep { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
-
         .slider-section { height: 100vh; width: 100%; position: relative; background: #000; overflow: hidden; }
         .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s; transform: scale(1.05); display: flex; align-items: center; justify-content: center; }
         .slide.active { opacity: 1; transform: scale(1); z-index: 10; }
@@ -187,16 +155,27 @@
 
         .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 60; background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); color: white; width: 55px; height: 55px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .frame-ui { position: fixed; inset: 25px; border: 1px solid rgba(255,255,255,0.03); pointer-events: none; z-index: 100; }
-        .sub-title-ch { font-family: 'Noto Sans TC', sans-serif; font-weight: 100; letter-spacing: 0.6em; text-indent: 0.6em; }
-        .name-brand { text-transform: uppercase; font-size: 10px; letter-spacing: 0.6em; color: rgba(255, 255, 255, 0.3); font-weight: 300; margin-bottom: 0.5rem; }
     </style>
 </head>
 <body>
 
     <div class="frame-ui"></div>
 
+    <!-- 底部導覽列 -->
+    <nav class="category-nav">
+        <!-- 點擊作品集直接捲動到輪播區 -->
+        <a onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})" class="nav-item active">作品集</a>
+        <!-- 連接到指定的 YouTube 影片 -->
+        <a href="https://youtu.be/YLsqzahcr3g" target="_blank" class="nav-item">美髮商業</a>
+        <!-- 連接到 food.html -->
+        <a href="food.html" class="nav-item">美食影像</a>
+        <!-- 連接到 wedding.html -->
+        <a href="wedding.html" class="nav-item">婚禮攝影</a>
+    </nav>
+
     <section class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="bg-glow"></div>
+        
         <div class="z-10 text-center px-4 mt-[-2vh]">
             <div class="mb-10">
                 <div class="tracking-[0.6em] text-[10px] md:text-xs text-gray-500 font-light opacity-80 uppercase">
@@ -204,19 +183,11 @@
                 </div>
             </div>
 
-            <!-- 播放按鈕區：改為直接跳轉 YouTube 網址 -->
+            <!-- 首頁精選影片按鈕 -->
             <div class="relative inline-block mb-14 group">
-                <div class="indicator-arrow">
-                    <svg viewBox="0 0 24 24">
-                        <line x1="20" y1="4" x2="6" y2="18"></line>
-                        <polyline points="16,18 6,18 6,8"></polyline>
-                    </svg>
-                </div>
-                
-                <!-- 使用 a 標籤直接導向 Youtube -->
-                <a href="https://www.youtube.com/watch?v=R8OsDnJ_6wI" target="_blank" class="play-btn-pulse relative w-32 h-32 md:w-44 md:h-44 bg-white/5 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center transition-all duration-700 group-hover:bg-white/10 group-hover:border-white/20 cursor-pointer outline-none decoration-none">
+                <a href="https://www.youtube.com/watch?v=R8OsDnJ_6wI" target="_blank" class="play-btn-pulse relative w-32 h-32 md:w-44 md:h-44 bg-white/5 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center transition-all duration-700 group-hover:bg-white/10 cursor-pointer outline-none">
                     <div class="metal-btn w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center">
-                        <i class="fa-solid fa-play text-black/80 text-3xl md:text-5xl translate-x-1"></i>
+                        <i class="fa-solid fa-play text-black/80 text-3xl md:text-5xl translate-x-1 relative z-10"></i>
                     </div>
                 </a>
             </div>
@@ -227,14 +198,8 @@
             
             <div class="mt-8 flex flex-col items-center gap-6">
                 <div class="text-center">
-                    <div class="sub-title-ch text-sm md:text-base text-white/60 mb-2">2026 影像作品精選</div>
-                    <div class="name-brand">Kenny Shen</div>
-                </div>
-
-                <!-- 具備懸停亮起效果的滾動提示 -->
-                <div class="scroll-trigger" onclick="document.getElementById('works-slider').scrollIntoView()">
-                    <span class="text-[9px] tracking-[0.4em] uppercase block font-medium">Scroll to explore</span>
-                    <div class="scroll-line"></div>
+                    <div class="text-sm md:text-base text-white/60 mb-2 tracking-[0.6em]">2026 影像作品精選</div>
+                    <div class="text-[10px] tracking-[0.6em] text-white/30 uppercase">Kenny Shen</div>
                 </div>
             </div>
         </div>
@@ -256,13 +221,9 @@
         <div class="absolute bottom-10 left-12 z-50 text-[10px] text-white/30 tracking-[0.2em]">
             <span id="current-page">01</span> / 07
         </div>
-        <div class="absolute bottom-10 right-12 z-50 text-[10px] text-white/20 tracking-[0.4em] uppercase">
-            Kenny Shen Portfolio
-        </div>
     </section>
 
     <script>
-        // 輪播控制
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
         const pageDisplay = document.getElementById('current-page');
