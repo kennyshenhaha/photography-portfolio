@@ -49,15 +49,14 @@
 
         .wedding-item:hover img { transform: scale(1.08); }
 
-        /* 資訊浮層 */
-        .overlay {
+        /* 僅用於 01 的資訊浮層 */
+        .overlay-main {
             position: absolute; inset: 0;
             background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
-            opacity: 0; transition: opacity 0.5s ease;
             display: flex; flex-direction: column; justify-content: flex-end;
             padding: 2rem;
+            opacity: 1;
         }
-        .wedding-item:hover .overlay { opacity: 1; }
 
         /* 雜誌風格排版佈置 (桌面端修正) */
         @media (min-width: 1025px) {
@@ -78,10 +77,10 @@
         }
 
         /* 針對照片細節修正裁切點 (02~06) */
-        .item-03 img { object-position: center 20%; } /* 新人臉部 */
-        .item-02 img { object-position: center; }    /* 婚戒 */
-        .item-06 img { object-position: center 20%; } /* 男生臉部 */
-        .item-05 img { object-position: center 40%; } /* 婚鞋 */
+        .item-03 img { object-position: center 20%; } 
+        .item-02 img { object-position: center; }    
+        .item-06 img { object-position: center 20%; } 
+        .item-05 img { object-position: center 40%; } 
 
         /* 行動端 */
         @media (max-width: 1024px) {
@@ -124,10 +123,10 @@
 
     <main class="magazine-grid mb-40 animate-fade-in" style="animation-delay: 0.2s;">
         
-        <!-- 01 飯店大景 -->
+        <!-- 01 飯店大景 - 唯一有字的項目 -->
         <div class="wedding-item item-01">
-            <img src="20250704-DSC07500.jpg" alt="Wedding Venue">
-            <div class="overlay">
+            <img src="Wedding-01.jpg" alt="Wedding Venue">
+            <div class="overlay-main">
                 <span class="text-[9px] tracking-[0.4em] text-[#f3e5ab] mb-2 uppercase">The Beginning</span>
                 <h3 class="text-xl font-bold">Wedding Project</h3>
             </div>
@@ -135,53 +134,42 @@
 
         <!-- 02 婚戒 -->
         <div class="wedding-item item-02">
-            <img src="20250704-DSC07531.jpg" alt="Rings">
-            <div class="overlay"><h3 class="text-lg font-bold">永恆承諾</h3></div>
+            <img src="Wedding-02.jpg" alt="Wedding 02">
         </div>
 
         <!-- 04 梳妝 -->
         <div class="wedding-item item-04">
-            <img src="20250704-DSC07926.jpg" alt="Makeup">
-            <div class="overlay"><h3 class="text-sm font-bold">期待瞬間</h3></div>
+            <img src="Wedding-04.jpg" alt="Wedding 04">
         </div>
 
         <!-- 03 新人情感大圖 -->
         <div class="wedding-item item-03">
-            <img src="20250704-DSC08260.jpg" alt="Emotional Moment">
-            <div class="overlay">
-                <span class="text-[9px] tracking-[0.4em] text-[#f3e5ab] mb-2 uppercase">The Vow</span>
-                <h3 class="text-2xl font-bold">真摯告白</h3>
-            </div>
+            <img src="Wedding-03.jpg" alt="Wedding 03">
         </div>
 
         <!-- 06 男生整理 -->
         <div class="wedding-item item-06">
-            <img src="20250704-DSC07810.jpg" alt="Groom Prep">
-            <div class="overlay"><h3 class="text-lg font-bold">紳士細節</h3></div>
+            <img src="Wedding-06.jpg" alt="Wedding 06">
         </div>
 
         <!-- 05 婚鞋 -->
         <div class="wedding-item item-05">
-            <img src="20250704-DSC07570.jpg" alt="Shoes">
-            <div class="overlay"><h3 class="text-sm font-bold">優雅步伐</h3></div>
+            <img src="Wedding-05.jpg" alt="Wedding 05">
         </div>
 
-        <!-- 07 交手儀式 -->
+        <!-- 07 -->
         <div class="wedding-item item-07">
-            <img src="20250704-DSC08053.jpg" alt="Hand over">
-            <div class="overlay"><h3 class="text-sm font-bold">信任與交付</h3></div>
+            <img src="Wedding-07.jpg" alt="Wedding 07">
         </div>
 
-        <!-- 08 溫暖互動 -->
+        <!-- 08 -->
         <div class="wedding-item item-08">
-            <img src="20250704-DSC08493.jpg" alt="Interaction">
-            <div class="overlay"><h3 class="text-sm font-bold">溫暖時刻</h3></div>
+            <img src="Wedding-08.jpg" alt="Wedding 08">
         </div>
 
-        <!-- 09 圓滿合影 -->
+        <!-- 09 -->
         <div class="wedding-item item-09">
-            <img src="20250704-DSC08754.jpg" alt="Group Photo">
-            <div class="overlay"><h3 class="text-sm font-bold">完美收尾</h3></div>
+            <img src="Wedding-09.jpg" alt="Wedding 09">
         </div>
 
     </main>
