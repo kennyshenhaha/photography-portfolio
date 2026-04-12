@@ -27,17 +27,26 @@
         }
 
         /* 網格核心容器 */
-        .masonry-grid {
+        .grid-container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1.5fr 1fr 1fr; /* 左欄較寬 */
             gap: 1.5rem;
-            grid-auto-flow: dense;
+            max-width: 1600px;
+            margin: 0 auto;
+            align-items: stretch; /* 確保內容撐開對齊 */
         }
 
-        @media (min-width: 1024px) {
-            .masonry-grid {
-                grid-template-columns: repeat(4, 1fr);
+        @media (max-width: 1024px) {
+            .grid-container {
+                grid-template-columns: 1fr; /* 平板手機切換為單欄 */
             }
+        }
+
+        /* 欄位容器：使用 flex 讓內部元素平均分配高度 */
+        .col-left, .col-side {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
 
         /* 作品單元 */
@@ -47,8 +56,10 @@
             border-radius: 4px;
             background: #111;
             transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            width: 100%;
+            flex: 1; /* 重要：讓圖片平均分配該欄位的高度 */
         }
-        
+
         .food-item:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
@@ -60,22 +71,28 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.8s ease;
+            display: block;
+        }
+
+        /* 當在大螢幕時，維持右側為正方形比例，左側自動對齊 */
+        @media (min-width: 1025px) {
+            .col-side .food-item {
+                aspect-ratio: 1/1;
+                flex: none; /* 右側固定比例 */
+            }
+            .col-left .food-item {
+                flex: 1; /* 左側兩張圖會自動平分三張圖加總的高度 */
+            }
         }
 
         .food-item:hover img {
             transform: scale(1.05);
         }
 
-        /* 比例設定 */
-        .item-large { grid-column: span 2; grid-row: span 2; aspect-ratio: 1/1; } /* 大方塊 */
-        .item-tall { grid-row: span 2; aspect-ratio: 2/3; } /* 直長塊 */
-        .item-wide { grid-column: span 2; aspect-ratio: 16/9; } /* 橫長塊 */
-        .item-square { aspect-ratio: 1/1; } /* 標準方塊 */
-
         /* 資訊浮層 */
         .overlay {
             position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 70%);
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
             opacity: 0; transition: opacity 0.4s ease;
             display: flex; flex-direction: column; justify-content: flex-end;
             padding: 1.5rem;
@@ -89,7 +106,7 @@
         .category-nav {
             position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
             display: flex; gap: 12px; z-index: 1000;
-            background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 50px;
+            background: rgba(15, 15, 15, 0.6); padding: 8px; border-radius: 50px;
             backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
@@ -124,80 +141,64 @@
         <div class="h-[1px] w-12 bg-[#f3e5ab] mt-6 opacity-60"></div>
     </header>
 
-    <!-- 優化後的網格區 -->
-    <section class="masonry-grid mb-40 animate-fade-in" style="animation-delay: 0.2s;">
+    <!-- 網格區：透過 Flexbox 讓左右高度完美對齊 -->
+    <main class="grid-container mb-40 animate-fade-in" style="animation-delay: 0.2s;">
         
-        <!-- 01 主圖 -->
-        <div class="food-item item-large">
-            <img src="Food-01.jpg" alt="Food 01">
-            <div class="overlay">
-                <span class="text-[9px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Signature</span>
-                <h3 class="text-lg font-bold">Dessert Project</h3>
+        <!-- 左邊：2張大圖 (將自動對齊右側總高) -->
+        <div class="col-left">
+            <div class="food-item">
+                <img src="Food-01.jpg" alt="Food 01">
+                <div class="overlay">
+                    <span class="text-[9px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Signature</span>
+                    <h3 class="text-lg font-bold">Dessert Project 01</h3>
+                </div>
+            </div>
+            <div class="food-item">
+                <img src="Food-02.jpg" alt="Food 02">
+                <div class="overlay">
+                    <h3 class="text-lg font-bold">02</h3>
+                </div>
             </div>
         </div>
 
-        <!-- 02 -->
-        <div class="food-item item-square">
-            <img src="Food-02.jpg" alt="Food 02">
-            <div class="overlay">
-                <h3 class="text-sm font-bold">02</h3>
+        <!-- 中間：3張小圖 (定義基準高度) -->
+        <div class="col-side">
+            <div class="food-item">
+                <img src="Food-03.jpg" alt="Food 03">
+                <div class="overlay"><h3 class="text-sm font-bold">03</h3></div>
+            </div>
+            <div class="food-item">
+                <img src="Food-04.jpg" alt="Food 04">
+                <div class="overlay"><h3 class="text-sm font-bold">04</h3></div>
+            </div>
+            <div class="food-item">
+                <img src="Food-05.jpg" alt="Food 05">
+                <div class="overlay"><h3 class="text-sm font-bold">05</h3></div>
             </div>
         </div>
 
-        <!-- 03 -->
-        <div class="food-item item-square">
-            <img src="Food-03.jpg" alt="Food 03">
-            <div class="overlay">
-                <h3 class="text-sm font-bold">03</h3>
+        <!-- 右邊：3張小圖 (定義基準高度) -->
+        <div class="col-side">
+            <div class="food-item">
+                <img src="Food-06.jpg" alt="Food 06">
+                <div class="overlay"><h3 class="text-sm font-bold">06</h3></div>
+            </div>
+            <div class="food-item">
+                <img src="Food-07.jpg" alt="Food 07">
+                <div class="overlay"><h3 class="text-sm font-bold">07</h3></div>
+            </div>
+            <div class="food-item">
+                <img src="Food-08.jpg" alt="Food 08">
+                <div class="overlay"><h3 class="text-sm font-bold">08</h3></div>
             </div>
         </div>
 
-        <!-- 04 直長圖增加變化 -->
-        <div class="food-item item-tall">
-            <img src="Food-04.jpg" alt="Food 04">
-            <div class="overlay">
-                <h3 class="text-sm font-bold">04</h3>
-            </div>
-        </div>
-
-        <!-- 05 -->
-        <div class="food-item item-square">
-            <img src="Food-05.jpg" alt="Food 05">
-            <div class="overlay">
-                <h3 class="text-sm font-bold">05</h3>
-            </div>
-        </div>
-
-        <!-- 06 寬圖 -->
-        <div class="food-item item-wide">
-            <img src="Food-06.jpg" alt="Food 06">
-            <div class="overlay">
-                <h3 class="text-sm font-bold">06</h3>
-            </div>
-        </div>
-
-        <!-- 07 -->
-        <div class="food-item item-square">
-            <img src="Food-07.jpg" alt="Food 07">
-            <div class="overlay">
-                <h3 class="text-sm font-bold">07</h3>
-            </div>
-        </div>
-
-        <!-- 08 -->
-        <div class="food-item item-square">
-            <img src="Food-08.jpg" alt="Food 08">
-            <div class="overlay">
-                <h3 class="text-sm font-bold">08</h3>
-            </div>
-        </div>
-
-    </section>
+    </main>
 
     <!-- 底部導覽列 -->
     <nav class="category-nav">
         <a href="index.html" class="nav-item">作品集</a>
-        <a href="https://youtu.be/YLsqzahcr3g" target="_blank" class="nav-item">美髮商業</a>
+        <a href="hair.html" class="nav-item">美髮商業</a>
         <a href="food.html" class="nav-item active">美食影像</a>
         <a href="wedding.html" class="nav-item">婚禮攝影</a>
     </nav>
