@@ -148,12 +148,22 @@
             100% { transform: scale(1.6); opacity: 0; }
         }
 
-        .slider-section { height: 100vh; width: 100%; position: relative; background: #000; overflow: hidden; }
+        .slider-section { 
+            height: 100vh; 
+            width: 100%; 
+            position: relative; 
+            background: #000; 
+            overflow: hidden; 
+            /* 修正關鍵：增加捲動邊距防止頂部被遮擋或不對齊 */
+            scroll-margin-top: 0;
+        }
         .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s; transform: scale(1.05); display: flex; align-items: center; justify-content: center; }
         .slide.active { opacity: 1; transform: scale(1); z-index: 10; }
         .slide img { width: 100%; height: 100%; object-fit: contain; }
 
-        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 60; background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); color: white; width: 55px; height: 55px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 60; background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); color: white; width: 55px; height: 55px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .nav-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-50%) scale(1.1); }
+        
         .frame-ui { position: fixed; inset: 25px; border: 1px solid rgba(255,255,255,0.03); pointer-events: none; z-index: 100; }
     </style>
 </head>
@@ -163,13 +173,9 @@
 
     <!-- 底部導覽列 -->
     <nav class="category-nav">
-        <!-- 已移除作品集的 active class，使其初始狀態與其他選項一致 -->
         <a onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})" class="nav-item">作品集</a>
-        <!-- 連接到指定的 YouTube 影片 -->
         <a href="https://youtu.be/YLsqzahcr3g" target="_blank" class="nav-item">美髮商業</a>
-        <!-- 連接到 food.html -->
         <a href="food.html" class="nav-item">美食影像</a>
-        <!-- 連接到 wedding.html -->
         <a href="wedding.html" class="nav-item">婚禮攝影</a>
     </nav>
 
