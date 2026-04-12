@@ -29,49 +29,14 @@
         /* 網格核心容器 */
         .grid-container {
             display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr; /* 三欄佈局 */
-            gap: 1.5rem; /* 統一的間距基準 */
+            /* 定義 3 欄，且定義 6 個等高的行 (2與3的最小公倍數) */
+            grid-template-columns: 1.5fr 1fr 1fr;
+            grid-template-rows: repeat(6, 1fr);
+            gap: 1.5rem;
             max-width: 1600px;
             margin: 0 auto;
-            align-items: stretch;
-        }
-
-        /* 桌機版絕對對齊邏輯 */
-        @media (min-width: 1025px) {
-            .col-left {
-                display: flex;
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-
-            .col-side {
-                display: flex;
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-
-            /* 左側兩張大圖：平分右側三張圖的總高度 */
-            .col-left .food-item {
-                flex: 1; 
-                min-height: 0; /* 確保 flex 能縮小圖片 */
-            }
-
-            /* 右側三張小圖：維持 1:1 正方形作為高度基準 */
-            .col-side .food-item {
-                aspect-ratio: 1 / 1;
-                flex: none; /* 固定比例，不隨 flex 伸長 */
-            }
-        }
-
-        /* 行動裝置排版 */
-        @media (max-width: 1024px) {
-            .grid-container {
-                grid-template-columns: 1fr;
-            }
-            .food-item {
-                aspect-ratio: 16 / 9;
-                margin-bottom: 1.5rem;
-            }
+            /* 關鍵：強制容器高度由內容決定，並讓內部的 item 填滿 */
+            height: auto;
         }
 
         /* 作品單元通用樣式 */
@@ -82,20 +47,54 @@
             background: #111;
             transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
             width: 100%;
+            height: 100%; /* 讓它填滿 Grid 指定的區域 */
+        }
+
+        .food-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 確保圖片填滿格位且不變形 */
+            transition: transform 0.8s ease;
+            display: block;
+        }
+
+        /* 桌面版對齊邏輯 */
+        @media (min-width: 1025px) {
+            /* 左側大圖：Food-01 佔據前 3 行，Food-02 佔據後 3 行 */
+            .food-01 { grid-column: 1; grid-row: 1 / span 3; }
+            .food-02 { grid-column: 1; grid-row: 4 / span 3; }
+
+            /* 中間小圖：三張各佔 2 行 */
+            .food-03 { grid-column: 2; grid-row: 1 / span 2; }
+            .food-04 { grid-column: 2; grid-row: 3 / span 2; }
+            .food-05 { grid-column: 2; grid-row: 5 / span 2; }
+
+            /* 右側小圖：三張各佔 2 行 */
+            .food-06 { grid-column: 3; grid-row: 1 / span 2; }
+            .food-07 { grid-column: 3; grid-row: 3 / span 2; }
+            .food-08 { grid-column: 3; grid-row: 5 / span 2; }
+            
+            /* 為了讓小圖保持正方形感覺，我們讓中間的小圖設定 aspect-ratio */
+            .col-ref { aspect-ratio: 1 / 1; }
+        }
+
+        /* 行動裝置排版 */
+        @media (max-width: 1024px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                display: block;
+            }
+            .food-item {
+                aspect-ratio: 16 / 9;
+                margin-bottom: 1.5rem;
+            }
         }
 
         .food-item:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             z-index: 20;
-        }
-
-        .food-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.8s ease;
-            display: block;
         }
 
         .food-item:hover img {
@@ -154,56 +153,50 @@
         <div class="h-[1px] w-12 bg-[#f3e5ab] mt-6 opacity-60"></div>
     </header>
 
-    <!-- 網格區：透過 Flex 分配確保 Food-01/02 對齊右側三圖總高度 -->
+    <!-- 網格區：直接將所有 item 放進同一個 Grid 容器中進行精準定位 -->
     <main class="grid-container mb-40 animate-fade-in" style="animation-delay: 0.2s;">
         
-        <!-- 左邊：2張大圖 (自動縮放以對齊) -->
-        <div class="col-left">
-            <div class="food-item">
-                <img src="Food-01.jpg" alt="Food 01">
-                <div class="overlay">
-                    <span class="text-[9px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Signature</span>
-                    <h3 class="text-lg font-bold">Dessert Project 01</h3>
-                </div>
+        <!-- 左側大圖 -->
+        <div class="food-item food-01">
+            <img src="Food-01.jpg" alt="Food 01">
+            <div class="overlay">
+                <span class="text-[9px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Signature</span>
+                <h3 class="text-lg font-bold">Featured Dish 01</h3>
             </div>
-            <div class="food-item">
-                <img src="Food-02.jpg" alt="Food 02">
-                <div class="overlay">
-                    <h3 class="text-lg font-bold">02</h3>
-                </div>
+        </div>
+        <div class="food-item food-02">
+            <img src="Food-02.jpg" alt="Food 02">
+            <div class="overlay">
+                <h3 class="text-lg font-bold">Featured Dish 02</h3>
             </div>
         </div>
 
-        <!-- 中間：3張小圖 (緊密排列，作為高度基準) -->
-        <div class="col-side">
-            <div class="food-item">
-                <img src="Food-03.jpg" alt="Food 03">
-                <div class="overlay"><h3 class="text-sm font-bold">03</h3></div>
-            </div>
-            <div class="food-item">
-                <img src="Food-04.jpg" alt="Food 04">
-                <div class="overlay"><h3 class="text-sm font-bold">04</h3></div>
-            </div>
-            <div class="food-item">
-                <img src="Food-05.jpg" alt="Food 05">
-                <div class="overlay"><h3 class="text-sm font-bold">05</h3></div>
-            </div>
+        <!-- 中間小圖 -->
+        <div class="food-item food-03 col-ref">
+            <img src="Food-03.jpg" alt="Food 03">
+            <div class="overlay"><h3 class="text-sm font-bold">03</h3></div>
+        </div>
+        <div class="food-item food-04 col-ref">
+            <img src="Food-04.jpg" alt="Food 04">
+            <div class="overlay"><h3 class="text-sm font-bold">04</h3></div>
+        </div>
+        <div class="food-item food-05 col-ref">
+            <img src="Food-05.jpg" alt="Food 05">
+            <div class="overlay"><h3 class="text-sm font-bold">05</h3></div>
         </div>
 
-        <!-- 右邊：3張小圖 (緊密排列，作為高度基準) -->
-        <div class="col-side">
-            <div class="food-item">
-                <img src="Food-06.jpg" alt="Food 06">
-                <div class="overlay"><h3 class="text-sm font-bold">06</h3></div>
-            </div>
-            <div class="food-item">
-                <img src="Food-07.jpg" alt="Food 07">
-                <div class="overlay"><h3 class="text-sm font-bold">07</h3></div>
-            </div>
-            <div class="food-item">
-                <img src="Food-08.jpg" alt="Food 08">
-                <div class="overlay"><h3 class="text-sm font-bold">08</h3></div>
-            </div>
+        <!-- 右側小圖 -->
+        <div class="food-item food-06 col-ref">
+            <img src="Food-06.jpg" alt="Food 06">
+            <div class="overlay"><h3 class="text-sm font-bold">06</h3></div>
+        </div>
+        <div class="food-item food-07 col-ref">
+            <img src="Food-07.jpg" alt="Food 07">
+            <div class="overlay"><h3 class="text-sm font-bold">07</h3></div>
+        </div>
+        <div class="food-item food-08 col-ref">
+            <img src="Food-08.jpg" alt="Food 08">
+            <div class="overlay"><h3 class="text-sm font-bold">08</h3></div>
         </div>
 
     </main>
