@@ -29,19 +29,20 @@
             padding: 0 1rem;
         }
 
-        /* 核心排版：非對稱網格系統 (Bento Grid) */
-        /* 電腦與手機均維持此邏輯，僅欄數不同 */
+        /* 核心排版：將電腦版與手機版同步為固定兩欄 */
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 基礎 2 欄 */
+            grid-template-columns: repeat(2, 1fr); /* 固定兩欄 */
             gap: 8px;
             grid-auto-flow: dense;
         }
 
         @media (min-width: 1024px) {
             .gallery-grid {
-                grid-template-columns: repeat(4, 1fr); /* 電腦版維持 4 欄以實現複雜跨度 */
+                /* 移除原本的四欄設定，維持與手機版一致的視覺感 */
                 gap: 16px;
+                max-width: 900px; /* 電腦版限制寬度，避免兩欄圖片被拉得太扁 */
+                margin: 0 auto;
             }
         }
 
@@ -52,7 +53,7 @@
             transition: all 0.5s ease;
         }
 
-        /* 重構非對稱跨度類別，確保電腦版與手機版邏輯一致 */
+        /* 跨度類別 */
         .item-lg { grid-column: span 2; grid-row: span 2; } 
         .item-wide { grid-column: span 2; }
         .item-tall { grid-row: span 2; }
@@ -102,7 +103,7 @@
 
     <div class="bg-glow"></div>
 
-    <header class="container-custom mb-12 md:mb-20 animate-fade-in">
+    <header class="container-custom mb-12 md:mb-20 animate-fade-in text-center md:text-left">
         <a href="index.html" class="text-[10px] tracking-[0.4em] text-white/40 hover:text-white transition-colors mb-4 inline-block uppercase">
             <i class="fa-solid fa-arrow-left mr-2"></i> Back to Main
         </a>
@@ -114,7 +115,6 @@
     <main class="container-custom mb-40">
         <div class="gallery-grid">
             
-            <!-- 恢復非對稱排版：大(item-lg)、寬(item-wide)、長(item-tall) -->
             <div class="wedding-item item-lg" style="animation-delay: 0.1s;"><img src="Wedding-01.jpg" alt="Wedding 01"></div>
             <div class="wedding-item" style="animation-delay: 0.2s;"><img src="Wedding-02.jpg" alt="Wedding 02"></div>
             <div class="wedding-item" style="animation-delay: 0.3s;"><img src="Wedding-03.jpg" alt="Wedding 03"></div>
