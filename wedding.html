@@ -29,16 +29,18 @@
             padding: 0 1rem;
         }
 
-        /* 調整後的網格系統：與手機版邏輯一致，減少大面積裁切 */
+        /* 核心排版：非對稱網格系統 (Bento Grid) */
+        /* 電腦與手機均維持此邏輯，僅欄數不同 */
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 預設 2 欄 */
+            grid-template-columns: repeat(2, 1fr); /* 基礎 2 欄 */
             gap: 8px;
+            grid-auto-flow: dense;
         }
 
         @media (min-width: 1024px) {
             .gallery-grid {
-                grid-template-columns: repeat(3, 1fr); /* 電腦版改為 3 欄，增加照片顯示面積 */
+                grid-template-columns: repeat(4, 1fr); /* 電腦版維持 4 欄以實現複雜跨度 */
                 gap: 16px;
             }
         }
@@ -48,14 +50,12 @@
             overflow: hidden;
             background: #111;
             transition: all 0.5s ease;
-            aspect-ratio: 4 / 3; /* 統一比例，減少不可控裁切 */
         }
 
-        /* 針對長型照片的特定設定 */
-        .item-tall { 
-            grid-row: span 2; 
-            aspect-ratio: auto; /* 長型照片不固定比例 */
-        }
+        /* 重構非對稱跨度類別，確保電腦版與手機版邏輯一致 */
+        .item-lg { grid-column: span 2; grid-row: span 2; } 
+        .item-wide { grid-column: span 2; }
+        .item-tall { grid-row: span 2; }
 
         .wedding-item img {
             width: 100%;
@@ -65,7 +65,7 @@
             transition: transform 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        /* 針對 Wedding 27 的構圖微調 */
+        /* 針對特定照片的構圖微調 */
         .img-27 {
             object-position: 20% center !important;
         }
@@ -95,7 +95,6 @@
         }
         .animate-fade-in { animation: fadeInUp 1s ease forwards; }
 
-        /* 圖片載入動畫 */
         .wedding-item { opacity: 0; animation: fadeInUp 0.8s ease forwards; }
     </style>
 </head>
@@ -115,38 +114,39 @@
     <main class="container-custom mb-40">
         <div class="gallery-grid">
             
-            <div class="wedding-item" style="animation-delay: 0.1s;"><img src="Wedding-01.jpg" alt="Wedding 01"></div>
+            <!-- 恢復非對稱排版：大(item-lg)、寬(item-wide)、長(item-tall) -->
+            <div class="wedding-item item-lg" style="animation-delay: 0.1s;"><img src="Wedding-01.jpg" alt="Wedding 01"></div>
             <div class="wedding-item" style="animation-delay: 0.2s;"><img src="Wedding-02.jpg" alt="Wedding 02"></div>
             <div class="wedding-item" style="animation-delay: 0.3s;"><img src="Wedding-03.jpg" alt="Wedding 03"></div>
             
-            <div class="wedding-item" style="animation-delay: 0.4s;"><img src="Wedding-04.jpg" alt="Wedding 04"></div>
+            <div class="wedding-item item-wide" style="animation-delay: 0.4s;"><img src="Wedding-04.jpg" alt="Wedding 04"></div>
             <div class="wedding-item item-tall" style="animation-delay: 0.5s;"><img src="Wedding-05.jpg" alt="Wedding 05"></div>
             <div class="wedding-item" style="animation-delay: 0.6s;"><img src="Wedding-06.jpg" alt="Wedding 06"></div>
             
             <div class="wedding-item" style="animation-delay: 0.7s;"><img src="Wedding-07.jpg" alt="Wedding 07"></div>
-            <div class="wedding-item" style="animation-delay: 0.8s;"><img src="Wedding-08.jpg" alt="Wedding 08"></div>
+            <div class="wedding-item item-lg" style="animation-delay: 0.8s;"><img src="Wedding-08.jpg" alt="Wedding 08"></div>
             <div class="wedding-item" style="animation-delay: 0.9s;"><img src="Wedding-09.jpg" alt="Wedding 09"></div>
             
-            <div class="wedding-item" style="animation-delay: 1.0s;"><img src="Wedding-10.jpg" alt="Wedding 10"></div>
+            <div class="wedding-item item-wide" style="animation-delay: 1.0s;"><img src="Wedding-10.jpg" alt="Wedding 10"></div>
             <div class="wedding-item" style="animation-delay: 1.1s;"><img src="Wedding-11.jpg" alt="Wedding 11"></div>
             <div class="wedding-item item-tall" style="animation-delay: 1.2s;"><img src="Wedding-12.jpg" alt="Wedding 12"></div>
             
             <div class="wedding-item" style="animation-delay: 0.1s;"><img src="Wedding-13.jpg" alt="Wedding 13"></div>
             <div class="wedding-item" style="animation-delay: 0.2s;"><img src="Wedding-15.jpg" alt="Wedding 15"></div>
-            <div class="wedding-item" style="animation-delay: 0.3s;"><img src="Wedding-14.jpg" alt="Wedding 14"></div>
-            <div class="wedding-item" style="animation-delay: 0.4s;"><img src="Wedding-16.jpg" alt="Wedding 16"></div>
+            <div class="wedding-item item-wide" style="animation-delay: 0.3s;"><img src="Wedding-14.jpg" alt="Wedding 14"></div>
+            <div class="wedding-item item-lg" style="animation-delay: 0.4s;"><img src="Wedding-16.jpg" alt="Wedding 16"></div>
             
             <div class="wedding-item" style="animation-delay: 0.5s;"><img src="Wedding-17.jpg" alt="Wedding 17"></div>
-            <div class="wedding-item" style="animation-delay: 0.6s;"><img src="Wedding-18.jpg" alt="Wedding 18"></div>
+            <div class="wedding-item item-wide" style="animation-delay: 0.6s;"><img src="Wedding-18.jpg" alt="Wedding 18"></div>
             <div class="wedding-item" style="animation-delay: 0.7s;"><img src="Wedding-19.jpg" alt="Wedding 19"></div>
-            <div class="wedding-item" style="animation-delay: 0.8s;"><img src="Wedding-20.jpg" alt="Wedding 20"></div>
+            <div class="wedding-item item-wide" style="animation-delay: 0.8s;"><img src="Wedding-20.jpg" alt="Wedding 20"></div>
             
             <div class="wedding-item" style="animation-delay: 0.9s;"><img src="Wedding-21.jpg" alt="Wedding 21"></div>
             <div class="wedding-item" style="animation-delay: 1.0s;"><img src="Wedding-22.jpg" alt="Wedding 22"></div>
-            <div class="wedding-item" style="animation-delay: 1.1s;"><img src="Wedding-23.jpg" alt="Wedding 23"></div>
+            <div class="wedding-item item-lg" style="animation-delay: 1.1s;"><img src="Wedding-23.jpg" alt="Wedding 23"></div>
             <div class="wedding-item" style="animation-delay: 1.2s;"><img src="Wedding-24.jpg" alt="Wedding 24"></div>
             
-            <div class="wedding-item" style="animation-delay: 0.1s;"><img src="Wedding-25.jpg" alt="Wedding 25"></div>
+            <div class="wedding-item item-wide" style="animation-delay: 0.1s;"><img src="Wedding-25.jpg" alt="Wedding 25"></div>
             <div class="wedding-item" style="animation-delay: 0.2s;"><img src="Wedding-26.jpg" alt="Wedding 26"></div>
             <div class="wedding-item" style="animation-delay: 0.3s;"><img src="Wedding-29.jpg" alt="Wedding 29"></div>
             <div class="wedding-item" style="animation-delay: 0.4s;"><img src="Wedding-28.jpg" alt="Wedding 28"></div>
@@ -154,7 +154,7 @@
             <div class="wedding-item item-tall" style="animation-delay: 0.5s;"><img src="Wedding-27.jpg" alt="Wedding 27" class="img-27"></div>
             <div class="wedding-item" style="animation-delay: 0.6s;"><img src="Wedding-30.jpg" alt="Wedding 30"></div>
             <div class="wedding-item" style="animation-delay: 0.7s;"><img src="Wedding-32.jpg" alt="Wedding 32"></div>
-            <div class="wedding-item" style="animation-delay: 0.8s;"><img src="Wedding-31.jpg" alt="Wedding 31"></div>
+            <div class="wedding-item item-wide" style="animation-delay: 0.8s;"><img src="Wedding-31.jpg" alt="Wedding 31"></div>
         </div>
     </main>
 
