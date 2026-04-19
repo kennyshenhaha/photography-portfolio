@@ -95,6 +95,22 @@
             transform: translateY(-2px);
         }
 
+        /* 手機版導覽列縮小 */
+        @media (max-width: 768px) {
+            .category-nav {
+                gap: 6px;
+                padding: 5px;
+                bottom: 25px;
+            }
+            .category-nav.scrolled {
+                bottom: 12px;
+            }
+            .nav-item {
+                padding: 6px 14px;
+                font-size: 11px;
+            }
+        }
+
         /* 背景發光 */
         .bg-glow {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -301,12 +317,6 @@
         });
 
         function changeSlide(direction) {
-            // 如果是在第一張點擊「下一張」，則啟動自動輪播
-            if (!hasStarted && direction > 0) {
-                hasStarted = true;
-                isPaused = false;
-            }
-
             slides[currentSlide].classList.remove('active');
             
             const oldFill = document.getElementById(`fill-${currentSlide}`);
@@ -322,6 +332,33 @@
             
             // 確保切換後的進度條視覺正確
             document.getElementById(`fill-${currentSlide}`).style.width = '0%';
+
+            // 核心邏輯：判斷目前是不是第一張照片
+            if (currentSlide === 0) {
+                isPaused = true;
+                hasStarted = false;
+                
+                // 輪播回第一張時，清空所有進度條，準備迎接下一輪
+                setTimeout(() => {
+                    slides.forEach((_, i) => {
+                        const fill = document.getElementById(`fill-${i}`);
+                        if(fill) fill.style.width = '0%';
+                    });
+                }, 200); // 微延遲讓舊動畫跑完，視覺更順暢
+                
+            } else {
+                // 只要不是第一張，確保輪播啟動
+                isPaused = false;
+                hasStarted = true;
+                
+                // 如果從第一張 "往回切" 到最後一張，自動把前面的進度條補滿視覺
+                if (direction < 0 && currentSlide === totalSlides - 1) {
+                    slides.forEach((_, i) => {
+                        const fill = document.getElementById(`fill-${i}`);
+                        if (fill && i < currentSlide) fill.style.width = '100%';
+                    });
+                }
+            }
         }
 
         // 自動播放計時器
