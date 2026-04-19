@@ -29,13 +29,11 @@
         /* 網格核心容器 */
         .grid-container {
             display: grid;
-            /* 定義 3 欄，且定義 6 個等高的行 (2與3的最小公倍數) */
             grid-template-columns: 1.5fr 1fr 1fr;
             grid-template-rows: repeat(6, 1fr);
             gap: 1.5rem;
             max-width: 1600px;
             margin: 0 auto;
-            /* 關鍵：強制容器高度由內容決定，並讓內部的 item 填滿 */
             height: auto;
         }
 
@@ -47,34 +45,27 @@
             background: #111;
             transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
             width: 100%;
-            height: 100%; /* 讓它填滿 Grid 指定的區域 */
+            height: 100%;
         }
 
         .food-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* 確保圖片填滿格位且不變形 */
+            object-fit: cover;
             transition: transform 0.8s ease;
             display: block;
         }
 
         /* 桌面版對齊邏輯 */
         @media (min-width: 1025px) {
-            /* 左側大圖：Food-01 佔據前 3 行，Food-02 佔據後 3 行 */
             .food-01 { grid-column: 1; grid-row: 1 / span 3; }
             .food-02 { grid-column: 1; grid-row: 4 / span 3; }
-
-            /* 中間小圖：三張各佔 2 行 */
             .food-03 { grid-column: 2; grid-row: 1 / span 2; }
             .food-04 { grid-column: 2; grid-row: 3 / span 2; }
             .food-05 { grid-column: 2; grid-row: 5 / span 2; }
-
-            /* 右側小圖：三張各佔 2 行 */
             .food-06 { grid-column: 3; grid-row: 1 / span 2; }
             .food-07 { grid-column: 3; grid-row: 3 / span 2; }
             .food-08 { grid-column: 3; grid-row: 5 / span 2; }
-            
-            /* 為了讓小圖保持正方形感覺，我們讓中間的小圖設定 aspect-ratio */
             .col-ref { aspect-ratio: 1 / 1; }
         }
 
@@ -101,7 +92,6 @@
             transform: scale(1.05);
         }
 
-        /* 資訊浮層 */
         .overlay {
             position: absolute; inset: 0;
             background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
@@ -114,22 +104,37 @@
             opacity: 1;
         }
 
-        /* 導覽列 */
+        /* --- 修正後的導覽列樣式 (根據最新截圖) --- */
         .category-nav {
-            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 12px; z-index: 1000;
-            background: rgba(15, 15, 15, 0.6); padding: 8px; border-radius: 50px;
-            backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed; 
+            bottom: 40px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            display: flex; 
+            align-items: center;
+            z-index: 1000;
+            background: rgba(15, 15, 15, 0.5); /* 深色半透明底 */
+            padding: 6px 12px; 
+            border-radius: 50px;
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .nav-item {
-            padding: 10px 24px; border-radius: 40px; font-size: 13px;
-            letter-spacing: 0.1em; color: rgba(255,255,255,0.6);
-            text-decoration: none; transition: all 0.4s ease;
+            font-size: 14px;
+            padding: 10px 24px;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none; 
+            transition: all 0.3s ease;
+            border-radius: 40px;
+            white-space: nowrap;
         }
 
-        .nav-item:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
-        .nav-item.active { color: #000; background: #f3e5ab; font-weight: 700; }
+        .nav-item:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
 
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
@@ -153,10 +158,8 @@
         <div class="h-[1px] w-12 bg-[#f3e5ab] mt-6 opacity-60"></div>
     </header>
 
-    <!-- 網格區：直接將所有 item 放進同一個 Grid 容器中進行精準定位 -->
+    <!-- 網格區 -->
     <main class="grid-container mb-40 animate-fade-in" style="animation-delay: 0.2s;">
-        
-        <!-- 左側大圖 -->
         <div class="food-item food-01">
             <img src="Food-01.jpg" alt="Food 01">
             <div class="overlay">
@@ -166,12 +169,8 @@
         </div>
         <div class="food-item food-02">
             <img src="Food-02.jpg" alt="Food 02">
-            <div class="overlay">
-                <h3 class="text-lg font-bold">02</h3>
-            </div>
+            <div class="overlay"><h3 class="text-lg font-bold">02</h3></div>
         </div>
-
-        <!-- 中間小圖 -->
         <div class="food-item food-03 col-ref">
             <img src="Food-03.jpg" alt="Food 03">
             <div class="overlay"><h3 class="text-sm font-bold">03</h3></div>
@@ -184,8 +183,6 @@
             <img src="Food-05.jpg" alt="Food 05">
             <div class="overlay"><h3 class="text-sm font-bold">05</h3></div>
         </div>
-
-        <!-- 右側小圖 -->
         <div class="food-item food-06 col-ref">
             <img src="Food-06.jpg" alt="Food 06">
             <div class="overlay"><h3 class="text-sm font-bold">06</h3></div>
@@ -198,10 +195,9 @@
             <img src="Food-08.jpg" alt="Food 08">
             <div class="overlay"><h3 class="text-sm font-bold">08</h3></div>
         </div>
-
     </main>
 
-    <!-- 底部導覽列 -->
+    <!-- 修正後的底部導覽列：移除「美食影像」 -->
     <nav class="category-nav">
         <a href="index.html" class="nav-item">回首頁</a>
         <a href="hair.html" class="nav-item">美髮商業</a>
