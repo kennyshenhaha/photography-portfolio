@@ -177,31 +177,36 @@
         .slide.active { opacity: 1; transform: scale(1); z-index: 10; }
         .slide img { width: 100%; height: 80%; object-fit: contain; }
 
-        /* 電腦版按鈕 */
+        /* 導覽按鈕優化 */
         .nav-btn { 
             position: absolute; 
             top: 50%; 
             transform: translateY(-50%); 
-            z-index: 65; 
-            background: rgba(255,255,255,0.03); 
-            backdrop-filter: blur(15px); 
-            border: 1px solid rgba(255,255,255,0.1); 
+            z-index: 70; 
             color: white; 
-            width: 55px; 
-            height: 55px; 
-            border-radius: 50%; 
-            cursor: pointer; 
-            display: none; 
+            width: 44px; 
+            height: 44px; 
+            display: flex; 
             align-items: center; 
             justify-content: center; 
             transition: all 0.3s ease; 
+            opacity: 0.2; /* 手機版非常淡 */
+            background: transparent;
+            cursor: pointer;
         }
 
         @media (min-width: 768px) {
-            .nav-btn { display: flex; }
+            .nav-btn { 
+                opacity: 1;
+                width: 55px; 
+                height: 55px; 
+                background: rgba(255,255,255,0.03); 
+                backdrop-filter: blur(15px); 
+                border: 1px solid rgba(255,255,255,0.1); 
+                border-radius: 50%;
+            }
+            .nav-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-50%) scale(1.1); }
         }
-        
-        .nav-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-50%) scale(1.1); }
 
         /* 頁碼與視覺進度條 */
         .page-indicator-wrapper {
@@ -226,15 +231,9 @@
 
         .swipe-text {
             font-size: 8px;
-            color: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.15);
             text-transform: uppercase;
             letter-spacing: 0.3em;
-            animation: pulse-text 2s infinite;
-        }
-
-        @keyframes pulse-text {
-            0%, 100% { opacity: 0.2; transform: translateX(0); }
-            50% { opacity: 0.5; transform: translateX(5px); }
         }
 
         @media (min-width: 768px) {
@@ -261,11 +260,12 @@
 
         .frame-ui { position: fixed; inset: 20px; border: 1px solid rgba(255,255,255,0.03); pointer-events: none; z-index: 100; }
 
+        /* 隱形的點擊區域保持較大 */
         .click-zone {
             position: absolute;
             top: 0;
             height: 100%;
-            width: 50%;
+            width: 40%;
             z-index: 60;
         }
         .click-zone-left { left: 0; }
@@ -318,11 +318,13 @@
 
     <!-- 影像輪播區 -->
     <section id="works-slider" class="slider-section">
+        <!-- 點擊區域 -->
         <div class="click-zone click-zone-left" onclick="changeSlide(-1)"></div>
         <div class="click-zone click-zone-right" onclick="changeSlide(1)"></div>
 
-        <button class="nav-btn left-12" onclick="changeSlide(-1)"><i class="fa-solid fa-arrow-left"></i></button>
-        <button class="nav-btn right-12" onclick="changeSlide(1)"><i class="fa-solid fa-arrow-right"></i></button>
+        <!-- 箭頭按鈕：手機版現在是半透明且無背景的細小箭頭 -->
+        <button class="nav-btn left-4 md:left-12" onclick="changeSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="nav-btn right-4 md:right-12" onclick="changeSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
 
         <div id="slide-container" class="slide-container">
             <div class="slide active"><img src="Photo-01.jpg" alt="Work 01" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-01'"></div>
@@ -334,11 +336,11 @@
             <div class="slide"><img src="Photo-07.jpg" alt="Work 07" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-07'"></div>
         </div>
 
-        <!-- 增強的頁碼與進度條 -->
+        <!-- 頁碼與進度條 -->
         <div class="page-indicator-wrapper">
             <div class="page-indicator">
                 <span><span id="current-page">01</span> / 07</span>
-                <span class="swipe-text">Swipe to explore →</span>
+                <span class="swipe-text">Slide to view</span>
             </div>
             <div class="progress-bar-bg">
                 <div id="progress-fill" class="progress-bar-fill"></div>
@@ -356,12 +358,11 @@
         const slider = document.getElementById('works-slider');
         const slideContainer = document.getElementById('slide-container');
 
-        // 滾動監聽與動畫觸發
+        // 滾動監聽
         let hinted = false;
         window.addEventListener('scroll', () => {
             const rect = slider.getBoundingClientRect();
             
-            // 進入視線時觸發一次晃動暗示
             if (rect.top < window.innerHeight * 0.7 && !hinted) {
                 slideContainer.classList.add('hint-anim');
                 hinted = true;
