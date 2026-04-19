@@ -54,23 +54,6 @@
             z-index: 1;
         }
 
-        .metal-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -150%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(110deg, transparent 0%, transparent 40%, rgba(255, 255, 255, 0.7) 50%, transparent 60%, transparent 100%);
-            transition: 0s;
-            z-index: 2;
-        }
-
-        .group:hover .metal-btn::before {
-            left: 150%;
-            transition: 0.8s ease-in-out;
-        }
-
         /* 底部導覽列 */
         .category-nav {
             position: fixed;
@@ -85,61 +68,32 @@
             border-radius: 50px;
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.5s ease;
         }
 
         .category-nav.scrolled {
             bottom: 20px;
-            background: rgba(10, 10, 10, 0.2);
             transform: translateX(-50%) scale(0.9);
-            opacity: 0.5;
-        }
-        
-        .category-nav.scrolled:hover {
-            opacity: 1;
-            transform: translateX(-50%) scale(1);
-            background: rgba(15, 15, 15, 0.6);
+            opacity: 0.6;
         }
 
         .nav-item {
             padding: 10px 24px;
             border-radius: 40px;
             font-size: 13px;
-            letter-spacing: 0.1em;
             color: rgba(255,255,255,0.6);
             text-decoration: none;
-            transition: all 0.4s ease;
+            transition: 0.4s;
             cursor: pointer;
             white-space: nowrap;
-        }
-
-        .nav-item:hover {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.1);
         }
 
         /* 背景發光 */
         .bg-glow {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 120vw; height: 120vw; max-width: 1200px;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.25) 0%, rgba(243, 229, 171, 0.15) 25%, rgba(243, 229, 171, 0.05) 50%, transparent 70%);
-            z-index: 0; pointer-events: none; animation: pulse-glow 10s infinite ease-in-out;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.6; }
-            50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
-        }
-
-        .play-btn-pulse::after {
-            content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.2); animation: ring 2.5s infinite;
-        }
-
-        @keyframes ring {
-            0% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(1.6); opacity: 0; }
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, rgba(243, 229, 171, 0.1) 25%, transparent 70%);
+            z-index: 0; pointer-events: none;
         }
 
         /* 作品集輪播區 */
@@ -149,127 +103,99 @@
             position: relative; 
             background: #000; 
             overflow: hidden; 
-            padding-bottom: 100px;
         }
         
         .slide-container {
             position: relative;
             width: 100%;
             height: 100%;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        /* 提示滑動的抖動動畫 */
-        @keyframes swipe-hint {
-            0% { transform: translateX(0); }
-            20% { transform: translateX(-30px); }
-            40% { transform: translateX(20px); }
-            60% { transform: translateX(-10px); }
-            80% { transform: translateX(5px); }
-            100% { transform: translateX(0); }
+        .slide { 
+            position: absolute; inset: 0; opacity: 0; 
+            transition: opacity 0.8s ease; 
+            display: flex; align-items: center; justify-content: center; pointer-events: none;
+        }
+        .slide.active { opacity: 1; z-index: 10; }
+        .slide img { width: 100%; height: 75%; object-fit: contain; }
+
+        /* Reels 頂部分段進度條 */
+        .reels-progress-bar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            gap: 6px;
+            z-index: 80;
         }
 
-        .hint-anim {
-            animation: swipe-hint 1.2s ease-in-out;
+        .progress-seg {
+            height: 2px;
+            flex: 1;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
         }
 
-        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s; transform: scale(1.05); display: flex; align-items: center; justify-content: center; pointer-events: none;}
-        .slide.active { opacity: 1; transform: scale(1); z-index: 10; }
-        .slide img { width: 100%; height: 80%; object-fit: contain; }
+        .progress-seg-fill {
+            position: absolute;
+            top: 0; left: 0; height: 100%;
+            width: 0%;
+            background: #fff;
+            transition: width 0.1s linear;
+        }
 
-        /* 導覽按鈕優化 */
-        .nav-btn { 
-            position: absolute; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            z-index: 70; 
-            color: white; 
-            width: 44px; 
-            height: 44px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            transition: all 0.3s ease; 
-            opacity: 0.2; /* 手機版非常淡 */
-            background: transparent;
+        /* 隱形點擊區域 (手機端使用) */
+        .tap-zone {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 30%;
+            z-index: 100;
             cursor: pointer;
         }
+        .tap-left { left: 0; }
+        .tap-right { right: 0; }
 
-        @media (min-width: 768px) {
-            .nav-btn { 
-                opacity: 1;
-                width: 55px; 
-                height: 55px; 
-                background: rgba(255,255,255,0.03); 
-                backdrop-filter: blur(15px); 
-                border: 1px solid rgba(255,255,255,0.1); 
-                border-radius: 50%;
-            }
-            .nav-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-50%) scale(1.1); }
-        }
-
-        /* 頁碼與視覺進度條 */
-        .page-indicator-wrapper {
+        /* 電腦版半透明箭頭 */
+        .nav-arrow {
             position: absolute;
-            bottom: 45px;
-            left: 30px;
-            z-index: 50;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            pointer-events: none;
-        }
-
-        .page-indicator {
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.4);
-            letter-spacing: 0.2em;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 15px;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            z-index: 110;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
         }
-
-        .swipe-text {
-            font-size: 8px;
-            color: rgba(255, 255, 255, 0.15);
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
+        .nav-arrow:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            transform: translateY(-50%) scale(1.1);
         }
+        .arrow-left { left: 30px; }
+        .arrow-right { right: 30px; }
 
-        @media (min-width: 768px) {
-            .swipe-text { display: none; }
-        }
-
-        .progress-bar-bg {
-            width: 100px;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 14.28%; /* 1/7 */
-            background: linear-gradient(90deg, #b8a99a, #fff);
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
+        /* 頁面外框 */
         .frame-ui { position: fixed; inset: 20px; border: 1px solid rgba(255,255,255,0.03); pointer-events: none; z-index: 100; }
 
-        /* 隱形的點擊區域保持較大 */
-        .click-zone {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 40%;
-            z-index: 60;
+        .play-btn-pulse::after {
+            content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2); animation: ring 2.5s infinite;
         }
-        .click-zone-left { left: 0; }
-        .click-zone-right { right: 0; }
+        @keyframes ring {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -316,97 +242,122 @@
         </div>
     </section>
 
-    <!-- 影像輪播區 -->
+    <!-- 作品集輪播區 (Reels 進度條 + 電腦版箭頭) -->
     <section id="works-slider" class="slider-section">
-        <!-- 點擊區域 -->
-        <div class="click-zone click-zone-left" onclick="changeSlide(-1)"></div>
-        <div class="click-zone click-zone-right" onclick="changeSlide(1)"></div>
+        <!-- Reels 進度條容器 -->
+        <div class="reels-progress-bar" id="reels-progress"></div>
 
-        <!-- 箭頭按鈕：手機版現在是半透明且無背景的細小箭頭 -->
-        <button class="nav-btn left-4 md:left-12" onclick="changeSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-        <button class="nav-btn right-4 md:right-12" onclick="changeSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
-
-        <div id="slide-container" class="slide-container">
-            <div class="slide active"><img src="Photo-01.jpg" alt="Work 01" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-01'"></div>
-            <div class="slide"><img src="Photo-02.jpg" alt="Work 02" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-02'"></div>
-            <div class="slide"><img src="Photo-03.jpg" alt="Work 03" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-03'"></div>
-            <div class="slide"><img src="Photo-04.jpg" alt="Work 04" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-04'"></div>
-            <div class="slide"><img src="Photo-05.jpg" alt="Work 05" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-05'"></div>
-            <div class="slide"><img src="Photo-06.jpg" alt="Work 06" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-06'"></div>
-            <div class="slide"><img src="Photo-07.jpg" alt="Work 07" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-07'"></div>
+        <!-- 電腦版箭頭 (手機端 hidden, 電腦端 flex) -->
+        <div class="nav-arrow arrow-left hidden md:flex" id="arrow-prev">
+            <i class="fa-solid fa-chevron-left"></i>
+        </div>
+        <div class="nav-arrow arrow-right hidden md:flex" id="arrow-next">
+            <i class="fa-solid fa-chevron-right"></i>
         </div>
 
-        <!-- 頁碼與進度條 -->
-        <div class="page-indicator-wrapper">
-            <div class="page-indicator">
-                <span><span id="current-page">01</span> / 07</span>
-                <span class="swipe-text">Slide to view</span>
-            </div>
-            <div class="progress-bar-bg">
-                <div id="progress-fill" class="progress-bar-fill"></div>
-            </div>
+        <!-- 隱形點擊區域 (供手機端及點擊畫面切換使用) -->
+        <div class="tap-zone tap-left" id="tap-prev"></div>
+        <div class="tap-zone tap-right" id="tap-next"></div>
+
+        <div id="slide-container" class="slide-container">
+            <div class="slide active"><img src="Photo-01.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=COVER+PHOTO'"></div>
+            <div class="slide"><img src="Photo-02.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-02'"></div>
+            <div class="slide"><img src="Photo-03.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-03'"></div>
+            <div class="slide"><img src="Photo-04.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-04'"></div>
+            <div class="slide"><img src="Photo-05.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-05'"></div>
+            <div class="slide"><img src="Photo-06.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-06'"></div>
+            <div class="slide"><img src="Photo-07.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-07'"></div>
         </div>
     </section>
 
     <script>
         let currentSlide = 0;
-        const totalSlides = 7;
         const slides = document.querySelectorAll('.slide');
-        const pageDisplay = document.getElementById('current-page');
-        const progressFill = document.getElementById('progress-fill');
-        const nav = document.getElementById('main-nav');
+        const totalSlides = slides.length;
+        const progressContainer = document.getElementById('reels-progress');
         const slider = document.getElementById('works-slider');
-        const slideContainer = document.getElementById('slide-container');
+        const nav = document.getElementById('main-nav');
+        
+        let progress = 0;
+        let isPaused = true; 
+        let hasStarted = false; 
+        const duration = 5000; 
+        const interval = 100;
+        const step = 100 / (duration / interval);
 
-        // 滾動監聽
-        let hinted = false;
-        window.addEventListener('scroll', () => {
-            const rect = slider.getBoundingClientRect();
-            
-            if (rect.top < window.innerHeight * 0.7 && !hinted) {
-                slideContainer.classList.add('hint-anim');
-                hinted = true;
-                setTimeout(() => slideContainer.classList.remove('hint-anim'), 1200);
-            }
-
-            if (window.scrollY > window.innerHeight * 0.5) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
+        // 動態生成進度條段落
+        slides.forEach((_, i) => {
+            const seg = document.createElement('div');
+            seg.className = 'progress-seg';
+            seg.innerHTML = `<div class="progress-seg-fill" id="fill-${i}"></div>`;
+            progressContainer.appendChild(seg);
         });
 
-        // 切換邏輯
         function changeSlide(direction) {
+            // 如果是在第一張點擊「下一張」，則啟動自動輪播
+            if (!hasStarted && direction > 0) {
+                hasStarted = true;
+                isPaused = false;
+            }
+
             slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + direction + slides.length) % slides.length;
-            slides[currentSlide].classList.add('active');
             
-            // 更新 UI
-            pageDisplay.innerText = (currentSlide + 1).toString().padStart(2, '0');
-            const progress = ((currentSlide + 1) / totalSlides) * 100;
-            progressFill.style.width = `${progress}%`;
+            const oldFill = document.getElementById(`fill-${currentSlide}`);
+            if (direction > 0) {
+                oldFill.style.width = '100%';
+            } else {
+                oldFill.style.width = '0%';
+            }
+
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            progress = 0;
+            
+            // 確保切換後的進度條視覺正確
+            document.getElementById(`fill-${currentSlide}`).style.width = '0%';
         }
 
-        // 鍵盤控制
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') changeSlide(-1);
-            if (e.key === 'ArrowRight') changeSlide(1);
+        // 自動播放計時器
+        setInterval(() => {
+            const rect = slider.getBoundingClientRect();
+            const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+
+            if (!isPaused && isInView && hasStarted) {
+                progress += step;
+                const currentFill = document.getElementById(`fill-${currentSlide}`);
+                if (currentFill) currentFill.style.width = `${progress}%`;
+
+                if (progress >= 100) {
+                    changeSlide(1);
+                }
+            }
+        }, interval);
+
+        // 交互綁定 (手機隱形區域)
+        document.getElementById('tap-prev').addEventListener('click', () => changeSlide(-1));
+        document.getElementById('tap-next').addEventListener('click', () => changeSlide(1));
+
+        // 交互綁定 (電腦版箭頭)
+        document.getElementById('arrow-prev').addEventListener('click', (e) => {
+            e.stopPropagation();
+            changeSlide(-1);
+        });
+        document.getElementById('arrow-next').addEventListener('click', (e) => {
+            e.stopPropagation();
+            changeSlide(1);
         });
 
-        // 滑動手勢
-        let touchStartX = 0;
-        let touchEndX = 0;
+        // 長按暫停 (啟動後才有效)
+        slider.addEventListener('touchstart', () => { if(hasStarted) isPaused = true; });
+        slider.addEventListener('touchend', () => { if(hasStarted) isPaused = false; });
+        slider.addEventListener('mousedown', () => { if(hasStarted) isPaused = true; });
+        slider.addEventListener('mouseup', () => { if(hasStarted) isPaused = false; });
 
-        slider.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, {passive: true});
-
-        slider.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            if (touchEndX < touchStartX - 50) changeSlide(1); 
-            if (touchEndX > touchStartX + 50) changeSlide(-1);
-        }, {passive: true});
+        // 滾動導覽列變化
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
     </script>
 </body>
 </html>
