@@ -324,6 +324,12 @@
             progressContainer.appendChild(seg);
         });
 
+        // 讓第一張照片的進度條預設顯示為全白
+        setTimeout(() => {
+            const firstFill = document.getElementById('fill-0');
+            if (firstFill) firstFill.style.width = '100%';
+        }, 50);
+
         // 核心邏輯：動態計算進度條位置 (讓它貼緊圖片)
         function updateProgressBarPosition() {
             // 只在「手機版」且為「直式(Portrait)」時作動態貼合
@@ -380,11 +386,11 @@
                 isPaused = true;
                 hasStarted = false;
                 
-                // 清空所有進度條
+                // 清空後方的所有進度條，但保持第一張為全白
                 setTimeout(() => {
                     slides.forEach((_, i) => {
                         const fill = document.getElementById(`fill-${i}`);
-                        if(fill) fill.style.width = '0%';
+                        if(fill) fill.style.width = i === 0 ? '100%' : '0%';
                     });
                 }, 200); 
             } else {
