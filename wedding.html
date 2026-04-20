@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KENNY SHEN | WEDDING PHOTOGRAPHY</title>
-    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;700&display=swap" rel="stylesheet">
+    <link href="https://gs.jurieo.com/gemini/fonts-googleapis/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -51,6 +51,7 @@
             overflow: hidden;
             background: #111;
             transition: all 0.5s ease;
+            cursor: pointer; /* 加入滑鼠游標提示可點擊 */
         }
 
         /* 跨度類別 */
@@ -89,6 +90,13 @@
             white-space: nowrap;
         }
         .nav-item:hover { color: #fff; background: rgba(255,255,255,0.1); }
+        
+        /* 當前頁面的反白樣式 */
+        .nav-item.active {
+            background: #fff;
+            color: #000;
+            font-weight: 700;
+        }
 
         @keyframes fadeInUp { 
             from { opacity: 0; transform: translateY(30px); } 
@@ -97,6 +105,14 @@
         .animate-fade-in { animation: fadeInUp 1s ease forwards; }
 
         .wedding-item { opacity: 0; animation: fadeInUp 0.8s ease forwards; }
+        
+        /* 放大視窗 (Lightbox) 的過渡動畫 */
+        #lightbox {
+            transition: opacity 0.3s ease;
+        }
+        #lightbox-img {
+            transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
     </style>
 </head>
 <body class="py-10 md:py-20">
@@ -159,11 +175,79 @@
         </div>
     </main>
 
+    <!-- 更新後的導覽列 -->
     <nav class="category-nav">
         <a href="index.html" class="nav-item">回首頁</a>
         <a href="hair.html" class="nav-item">美髮商業</a>
         <a href="food.html" class="nav-item">美食影像</a>
+        <!-- 新增婚禮攝影並加上 active class 產生反白效果 -->
+        <a href="wedding.html" class="nav-item active">婚禮攝影</a>
     </nav>
 
+    <!-- 照片放大用的 Lightbox 容器 (預設隱藏) -->
+    <div id="lightbox" class="fixed inset-0 bg-black/95 z-[2000] hidden flex-col items-center justify-center opacity-0">
+        <!-- 關閉按鈕 -->
+        <button id="lightbox-close" class="absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white text-4xl cursor-pointer z-50 transition-colors">
+            &times;
+        </button>
+        <!-- 顯示的照片 -->
+        <img id="lightbox-img" src="" alt="Enlarged view" class="max-w-[95vw] max-h-[90vh] object-contain scale-95 shadow-2xl">
+    </div>
+
+    <!-- Lightbox 互動邏輯 -->
+    <script>
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const closeBtn = document.getElementById('lightbox-close');
+        const weddingItems = document.querySelectorAll('.wedding-item');
+
+        // 開啟放大圖片
+        weddingItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const imgSrc = item.querySelector('img').src;
+                lightboxImg.src = imgSrc;
+                
+                // 移除隱藏，並觸發淡入/放大的 CSS 過渡動畫
+                lightbox.classList.remove('hidden');
+                
+                // 使用 requestAnimationFrame 確保瀏覽器能正確渲染過渡效果
+                requestAnimationFrame(() => {
+                    lightbox.classList.remove('opacity-0');
+                    lightboxImg.classList.remove('scale-95');
+                    lightboxImg.classList.add('scale-100');
+                });
+            });
+        });
+
+        // 關閉放大圖片函式
+        const closeLightbox = () => {
+            lightbox.classList.add('opacity-0');
+            lightboxImg.classList.remove('scale-100');
+            lightboxImg.classList.add('scale-95');
+            
+            // 等待動畫結束後隱藏元素
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+                lightboxImg.src = '';
+            }, 300);
+        };
+
+        // 點擊關閉按鈕
+        closeBtn.addEventListener('click', closeLightbox);
+        
+        // 點擊背景黑幕也能關閉
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        // 支援按 ESC 鍵關閉
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+                closeLightbox();
+            }
+        });
+    </script>
 </body>
 </html>
