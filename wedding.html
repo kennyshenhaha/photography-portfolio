@@ -207,8 +207,9 @@
                 const imgSrc = item.querySelector('img').src;
                 lightboxImg.src = imgSrc;
                 
-                // 移除隱藏，並觸發淡入/放大的 CSS 過渡動畫
+                // 移除 hidden，並加入 flex 確保置中生效
                 lightbox.classList.remove('hidden');
+                lightbox.classList.add('flex');
                 
                 // 使用 requestAnimationFrame 確保瀏覽器能正確渲染過渡效果
                 requestAnimationFrame(() => {
@@ -225,9 +226,10 @@
             lightboxImg.classList.remove('scale-100');
             lightboxImg.classList.add('scale-95');
             
-            // 等待動畫結束後隱藏元素
+            // 等待動畫結束後隱藏元素並移除 flex
             setTimeout(() => {
                 lightbox.classList.add('hidden');
+                lightbox.classList.remove('flex');
                 lightboxImg.src = '';
             }, 300);
         };
