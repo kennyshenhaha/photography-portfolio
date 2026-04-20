@@ -54,6 +54,28 @@
             z-index: 1;
         }
 
+        /* 播放按鈕掃光效果 (新增) */
+        .metal-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            transform: skewX(-20deg);
+            z-index: 2; /* 確保在背景漸層之上，但低於 z-10 的 icon */
+        }
+
+        .group:hover .metal-btn::after {
+            animation: metal-sweep 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes metal-sweep {
+            0% { left: -150%; }
+            100% { left: 200%; }
+        }
+
         /* 底部導覽列 */
         .category-nav {
             position: fixed;
@@ -110,11 +132,13 @@
             }
         }
 
-        /* 背景發光 */
+        /* 背景發光 (修改優化版) */
         .bg-glow {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 120vw; height: 120vw; max-width: 1200px;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, rgba(243, 229, 171, 0.1) 25%, transparent 70%);
+            width: 120vw; height: 120vw; max-width: 1000px;
+            background: radial-gradient(circle at center, rgba(243, 229, 171, 0.3) 0%, rgba(255, 255, 255, 0.15) 25%, rgba(255, 255, 255, 0.05) 50%, transparent 75%);
+            filter: blur(40px); /* 新增：讓邊緣更柔和質感 */
+            mix-blend-mode: screen; /* 新增：讓發光效果更清晰且融入背景 */
             z-index: 0; pointer-events: none;
         }
 
