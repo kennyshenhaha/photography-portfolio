@@ -82,6 +82,8 @@
             display: flex; gap: 8px; z-index: 1000;
             background: rgba(15, 15, 15, 0.8); padding: 6px; border-radius: 50px;
             backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1);
+            width: max-content;
+            max-width: 96vw; /* 加上這行，確保最大不超過螢幕寬度 */
         }
         .nav-item {
             padding: 10px 24px; border-radius: 40px; font-size: 13px;
@@ -97,6 +99,30 @@
             color: #000;
             font-weight: 700;
         }
+
+        /* === 新增：手機版導覽列防跑版設定 === */
+        @media (max-width: 768px) {
+            .category-nav {
+                gap: 4px;
+                padding: 4px;
+                bottom: 20px;
+            }
+            .nav-item {
+                padding: 8px 14px;
+                font-size: 12px;
+                letter-spacing: 0.05em;
+            }
+        }
+
+        /* 針對更小螢幕(如舊款 iPhone)的微調 */
+        @media (max-width: 380px) {
+            .nav-item {
+                padding: 6px 10px;
+                font-size: 11px;
+                letter-spacing: 0;
+            }
+        }
+        /* ================================= */
 
         @keyframes fadeInUp { 
             from { opacity: 0; transform: translateY(30px); } 
