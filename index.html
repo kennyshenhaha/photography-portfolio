@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KENNY SHEN | PORTFOLIO 2026</title>
     <!-- 引入字體與圖示 -->
-    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;700&display=swap" rel="stylesheet">
+    <link href="https://gs.jurieo.com/gemini/fonts-googleapis/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -140,6 +140,11 @@
         }
         .slide.active { opacity: 1; z-index: 10; }
         
+        /* 確保 picture 標籤不會影響 flexbox 排版 */
+        .slide picture {
+            display: contents;
+        }
+
         /* 關鍵修正：讓 img 的 DOM 邊界與圖片真實可視邊界完全重合，方便 JS 追蹤座標 */
         .slide img { 
             max-width: 100%; 
@@ -291,13 +296,49 @@
         <div class="tap-zone tap-right" id="tap-next"></div>
 
         <div id="slide-container" class="slide-container">
-            <div class="slide active"><img src="Photo-01.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=COVER+PHOTO'"></div>
-            <div class="slide"><img src="Photo-02.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-02'"></div>
-            <div class="slide"><img src="Photo-03.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-03'"></div>
-            <div class="slide"><img src="Photo-04.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-04'"></div>
-            <div class="slide"><img src="Photo-05.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-05'"></div>
-            <div class="slide"><img src="Photo-06.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-06'"></div>
-            <div class="slide"><img src="Photo-07.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-07'"></div>
+            <!-- 使用 HTML5 picture 標籤，讓瀏覽器自動依據螢幕寬度切換直式/橫式照片 -->
+            <div class="slide active">
+                <picture>
+                    <source media="(max-width: 768px)" srcset="Photo-08.jpg">
+                    <img src="Photo-01.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=COVER+PHOTO'">
+                </picture>
+            </div>
+            <div class="slide">
+                <picture>
+                    <source media="(max-width: 768px)" srcset="Photo-09.jpg">
+                    <img src="Photo-02.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-02'">
+                </picture>
+            </div>
+            <div class="slide">
+                <picture>
+                    <source media="(max-width: 768px)" srcset="Photo-10.jpg">
+                    <img src="Photo-03.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-03'">
+                </picture>
+            </div>
+            <div class="slide">
+                <picture>
+                    <source media="(max-width: 768px)" srcset="Photo-11.jpg">
+                    <img src="Photo-04.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-04'">
+                </picture>
+            </div>
+            <div class="slide">
+                <picture>
+                    <source media="(max-width: 768px)" srcset="Photo-12.jpg">
+                    <img src="Photo-05.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-05'">
+                </picture>
+            </div>
+            <div class="slide">
+                <picture>
+                    <source media="(max-width: 768px)" srcset="Photo-13.jpg">
+                    <img src="Photo-06.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-06'">
+                </picture>
+            </div>
+            <div class="slide">
+                <picture>
+                    <source media="(max-width: 768px)" srcset="Photo-14.jpg">
+                    <img src="Photo-07.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-07'">
+                </picture>
+            </div>
         </div>
     </section>
 
@@ -334,6 +375,7 @@
         function updateProgressBarPosition() {
             // 只在「手機版」且為「直式(Portrait)」時作動態貼合
             if (window.innerWidth <= 768 && window.innerHeight > window.innerWidth) {
+                // 因為使用了 picture 標籤，querySelector('img') 依然可以準確抓取目前被瀏覽器算繪的影像物件
                 const activeImg = slides[currentSlide].querySelector('img');
                 if (activeImg) {
                     if (!activeImg.complete) {
