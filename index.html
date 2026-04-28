@@ -139,7 +139,10 @@
 <body>
 
     <!-- ================= 頁面過渡動畫遮罩 ================= -->
-    <div id="page-transition" class="fixed inset-0 bg-[#050505] z-[9999] transition-opacity duration-500 pointer-events-none opacity-100"></div>
+    <div id="page-transition" class="fixed inset-0 bg-[#050505] z-[9999] transition-opacity duration-500 opacity-100 flex items-center justify-center">
+        <!-- 可以在這裡放一個小小的載入動畫，避免純黑太無聊 -->
+        <div class="w-8 h-8 border-2 border-white/20 border-t-white/80 rounded-full animate-spin"></div>
+    </div>
 
     <div class="frame-ui"></div>
 
@@ -433,7 +436,8 @@
             // 關閉選單時復原按鈕，並喚醒它
             fabContainer.classList.remove('translate-y-12', 'opacity-0', 'pointer-events-none'); 
             document.body.style.overflow = '';
-            wakeUpFab();
+            setFabState('full');
+            resetIdleTimer();
         }
 
         fabMenu.addEventListener('click', openMenu);
@@ -446,62 +450,100 @@
             if (e.touches[0].clientY - menuTouchStartY > 60) closeMenu();
         });
 
-        // ================= 閒置自動隱藏按鈕邏輯 (仿 IG 限動體驗) =================
+        // ================= 進階按鈕顯示邏輯 (縮小半隱藏 + 1秒閒置消失) =================
         let idleTimer;
+        let lastScrollY = window.scrollY;
 
-        function wakeUpFab() {
+        function setFabState(state) {
             // 如果底部選單是打開的，就不要動作
             if (!bottomSheet.classList.contains('translate-y-full')) return;
+            
+            // 1. 先清除所有的狀態 class
+            fabContainer.classList.remove(
+                'opacity-100', 'translate-y-0', 'scale-100', 
+                'opacity-40', 'translate-y-4', 'scale-90', 
+                'opacity-0', 'translate-y-12', 'pointer-events-none'
+            );
 
-            // 喚醒按鈕 (移除所有隱藏相關的 class)
-            fabContainer.classList.remove('opacity-0', 'translate-y-8', 'scale-95', 'pointer-events-none');
-            fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
-
-            // 清除舊的計時器
-            clearTimeout(idleTimer);
-
-            // 判斷：如果畫面已經滾動到下方的輪播區 (離開首頁大標題了)
-            if (window.scrollY > window.innerHeight * 0.3) {
-                // 設定 2.5 秒後自動隱藏按鈕，不擋住履歷
-                idleTimer = setTimeout(() => {
-                    // 再次確認選單沒開才隱藏
-                    if (bottomSheet.classList.contains('translate-y-full')) {
-                        fabContainer.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
-                        fabContainer.classList.add('opacity-0', 'translate-y-8', 'scale-95', 'pointer-events-none');
-                    }
-                }, 2500);
+            // 2. 依照指令套用新狀態
+            if (state === 'full') {
+                // 狀態 1: 完全顯示
+                fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+            } else if (state === 'semi') {
+                // 狀態 2: 縮小且半透明
+                fabContainer.classList.add('opacity-40', 'translate-y-4', 'scale-90');
+            } else if (state === 'hidden') {
+                // 狀態 3: 徹底消失不干擾畫面
+                fabContainer.classList.add('opacity-0', 'translate-y-12', 'scale-90', 'pointer-events-none');
             }
         }
 
-        // 監聽各種螢幕互動來喚醒按鈕 (滑動、觸碰、游標移動)
-        window.addEventListener('scroll', wakeUpFab, {passive: true});
-        window.addEventListener('touchstart', wakeUpFab, {passive: true});
-        window.addEventListener('touchmove', wakeUpFab, {passive: true});
-        window.addEventListener('mousemove', wakeUpFab, {passive: true});
-        window.addEventListener('click', wakeUpFab, {passive: true});
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            // 只有離開最頂端的首頁畫面時，才啟動「閒置徹底消失」機制
+            if (window.scrollY > window.innerHeight * 0.3) {
+                idleTimer = setTimeout(() => {
+                    setFabState('hidden');
+                }, 1000); // 【改為 1秒 消失】
+            }
+        }
 
-        // 頁面載入時初始化一次
-        wakeUpFab();
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+            
+            // 判斷滾動方向：往下滾(縮小半隱藏)，往上滾(完全顯示)
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                setFabState('semi');
+            } else {
+                setFabState('full');
+            }
+            
+            lastScrollY = currentScrollY;
+            resetIdleTimer();
+        }, {passive: true});
 
-        // ================= 頁面過渡動畫邏輯 =================
-        const pageTransition = document.getElementById('page-transition');
-        
-        window.addEventListener('pageshow', () => {
-            pageTransition.classList.remove('opacity-100');
-            pageTransition.classList.add('opacity-0');
+        // 偵測滑鼠移動、點擊或觸碰螢幕時，立刻喚醒按鈕
+        ['touchstart', 'mousemove', 'click'].forEach(event => {
+            window.addEventListener(event, () => {
+                setFabState('full');
+                resetIdleTimer();
+            }, {passive: true});
         });
 
+        // 頁面載入初始設定
+        setFabState('full');
+        resetIdleTimer();
+
+        // ================= 頁面過渡動畫邏輯 (修復版) =================
+        const pageTransition = document.getElementById('page-transition');
+        
+        // 確保黑幕一定會消失的防呆函數
+        function hideTransition() {
+            pageTransition.classList.remove('opacity-100');
+            pageTransition.classList.add('opacity-0');
+            // 動畫播完後把遮罩移走，避免擋住點擊
+            setTimeout(() => { pageTransition.classList.add('hidden'); }, 500);
+        }
+
+        // 多重事件綁定，確保載入後一定會觸發透明
+        document.addEventListener('DOMContentLoaded', hideTransition);
+        window.addEventListener('load', hideTransition);
+        window.addEventListener('pageshow', hideTransition);
+        
+        // 終極保險：如果前幾個事件都沒觸發（例如預覽環境的 Bug），半秒後強制隱藏
+        setTimeout(hideTransition, 500);
+
+        // 點擊連結時的淡出動畫
         document.querySelectorAll('a').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 const href = this.getAttribute('href');
                 const target = this.getAttribute('target');
                 
                 if (href && !href.startsWith('#') && !href.startsWith('javascript') && target !== '_blank' && !this.hasAttribute('download')) {
-                    // 若是使用 onclick 跳轉(如 index.html 的關於我)，不攔截
                     if(this.hasAttribute('onclick')) return;
                     
                     e.preventDefault(); 
-                    pageTransition.classList.remove('opacity-0');
+                    pageTransition.classList.remove('hidden', 'opacity-0');
                     pageTransition.classList.add('opacity-100');
                     
                     setTimeout(() => {
