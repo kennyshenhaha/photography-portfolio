@@ -19,7 +19,7 @@
             overflow-x: hidden;
         }
 
-        /* ================= 科技感自訂游標 (僅限電腦版) ================= */
+        /* ================= 科技感自訂游標 (僅限電腦版 - 效能優化版) ================= */
         @media (pointer: fine) {
             body, a, button, .food-item {
                 cursor: none !important;
@@ -30,11 +30,13 @@
             background: #fff; border-radius: 50%; pointer-events: none; z-index: 10000;
             transition: width 0.3s, height 0.3s, background-color 0.3s, margin 0.3s;
             mix-blend-mode: difference;
+            will-change: transform; /* 強制開啟 GPU 硬體加速 */
         }
         .custom-cursor-follower {
             position: fixed; top: 0; left: 0; width: 40px; height: 40px; margin-top: -20px; margin-left: -20px;
             border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; pointer-events: none; z-index: 9999;
             transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s, margin 0.3s;
+            will-change: transform, width, height; /* 強制開啟 GPU 硬體加速 */
         }
         /* 游標懸停狀態 */
         .custom-cursor.hovered {
@@ -294,19 +296,19 @@
             <div class="flex flex-col gap-3 max-w-md mx-auto">
                 <a href="https://www.youtube.com/watch?v=R8OsDnJ_6wI" target="_blank" class="menu-link-item group">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-images text-lg group-hover:scale-110 transition-transform"></i></div>
-                        <span class="font-bold tracking-wide text-sm md:text-base">影像作品集</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <a href="https://www.instagram.com/kshen_life?igsh=OWZ4ZGs4cHhzb3Rz&utm_source=qr" target="_blank" class="menu-link-item group">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-brands fa-instagram text-xl group-hover:scale-110 transition-transform"></i></div>
-                        <span class="font-bold tracking-wide text-sm md:text-base">短影音 Reels</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <a href="https://youtu.be/YLsqzahcr3g" target="_blank" class="menu-link-item group">
+                <div class="absolute inset-0 bg-white/20 transform -translate-x-full skew-x-12 group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
+                <i class="fa-brands fa-instagram text-2xl"></i>
+                <span>聯絡我 / Follow IG</span>
+            </a>
+        </div>
+    <!-- ==================================================================== -->
+
+    <!-- 回到頂部按鈕 -->
+    <button id="back-to-top" class="fixed bottom-24 right-6 md:bottom-8 md:right-8 z-[850] w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-lg flex items-center justify-center opacity-0 translate-y-10 pointer-events-none transition-all duration-300 hover:bg-white/20 hover:scale-110">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- 照片放大用的 Lightbox 容器 (加入左右箭頭) -->
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-scissors text-lg group-hover:scale-110 transition-transform"></i></div>
                         <span class="font-bold tracking-wide text-sm md:text-base">美髮商業</span>
@@ -339,7 +341,7 @@
     </div>
 
     <script>
-        // ================= 自訂游標邏輯 (僅電腦版) =================
+        // ================= 自訂游標邏輯 (僅電腦版 - 效能優化版) =================
         const cursorDot = document.getElementById('cursor-dot');
         const cursorRing = document.getElementById('cursor-ring');
         
@@ -349,16 +351,20 @@
             let ringX = mouseX;
             let ringY = mouseY;
 
+            // 1. mousemove 現在只負責紀錄座標，不直接操作 DOM (加上 passive 提升捲動效能)
             window.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
-                cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-            });
+            }, {passive: true});
 
+            // 2. 將所有的 DOM 操作交給 requestAnimationFrame，與螢幕刷新率同步，避免破圖掉幀
             function animateCursor() {
                 ringX += (mouseX - ringX) * 0.15;
                 ringY += (mouseY - ringY) * 0.15;
+                
+                cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
                 cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+                
                 requestAnimationFrame(animateCursor);
             }
             animateCursor();
