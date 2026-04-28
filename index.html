@@ -9,7 +9,6 @@
     <meta property="og:title" content="KENNY SHEN | PORTFOLIO 2026" />
     <meta property="og:description" content="歡迎來到我的攝影作品集，這裡紀錄了我的攝影創作與視覺影像工程。" />
     <meta property="og:url" content="https://kennyshenhaha.github.io/photography-portfolio/" />
-    <!-- ★ 請記得把一張名為 preview.jpg 的圖片上傳到你的 GitHub 專案裡 ★ -->
     <meta property="og:image" content="https://kennyshenhaha.github.io/photography-portfolio/previewc.jpg" />
     <meta property="og:type" content="website" />
     <!-- ================================================================ -->
@@ -27,6 +26,50 @@
             scroll-behavior: smooth;
             overflow-x: hidden;
         }
+
+        /* ================= 科技感自訂游標 (僅限電腦版) ================= */
+        @media (pointer: fine) {
+            body, a, button, .tap-zone, .nav-arrow, .play-btn-pulse, .metal-btn {
+                cursor: none !important;
+            }
+        }
+        .custom-cursor {
+            position: fixed; top: 0; left: 0; width: 6px; height: 6px; margin-top: -3px; margin-left: -3px;
+            background: #fff; border-radius: 50%; pointer-events: none; z-index: 10000;
+            transition: width 0.3s, height 0.3s, background-color 0.3s, margin 0.3s;
+            mix-blend-mode: difference;
+        }
+        .custom-cursor-follower {
+            position: fixed; top: 0; left: 0; width: 40px; height: 40px; margin-top: -20px; margin-left: -20px;
+            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; pointer-events: none; z-index: 9999;
+            transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s, margin 0.3s;
+        }
+        /* 游標懸停狀態 */
+        .custom-cursor.hovered {
+            width: 12px; height: 12px; margin-top: -6px; margin-left: -6px; background: #f3e5ab; mix-blend-mode: normal;
+        }
+        .custom-cursor-follower.hovered {
+            width: 60px; height: 60px; margin-top: -30px; margin-left: -30px; 
+            border-color: rgba(243, 229, 171, 0.6); background: rgba(243, 229, 171, 0.05);
+        }
+
+        /* ================= 電影級進場動畫 ================= */
+        .cinematic-element {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 1.2s ease, transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .cinematic-scale {
+            opacity: 0; transform: scale(0.8);
+            transition: opacity 1.2s ease, transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        /* 觸發後的狀態 */
+        .hero-loaded .cinematic-element { opacity: 1; transform: translateY(0); }
+        .hero-loaded .cinematic-scale { opacity: 1; transform: scale(1); }
+        /* 交錯時間 */
+        .delay-1 { transition-delay: 0.3s; }
+        .delay-2 { transition-delay: 0.5s; }
+        .delay-3 { transition-delay: 0.7s; }
+        .delay-4 { transition-delay: 0.9s; }
 
         /* 鈦金掃光文字核心樣式 */
         .titanium-text {
@@ -138,7 +181,11 @@
 </head>
 <body>
 
-    <!-- ================= 頁面過渡動畫遮罩 (純淨黑幕，完全移除載入圈圈) ================= -->
+    <!-- ================= 電腦版專屬自訂游標 ================= -->
+    <div id="cursor-dot" class="custom-cursor hidden md:block"></div>
+    <div id="cursor-ring" class="custom-cursor-follower hidden md:block"></div>
+
+    <!-- ================= 頁面過渡動畫遮罩 ================= -->
     <div id="page-transition" class="fixed inset-0 bg-[#050505] z-[9999] transition-opacity duration-500 opacity-100 pointer-events-none"></div>
 
     <div class="frame-ui"></div>
@@ -157,18 +204,20 @@
         </button>
     </div>
 
-    <!-- 首頁區塊 -->
-    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+    <!-- 首頁區塊 (加入 id="hero-section" 作為電影進場的觸發點) -->
+    <section id="hero-section" class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="bg-glow"></div>
         
         <div class="z-10 text-center px-4">
-            <div class="mb-8">
+            <!-- 加上 cinematic-element 與 delay-1 -->
+            <div class="mb-8 cinematic-element delay-1">
                 <div class="tracking-[0.5em] text-[9px] md:text-xs text-gray-500 font-light opacity-80 uppercase">
                     Visual Paranoia & Logic Engineering
                 </div>
             </div>
 
-            <div class="relative inline-block mb-12 group">
+            <!-- 加上 cinematic-scale 與 delay-2 -->
+            <div class="relative inline-block mb-12 group cinematic-scale delay-2">
                 <a href="https://www.youtube.com/watch?v=R8OsDnJ_6wI" target="_blank" class="play-btn-pulse relative w-32 h-32 md:w-44 md:h-44 bg-white/5 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center transition-all duration-700 group-hover:bg-white/10 cursor-pointer outline-none">
                     <div class="metal-btn w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center">
                         <i class="fa-solid fa-play text-black/80 text-3xl md:text-5xl translate-x-1 relative z-10"></i>
@@ -176,11 +225,13 @@
                 </a>
             </div>
 
-            <h1 class="text-5xl md:text-[7.5rem] font-bold tracking-tight mb-4 leading-none">
+            <!-- 加上 cinematic-element 與 delay-3 -->
+            <h1 class="text-5xl md:text-[7.5rem] font-bold tracking-tight mb-4 leading-none cinematic-element delay-3">
                 <span class="titanium-text">PORTFOLIO</span>
             </h1>
             
-            <div class="mt-8 flex flex-col items-center gap-6">
+            <!-- 加上 cinematic-element 與 delay-4 -->
+            <div class="mt-8 flex flex-col items-center gap-6 cinematic-element delay-4">
                 <div class="text-center">
                     <div class="text-xs md:text-base text-white/60 mb-2 tracking-[0.5em]">2026 影像作品精選</div>
                     <div class="text-[9px] tracking-[0.6em] text-white/30 uppercase">Kenny Shen</div>
@@ -306,6 +357,91 @@
     </div>
 
     <script>
+        // ================= 自訂游標邏輯 (僅電腦版) =================
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorRing = document.getElementById('cursor-ring');
+        
+        // 確保設備是滑鼠 (非觸控螢幕) 才啟動
+        if (window.matchMedia("(pointer: fine)").matches && cursorDot && cursorRing) {
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            let ringX = mouseX;
+            let ringY = mouseY;
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                // 中心小圓點無延遲跟隨
+                cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+            });
+
+            // 外圍圓環平滑跟隨動畫 (Lerp)
+            function animateCursor() {
+                ringX += (mouseX - ringX) * 0.15;
+                ringY += (mouseY - ringY) * 0.15;
+                cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            // 綁定所有可互動元素的 Hover 效果
+            const interactiveSelectors = 'a, button, .tap-zone, .nav-arrow, .play-btn-pulse, .menu-link-item';
+            
+            // 使用事件代理來處理 Hover，避免動態生成的元素抓不到
+            document.addEventListener('mouseover', (e) => {
+                if (e.target.closest(interactiveSelectors)) {
+                    cursorDot.classList.add('hovered');
+                    cursorRing.classList.add('hovered');
+                }
+            });
+            document.addEventListener('mouseout', (e) => {
+                if (e.target.closest(interactiveSelectors)) {
+                    cursorDot.classList.remove('hovered');
+                    cursorRing.classList.remove('hovered');
+                }
+            });
+        }
+
+        // ================= 頁面過渡動畫與電影進場邏輯 =================
+        const pageTransition = document.getElementById('page-transition');
+        const heroSection = document.getElementById('hero-section');
+        
+        function hideTransition() {
+            pageTransition.classList.remove('opacity-100');
+            pageTransition.classList.add('opacity-0');
+            
+            // 當黑幕開始退去，同時觸發首頁元素的交錯浮現動畫
+            setTimeout(() => {
+                heroSection.classList.add('hero-loaded');
+            }, 100);
+        }
+
+        // 確保載入時執行淡出 (從黑變透明)
+        document.addEventListener('DOMContentLoaded', hideTransition);
+        window.addEventListener('load', hideTransition);
+        window.addEventListener('pageshow', hideTransition);
+        setTimeout(hideTransition, 500); 
+
+        // 攔截所有連結點擊 (過渡黑幕效果)
+        document.addEventListener('click', function(e) {
+            const anchor = e.target.closest('a');
+            if (!anchor) return; 
+
+            const href = anchor.getAttribute('href');
+            const target = anchor.getAttribute('target');
+            const onclick = anchor.getAttribute('onclick');
+            
+            if (href && !href.startsWith('#') && !href.startsWith('javascript') && target !== '_blank' && !anchor.hasAttribute('download') && !onclick) {
+                e.preventDefault(); 
+                pageTransition.classList.remove('opacity-0');
+                pageTransition.classList.add('opacity-100');
+                
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 400);
+            }
+        });
+
         // ================= 作品集輪播邏輯 =================
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
@@ -447,7 +583,7 @@
             if (e.touches[0].clientY - menuTouchStartY > 60) closeMenu();
         });
 
-        // ================= 進階按鈕顯示邏輯 (縮小半隱藏 + 1秒閒置消失) =================
+        // ================= 進階按鈕顯示邏輯 =================
         let idleTimer;
         let lastScrollY = window.scrollY;
 
@@ -498,44 +634,6 @@
 
         setFabState('full');
         resetIdleTimer();
-
-        // ================= 頁面過渡動畫邏輯 (純淨升級版) =================
-        const pageTransition = document.getElementById('page-transition');
-        
-        function hideTransition() {
-            pageTransition.classList.remove('opacity-100');
-            pageTransition.classList.add('opacity-0');
-        }
-
-        // 確保載入時執行淡出 (從黑變透明)
-        document.addEventListener('DOMContentLoaded', hideTransition);
-        window.addEventListener('load', hideTransition);
-        window.addEventListener('pageshow', hideTransition);
-        setTimeout(hideTransition, 500); 
-
-        // 攔截所有連結點擊 (使用事件代理確保 100% 觸發，解決直接跳轉問題)
-        document.addEventListener('click', function(e) {
-            const anchor = e.target.closest('a');
-            if (!anchor) return; // 如果點擊的不是 a 標籤或其內部元素，就不理它
-
-            const href = anchor.getAttribute('href');
-            const target = anchor.getAttribute('target');
-            const onclick = anchor.getAttribute('onclick');
-            
-            // 確認這是一個需要跳轉的站內連結
-            if (href && !href.startsWith('#') && !href.startsWith('javascript') && target !== '_blank' && !anchor.hasAttribute('download') && !onclick) {
-                e.preventDefault(); // 攔截預設的跳轉行為
-                
-                // 恢復黑幕 (透明度變 100)
-                pageTransition.classList.remove('opacity-0');
-                pageTransition.classList.add('opacity-100');
-                
-                // 等待 0.4 秒變黑後，才真正切換網址
-                setTimeout(() => {
-                    window.location.href = href;
-                }, 400);
-            }
-        });
 
     </script>
 </body>
