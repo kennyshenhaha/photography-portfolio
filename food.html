@@ -6,7 +6,7 @@
     <title>KENNY SHEN | FOOD PHOTOGRAPHY</title>
     
     <!-- 引入字體與圖示 -->
-    <link href="https://gs.jurieo.com/gemini/fonts-googleapis/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -138,11 +138,14 @@
 
         .overlay {
             position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+            /* 修改處：將背景設為透明，移除反黑漸層 */
+            background: transparent;
             opacity: 0; transition: opacity 0.4s ease;
             display: flex; flex-direction: column; justify-content: flex-end;
             padding: 1.5rem;
-            pointer-events: none; /* 確保不擋住圖片點擊 */
+            pointer-events: none;
+            /* 可選：為文字加入陰影確保在亮色圖片上依然清晰 */
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
 
         .food-item:hover .overlay {
@@ -210,7 +213,7 @@
         <div class="h-[1px] w-12 bg-[#f3e5ab] mt-6 opacity-60"></div>
     </header>
 
-    <!-- 網格區 (加入 loading="lazy" 與 onload="this.classList.add('loaded')") -->
+    <!-- 網格區 -->
     <main class="grid-container animate-fade-in" style="animation-delay: 0.2s;">
         <div class="food-item food-01">
             <img src="Food-01.jpg" alt="Food 01" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x800/111/fff?text=Food+01'">
@@ -265,7 +268,7 @@
         <i class="fa-solid fa-arrow-up"></i>
     </button>
 
-    <!-- 照片放大用的 Lightbox 容器 (加入左右箭頭) -->
+    <!-- 照片放大用的 Lightbox 容器 -->
     <div id="lightbox" class="fixed inset-0 bg-black/95 z-[2000] hidden flex-col items-center justify-center opacity-0">
         <button id="lightbox-close" class="absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white text-4xl cursor-pointer z-50 transition-colors">
             &times;
@@ -337,7 +340,7 @@
     </div>
 
     <script>
-        // ================= 自訂游標邏輯 (僅電腦版 - 效能優化版) =================
+        // ================= 自訂游標邏輯 =================
         const cursorDot = document.getElementById('cursor-dot');
         const cursorRing = document.getElementById('cursor-ring');
         
@@ -363,7 +366,6 @@
             }
             animateCursor();
 
-            // 確保游標在這些元素上時，會自動放大發光 (移除反黑，採用放大與香檳金)
             const interactiveSelectors = 'a, button, .menu-link-item, .food-item, #lightbox-close, #lightbox-prev, #lightbox-next, #back-to-top';
             
             document.addEventListener('mouseover', (e) => {
@@ -380,7 +382,7 @@
             });
         }
 
-        // ================= Lightbox 升級邏輯 =================
+        // ================= Lightbox 邏輯 =================
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const closeBtn = document.getElementById('lightbox-close');
@@ -505,7 +507,7 @@
             if (e.touches[0].clientY - menuTouchStartY > 60) closeMenu();
         });
 
-        // ================= 進階按鈕顯示邏輯 (1秒閒置消失) =================
+        // ================= 懸浮按鈕閒置邏輯 =================
         let idleTimer;
         let lastScrollY = window.scrollY;
 
@@ -557,7 +559,7 @@
         setFabState('full');
         resetIdleTimer();
 
-        // ================= 回到頂部按鈕邏輯 =================
+        // ================= 回到頂部按鈕 =================
         const backToTopBtn = document.getElementById('back-to-top');
         
         window.addEventListener('scroll', () => {
@@ -574,7 +576,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // ================= 頁面過渡動畫邏輯 =================
+        // ================= 頁面過渡動畫 =================
         const pageTransition = document.getElementById('page-transition');
         
         function hideTransition() {
