@@ -139,14 +139,15 @@
 <body>
 
     <!-- ================= 頁面過渡動畫遮罩 ================= -->
-    <div id="page-transition" class="fixed inset-0 bg-[#050505] z-[9999] transition-opacity duration-500 opacity-100 flex items-center justify-center">
-        <!-- 可以在這裡放一個小小的載入動畫，避免純黑太無聊 -->
+    <!-- 重點修正：加入 pointer-events-none 確保不擋點擊，移除之前的 hidden 邏輯來保證 CSS 動畫有效 -->
+    <div id="page-transition" class="fixed inset-0 bg-[#050505] z-[9999] transition-opacity duration-500 opacity-100 pointer-events-none flex items-center justify-center">
+        <!-- 載入動畫小圈圈 -->
         <div class="w-8 h-8 border-2 border-white/20 border-t-white/80 rounded-full animate-spin"></div>
     </div>
 
     <div class="frame-ui"></div>
 
-    <!-- ================= 懸浮選單按鈕區 (加入 transition-all duration-500 確保動畫滑順) ================= -->
+    <!-- ================= 懸浮選單按鈕區 ================= -->
     <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center justify-center gap-3 w-max transition-all duration-500 ease-out">
         <!-- 關於我 (跳轉至輪播區) -->
         <a onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors cursor-pointer">
@@ -484,7 +485,7 @@
             if (window.scrollY > window.innerHeight * 0.3) {
                 idleTimer = setTimeout(() => {
                     setFabState('hidden');
-                }, 1000); // 【改為 1秒 消失】
+                }, 1000); // 1秒 消失
             }
         }
 
@@ -514,26 +515,24 @@
         setFabState('full');
         resetIdleTimer();
 
-        // ================= 頁面過渡動畫邏輯 (修復版) =================
+        // ================= 頁面過渡動畫邏輯 =================
         const pageTransition = document.getElementById('page-transition');
         
-        // 確保黑幕一定會消失的防呆函數
         function hideTransition() {
+            // 移除透明度 100%，改為 0% 觸發漸淡動畫
             pageTransition.classList.remove('opacity-100');
             pageTransition.classList.add('opacity-0');
-            // 動畫播完後把遮罩移走，避免擋住點擊
-            setTimeout(() => { pageTransition.classList.add('hidden'); }, 500);
+            // 注意：不使用 hidden 確保動畫能執行，因為上方 HTML 已經加上 pointer-events-none 避免干擾點擊
         }
 
-        // 多重事件綁定，確保載入後一定會觸發透明
+        // 確保載入時執行淡出
         document.addEventListener('DOMContentLoaded', hideTransition);
         window.addEventListener('load', hideTransition);
         window.addEventListener('pageshow', hideTransition);
         
-        // 終極保險：如果前幾個事件都沒觸發（例如預覽環境的 Bug），半秒後強制隱藏
-        setTimeout(hideTransition, 500);
+        setTimeout(hideTransition, 500); // 備用防呆機制
 
-        // 點擊連結時的淡出動畫
+        // 點擊連結時的淡入(黑幕出現)動畫
         document.querySelectorAll('a').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 const href = this.getAttribute('href');
@@ -543,7 +542,9 @@
                     if(this.hasAttribute('onclick')) return;
                     
                     e.preventDefault(); 
-                    pageTransition.classList.remove('hidden', 'opacity-0');
+                    
+                    // 恢復黑幕
+                    pageTransition.classList.remove('opacity-0');
                     pageTransition.classList.add('opacity-100');
                     
                     setTimeout(() => {
