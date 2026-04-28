@@ -64,7 +64,7 @@
             z-index: 1;
         }
 
-        /* 播放按鈕掃光效果 (新增) */
+        /* 播放按鈕掃光效果 */
         .metal-btn::after {
             content: '';
             position: absolute;
@@ -74,7 +74,7 @@
             height: 100%;
             background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.8), transparent);
             transform: skewX(-20deg);
-            z-index: 2; /* 確保在背景漸層之上，但低於 z-10 的 icon */
+            z-index: 2;
         }
 
         .group:hover .metal-btn::after {
@@ -86,7 +86,7 @@
             100% { left: 200%; }
         }
 
-        /* 底部導覽列 */
+        /* 底部導覽列 (新增防止按鈕過多導致擠壓的橫向滑動設計) */
         .category-nav {
             position: fixed;
             bottom: 40px;
@@ -101,6 +101,15 @@
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.5s ease;
+            max-width: 95vw;
+            overflow-x: auto;
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        /* 隱藏原生捲軸 */
+        .category-nav::-webkit-scrollbar {
+            display: none;
         }
 
         .category-nav.scrolled {
@@ -118,6 +127,7 @@
             transition: all 0.3s ease;
             cursor: pointer;
             white-space: nowrap;
+            flex-shrink: 0; /* 防止文字折行 */
         }
 
         .nav-item:hover {
@@ -132,6 +142,7 @@
                 gap: 6px;
                 padding: 5px;
                 bottom: 25px;
+                justify-content: flex-start; /* 讓內容多時可以往左靠齊滑動 */
             }
             .category-nav.scrolled {
                 bottom: 12px;
@@ -142,13 +153,26 @@
             }
         }
 
-        /* 背景發光 (修改優化版) */
+        /* 底部選單與 FAB 按鈕樣式 (新增) */
+        .menu-link-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 20px; background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05); border-radius: 16px;
+            color: #fff; text-decoration: none; transition: all 0.3s ease;
+        }
+        .menu-link-item:hover {
+            background: rgba(255,255,255,0.08); transform: translateY(-2px); border-color: rgba(255,255,255,0.2);
+        }
+        #fab-container { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        #fab-container.hidden-fab { transform: translate(-50%, 150%); opacity: 0; pointer-events: none; }
+
+        /* 背景發光 */
         .bg-glow {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 120vw; height: 120vw; max-width: 1000px;
             background: radial-gradient(circle at center, rgba(243, 229, 171, 0.3) 0%, rgba(255, 255, 255, 0.15) 25%, rgba(255, 255, 255, 0.05) 50%, transparent 75%);
-            filter: blur(40px); /* 新增：讓邊緣更柔和質感 */
-            mix-blend-mode: screen; /* 新增：讓發光效果更清晰且融入背景 */
+            filter: blur(40px);
+            mix-blend-mode: screen;
             z-index: 0; pointer-events: none;
         }
 
@@ -174,12 +198,8 @@
         }
         .slide.active { opacity: 1; z-index: 10; }
         
-        /* 確保 picture 標籤不會影響 flexbox 排版 */
-        .slide picture {
-            display: contents;
-        }
+        .slide picture { display: contents; }
 
-        /* 關鍵修正：讓 img 的 DOM 邊界與圖片真實可視邊界完全重合，方便 JS 追蹤座標 */
         .slide img { 
             max-width: 100%; 
             max-height: 75vh; 
@@ -191,13 +211,13 @@
         /* Reels 頂部分段進度條 */
         .reels-progress-bar {
             position: absolute;
-            top: 20px; /* 預設位置，手機直式時會由 JS 接管覆蓋 */
+            top: 20px;
             left: 20px;
             right: 20px;
             display: flex;
             gap: 6px;
             z-index: 80;
-            transition: top 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); /* 新增高度位移過渡動畫 */
+            transition: top 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .progress-seg {
@@ -218,40 +238,18 @@
         }
 
         /* 隱形點擊區域 (手機端使用) */
-        .tap-zone {
-            position: absolute;
-            top: 0; bottom: 0;
-            width: 30%;
-            z-index: 100;
-            cursor: pointer;
-        }
+        .tap-zone { position: absolute; top: 0; bottom: 0; width: 30%; z-index: 100; cursor: pointer; }
         .tap-left { left: 0; }
         .tap-right { right: 0; }
 
         /* 電腦版半透明箭頭 */
         .nav-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            z-index: 110;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
+            position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: rgba(255, 255, 255, 0.5);
+            cursor: pointer; z-index: 110; transition: all 0.3s ease; backdrop-filter: blur(5px);
         }
-        .nav-arrow:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-            transform: translateY(-50%) scale(1.1);
-        }
+        .nav-arrow:hover { background: rgba(255, 255, 255, 0.15); color: #fff; transform: translateY(-50%) scale(1.1); }
         .arrow-left { left: 30px; }
         .arrow-right { right: 30px; }
 
@@ -272,13 +270,19 @@
 
     <div class="frame-ui"></div>
 
-    <!-- 底部導覽列 -->
-    <nav class="category-nav" id="main-nav">
-        <a onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})" class="nav-item">關於我</a>
-        <a href="https://youtu.be/YLsqzahcr3g" target="_blank" class="nav-item">美髮商業</a>
-        <a href="food.html" class="nav-item">美食影像</a>
-        <a href="wedding.html" class="nav-item">婚禮攝影</a>
-    </nav>
+    <!-- 懸浮選單按鈕區 (包含關於我與探索作品) -->
+    <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center gap-3 w-max">
+        <!-- 關於我 (直接跳轉至輪播區) -->
+        <a onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})" class="group flex items-center justify-center gap-2 w-36 py-3.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 text-white shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all cursor-pointer">
+            <i class="fa-solid fa-user text-lg group-hover:scale-110 transition-transform"></i>
+            <span class="text-sm font-bold tracking-widest">關於我</span>
+        </a>
+        <!-- 探索作品 -->
+        <button id="fab-menu" class="group flex items-center justify-center gap-2 w-36 py-3.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 text-white shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all">
+            <i class="fa-solid fa-layer-group text-lg group-hover:scale-110 transition-transform"></i>
+            <span class="text-sm font-bold tracking-widest">探索作品</span>
+        </button>
+    </div>
 
     <!-- 首頁區塊 -->
     <section class="relative h-screen flex items-center justify-center overflow-hidden">
@@ -317,7 +321,7 @@
         <!-- Reels 進度條容器 -->
         <div class="reels-progress-bar" id="reels-progress"></div>
 
-        <!-- 電腦版箭頭 (手機端 hidden, 電腦端 flex) -->
+        <!-- 電腦版箭頭 -->
         <div class="nav-arrow arrow-left hidden md:flex" id="arrow-prev">
             <i class="fa-solid fa-chevron-left"></i>
         </div>
@@ -325,56 +329,113 @@
             <i class="fa-solid fa-chevron-right"></i>
         </div>
 
-        <!-- 隱形點擊區域 (供手機端及點擊畫面切換使用) -->
+        <!-- 隱形點擊區域 -->
         <div class="tap-zone tap-left" id="tap-prev"></div>
         <div class="tap-zone tap-right" id="tap-next"></div>
 
         <div id="slide-container" class="slide-container">
-            <!-- 使用 HTML5 picture 標籤，讓瀏覽器自動依據螢幕寬度切換直式/橫式照片 -->
             <div class="slide active">
                 <picture>
                     <source media="(max-width: 768px)" srcset="Photo-08.jpg">
-                    <img src="Photo-01.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=COVER+PHOTO'">
+                    <img src="Photo-01.jpg" onerror="this.src='https://via.placeholder.com/1200x800/111/fff?text=Photo-01'">
                 </picture>
             </div>
             <div class="slide">
                 <picture>
                     <source media="(max-width: 768px)" srcset="Photo-09.jpg">
-                    <img src="Photo-02.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-02'">
+                    <img src="Photo-02.jpg" onerror="this.src='https://via.placeholder.com/1200x800/111/fff?text=Photo-02'">
                 </picture>
             </div>
             <div class="slide">
                 <picture>
                     <source media="(max-width: 768px)" srcset="Photo-10.jpg">
-                    <img src="Photo-03.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-03'">
+                    <img src="Photo-03.jpg" onerror="this.src='https://via.placeholder.com/1200x800/111/fff?text=Photo-03'">
                 </picture>
             </div>
             <div class="slide">
                 <picture>
                     <source media="(max-width: 768px)" srcset="Photo-11.jpg">
-                    <img src="Photo-04.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-04'">
+                    <img src="Photo-04.jpg" onerror="this.src='https://via.placeholder.com/1200x800/111/fff?text=Photo-04'">
                 </picture>
             </div>
             <div class="slide">
                 <picture>
                     <source media="(max-width: 768px)" srcset="Photo-12.jpg">
-                    <img src="Photo-05.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-05'">
+                    <img src="Photo-05.jpg" onerror="this.src='https://via.placeholder.com/1200x800/111/fff?text=Photo-05'">
                 </picture>
             </div>
             <div class="slide">
                 <picture>
                     <source media="(max-width: 768px)" srcset="Photo-13.jpg">
-                    <img src="Photo-06.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-06'">
+                    <img src="Photo-06.jpg" onerror="this.src='https://via.placeholder.com/1200x800/111/fff?text=Photo-06'">
                 </picture>
             </div>
             <div class="slide">
                 <picture>
                     <source media="(max-width: 768px)" srcset="Photo-14.jpg">
-                    <img src="Photo-07.jpg" onerror="this.src='https://via.placeholder.com/1200x800/000/fff?text=Photo-07'">
+                    <img src="Photo-07.jpg" onerror="this.src='https://via.placeholder.com/1200x800/111/fff?text=Photo-07'">
                 </picture>
             </div>
         </div>
     </section>
+
+    <!-- ================= 底部滑動選單 (Bottom Sheet) ================= -->
+    <div id="menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[1000] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <div id="bottom-sheet" class="fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-white/10 rounded-t-3xl z-[1001] transform translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] flex flex-col max-h-[85vh] shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+        <!-- 拖曳把手區 (可點擊或手機下拉關閉) -->
+        <div class="w-full flex justify-center py-5 cursor-pointer hover:bg-white/5 transition-colors rounded-t-3xl" id="drag-handle">
+            <div class="w-12 h-1.5 bg-white/20 rounded-full"></div>
+        </div>
+        
+        <div class="px-6 pb-12 overflow-y-auto">
+            <h3 class="text-white/40 text-[10px] md:text-xs tracking-[0.3em] mb-6 text-center">PORTFOLIO CATEGORIES</h3>
+            <div class="flex flex-col gap-3 max-w-md mx-auto">
+                <a href="https://www.youtube.com/watch?v=R8OsDnJ_6wI" target="_blank" class="menu-link-item group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-images text-lg group-hover:scale-110 transition-transform"></i></div>
+                        <span class="font-bold tracking-wide text-sm md:text-base">影像作品集</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="https://www.instagram.com/kshen_life?igsh=OWZ4ZGs4cHhzb3Rz&utm_source=qr" target="_blank" class="menu-link-item group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-brands fa-instagram text-xl group-hover:scale-110 transition-transform"></i></div>
+                        <span class="font-bold tracking-wide text-sm md:text-base">短影音 Reels</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="https://youtu.be/YLsqzahcr3g" target="_blank" class="menu-link-item group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-scissors text-lg group-hover:scale-110 transition-transform"></i></div>
+                        <span class="font-bold tracking-wide text-sm md:text-base">美髮商業</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="https://photos.google.com/share/AF1QipOcqOXF-cWqF4ASgcmQkWf2sZieUTP7I8cJAiC6oycsSuxs85urrxEGt_gHnFftbQ?pli=1&key=WFd6U0Q3ckV4Ylh2STl6Ty1iaVBZV2VSNGh2ZGVB" target="_blank" class="menu-link-item group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0ea5e9] via-[#2563eb] to-[#3730a3] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-camera-retro text-lg group-hover:scale-110 transition-transform"></i></div>
+                        <span class="font-bold tracking-wide text-sm md:text-base">人像創作</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="https://kennyshenhaha.github.io/photography-portfolio/food.html" class="menu-link-item group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0ea5e9] via-[#2563eb] to-[#3730a3] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-utensils text-lg group-hover:scale-110 transition-transform"></i></div>
+                        <span class="font-bold tracking-wide text-sm md:text-base">美食影像</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="https://kennyshenhaha.github.io/photography-portfolio/wedding.html" class="menu-link-item group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0ea5e9] via-[#2563eb] to-[#3730a3] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-ring text-lg group-hover:scale-110 transition-transform"></i></div>
+                        <span class="font-bold tracking-wide text-sm md:text-base">婚禮攝影</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- =============================================================== -->
 
     <script>
         let currentSlide = 0;
@@ -382,7 +443,13 @@
         const totalSlides = slides.length;
         const progressContainer = document.getElementById('reels-progress');
         const slider = document.getElementById('works-slider');
-        const nav = document.getElementById('main-nav');
+        
+        // 選單變數
+        const fabContainer = document.getElementById('fab-container');
+        const fabMenu = document.getElementById('fab-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+        const bottomSheet = document.getElementById('bottom-sheet');
+        const dragHandle = document.getElementById('drag-handle');
         
         let progress = 0;
         let isPaused = true; 
@@ -407,9 +474,7 @@
 
         // 核心邏輯：動態計算進度條位置 (讓它貼緊圖片)
         function updateProgressBarPosition() {
-            // 只在「手機版」且為「直式(Portrait)」時作動態貼合
             if (window.innerWidth <= 768 && window.innerHeight > window.innerWidth) {
-                // 因為使用了 picture 標籤，querySelector('img') 依然可以準確抓取目前被瀏覽器算繪的影像物件
                 const activeImg = slides[currentSlide].querySelector('img');
                 if (activeImg) {
                     if (!activeImg.complete) {
@@ -418,21 +483,16 @@
                     const rect = activeImg.getBoundingClientRect();
                     const sliderRect = slider.getBoundingClientRect();
                     
-                    // 取得圖片頂部相對 slider 的位置，再往上預留 15px 空隙
                     let newTop = rect.top - sliderRect.top - 15;
-                    
-                    // 防呆：避免太高飛出畫面
                     newTop = Math.max(20, newTop); 
                     progressContainer.style.top = newTop + 'px';
                 }
             } else {
-                // 電腦版或手機橫式(Landscape)時，固定在最上方 20px
                 progressContainer.style.top = '20px';
             }
         }
 
         function changeSlide(direction) {
-            // 如果是在第一張點擊「下一張」，則啟動自動輪播
             if (!hasStarted && direction > 0) {
                 hasStarted = true;
                 isPaused = false;
@@ -451,18 +511,13 @@
             slides[currentSlide].classList.add('active');
             progress = 0;
             
-            // 確保切換後的進度條視覺正確
             document.getElementById(`fill-${currentSlide}`).style.width = '0%';
-
-            // 重新計算進度條位置 (因不同圖片高度可能不同)
             updateProgressBarPosition();
 
-            // 判斷是否回到第一張
             if (currentSlide === 0) {
                 isPaused = true;
                 hasStarted = false;
                 
-                // 清空後方的所有進度條，但保持第一張為全白
                 setTimeout(() => {
                     slides.forEach((_, i) => {
                         const fill = document.getElementById(`fill-${i}`);
@@ -473,7 +528,6 @@
                 isPaused = false;
                 hasStarted = true;
                 
-                // 如果是從第一張往回切到最後一張，自動補滿前面的進度
                 if (direction < 0 && currentSlide === totalSlides - 1) {
                     slides.forEach((_, i) => {
                         const fill = document.getElementById(`fill-${i}`);
@@ -483,7 +537,6 @@
             }
         }
 
-        // 自動播放計時器
         setInterval(() => {
             const rect = slider.getBoundingClientRect();
             const isInView = rect.top < window.innerHeight && rect.bottom > 0;
@@ -499,11 +552,9 @@
             }
         }, interval);
 
-        // 交互綁定 (手機隱形區域)
         document.getElementById('tap-prev').addEventListener('click', () => changeSlide(-1));
         document.getElementById('tap-next').addEventListener('click', () => changeSlide(1));
 
-        // 交互綁定 (電腦版箭頭)
         document.getElementById('arrow-prev').addEventListener('click', (e) => {
             e.stopPropagation();
             changeSlide(-1);
@@ -513,19 +564,47 @@
             changeSlide(1);
         });
 
-        // 長按暫停 (啟動後才有效)
         slider.addEventListener('touchstart', () => { if(hasStarted) isPaused = true; });
         slider.addEventListener('touchend', () => { if(hasStarted) isPaused = false; });
         slider.addEventListener('mousedown', () => { if(hasStarted) isPaused = true; });
         slider.addEventListener('mouseup', () => { if(hasStarted) isPaused = false; });
 
-        // 滾動導覽列與初始化定位
         window.addEventListener('load', updateProgressBarPosition);
         window.addEventListener('resize', updateProgressBarPosition);
         
+        // ================= 底部滑動選單邏輯 =================
+        function openMenu() {
+            menuOverlay.classList.remove('opacity-0', 'pointer-events-none');
+            bottomSheet.classList.remove('translate-y-full');
+            fabContainer.classList.add('hidden-fab');
+            document.body.style.overflow = 'hidden'; // 防止背景滾動
+        }
+
+        function closeMenu() {
+            menuOverlay.classList.add('opacity-0', 'pointer-events-none');
+            bottomSheet.classList.add('translate-y-full');
+            fabContainer.classList.remove('hidden-fab');
+            document.body.style.overflow = '';
+        }
+
+        fabMenu.addEventListener('click', openMenu);
+        menuOverlay.addEventListener('click', closeMenu);
+        dragHandle.addEventListener('click', closeMenu);
+
+        // 簡單下拉關閉邏輯 (觸控支援)
+        let touchStartY = 0;
+        bottomSheet.addEventListener('touchstart', (e) => touchStartY = e.touches[0].clientY);
+        bottomSheet.addEventListener('touchmove', (e) => {
+            if (e.touches[0].clientY - touchStartY > 60) closeMenu();
+        });
+
+        // 滾動時稍微隱藏或縮小懸浮按鈕
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 100) nav.classList.add('scrolled');
-            else nav.classList.remove('scrolled');
+            if (window.scrollY > 100) {
+                fabContainer.classList.add('scale-90', 'opacity-80');
+            } else {
+                fabContainer.classList.remove('scale-90', 'opacity-80');
+            }
         });
     </script>
 </body>
