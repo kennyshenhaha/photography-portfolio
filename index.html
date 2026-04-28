@@ -138,12 +138,8 @@
 </head>
 <body>
 
-    <!-- ================= 頁面過渡動畫遮罩 ================= -->
-    <!-- 重點修正：加入 pointer-events-none 確保不擋點擊，移除之前的 hidden 邏輯來保證 CSS 動畫有效 -->
-    <div id="page-transition" class="fixed inset-0 bg-[#050505] z-[9999] transition-opacity duration-500 opacity-100 pointer-events-none flex items-center justify-center">
-        <!-- 載入動畫小圈圈 -->
-        <div class="w-8 h-8 border-2 border-white/20 border-t-white/80 rounded-full animate-spin"></div>
-    </div>
+    <!-- ================= 頁面過渡動畫遮罩 (純淨黑幕，完全移除載入圈圈) ================= -->
+    <div id="page-transition" class="fixed inset-0 bg-[#050505] z-[9999] transition-opacity duration-500 opacity-100 pointer-events-none"></div>
 
     <div class="frame-ui"></div>
 
@@ -456,54 +452,43 @@
         let lastScrollY = window.scrollY;
 
         function setFabState(state) {
-            // 如果底部選單是打開的，就不要動作
             if (!bottomSheet.classList.contains('translate-y-full')) return;
             
-            // 1. 先清除所有的狀態 class
             fabContainer.classList.remove(
                 'opacity-100', 'translate-y-0', 'scale-100', 
                 'opacity-40', 'translate-y-4', 'scale-90', 
                 'opacity-0', 'translate-y-12', 'pointer-events-none'
             );
 
-            // 2. 依照指令套用新狀態
             if (state === 'full') {
-                // 狀態 1: 完全顯示
                 fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
             } else if (state === 'semi') {
-                // 狀態 2: 縮小且半透明
                 fabContainer.classList.add('opacity-40', 'translate-y-4', 'scale-90');
             } else if (state === 'hidden') {
-                // 狀態 3: 徹底消失不干擾畫面
                 fabContainer.classList.add('opacity-0', 'translate-y-12', 'scale-90', 'pointer-events-none');
             }
         }
 
         function resetIdleTimer() {
             clearTimeout(idleTimer);
-            // 只有離開最頂端的首頁畫面時，才啟動「閒置徹底消失」機制
             if (window.scrollY > window.innerHeight * 0.3) {
                 idleTimer = setTimeout(() => {
                     setFabState('hidden');
-                }, 1000); // 1秒 消失
+                }, 1000); 
             }
         }
 
         window.addEventListener('scroll', () => {
             const currentScrollY = window.scrollY;
-            
-            // 判斷滾動方向：往下滾(縮小半隱藏)，往上滾(完全顯示)
             if (currentScrollY > lastScrollY && currentScrollY > 100) {
                 setFabState('semi');
             } else {
                 setFabState('full');
             }
-            
             lastScrollY = currentScrollY;
             resetIdleTimer();
         }, {passive: true});
 
-        // 偵測滑鼠移動、點擊或觸碰螢幕時，立刻喚醒按鈕
         ['touchstart', 'mousemove', 'click'].forEach(event => {
             window.addEventListener(event, () => {
                 setFabState('full');
@@ -511,47 +496,45 @@
             }, {passive: true});
         });
 
-        // 頁面載入初始設定
         setFabState('full');
         resetIdleTimer();
 
-        // ================= 頁面過渡動畫邏輯 =================
+        // ================= 頁面過渡動畫邏輯 (純淨升級版) =================
         const pageTransition = document.getElementById('page-transition');
         
         function hideTransition() {
-            // 移除透明度 100%，改為 0% 觸發漸淡動畫
             pageTransition.classList.remove('opacity-100');
             pageTransition.classList.add('opacity-0');
-            // 注意：不使用 hidden 確保動畫能執行，因為上方 HTML 已經加上 pointer-events-none 避免干擾點擊
         }
 
-        // 確保載入時執行淡出
+        // 確保載入時執行淡出 (從黑變透明)
         document.addEventListener('DOMContentLoaded', hideTransition);
         window.addEventListener('load', hideTransition);
         window.addEventListener('pageshow', hideTransition);
-        
-        setTimeout(hideTransition, 500); // 備用防呆機制
+        setTimeout(hideTransition, 500); 
 
-        // 點擊連結時的淡入(黑幕出現)動畫
-        document.querySelectorAll('a').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                const target = this.getAttribute('target');
+        // 攔截所有連結點擊 (使用事件代理確保 100% 觸發，解決直接跳轉問題)
+        document.addEventListener('click', function(e) {
+            const anchor = e.target.closest('a');
+            if (!anchor) return; // 如果點擊的不是 a 標籤或其內部元素，就不理它
+
+            const href = anchor.getAttribute('href');
+            const target = anchor.getAttribute('target');
+            const onclick = anchor.getAttribute('onclick');
+            
+            // 確認這是一個需要跳轉的站內連結
+            if (href && !href.startsWith('#') && !href.startsWith('javascript') && target !== '_blank' && !anchor.hasAttribute('download') && !onclick) {
+                e.preventDefault(); // 攔截預設的跳轉行為
                 
-                if (href && !href.startsWith('#') && !href.startsWith('javascript') && target !== '_blank' && !this.hasAttribute('download')) {
-                    if(this.hasAttribute('onclick')) return;
-                    
-                    e.preventDefault(); 
-                    
-                    // 恢復黑幕
-                    pageTransition.classList.remove('opacity-0');
-                    pageTransition.classList.add('opacity-100');
-                    
-                    setTimeout(() => {
-                        window.location.href = href;
-                    }, 500);
-                }
-            });
+                // 恢復黑幕 (透明度變 100)
+                pageTransition.classList.remove('opacity-0');
+                pageTransition.classList.add('opacity-100');
+                
+                // 等待 0.4 秒變黑後，才真正切換網址
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 400);
+            }
         });
 
     </script>
