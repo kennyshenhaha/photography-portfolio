@@ -147,6 +147,9 @@
 </head>
 <body class="p-6 md:p-12 lg:p-20">
 
+    <!-- 頁面過渡動畫遮罩 -->
+    <div id="page-transition" class="fixed inset-0 bg-[#050505] z-[9999] transition-opacity duration-500 pointer-events-none opacity-100"></div>
+
     <div class="bg-glow"></div>
 
     <!-- ================= 懸浮選單按鈕區 ================= -->
@@ -242,6 +245,11 @@
         <!-- 顯示的照片 -->
         <img id="lightbox-img" src="" alt="Enlarged view" class="max-w-[100vw] max-h-[90vh] md:max-w-[85vw] object-contain scale-95 drop-shadow-2xl pointer-events-none select-none">
     </div>
+
+    <!-- 回到頂部按鈕 -->
+    <button id="back-to-top" class="fixed bottom-24 right-6 md:bottom-8 md:right-8 z-[850] w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-lg flex items-center justify-center opacity-0 translate-y-10 pointer-events-none transition-all duration-300 hover:bg-white/20 hover:scale-110">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
 
     <!-- ================= 底部滑動選單 (Bottom Sheet) ================= -->
     <div id="menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[1000] opacity-0 pointer-events-none transition-opacity duration-300"></div>
@@ -457,6 +465,52 @@
             fabContainer.classList.remove('opacity-40', 'translate-y-4', 'scale-90');
             fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
         }, {passive: true});
+
+        // ================= 頁面過渡動畫邏輯 =================
+        const pageTransition = document.getElementById('page-transition');
+        
+        // 進入頁面時淡入 (透明度變 0)
+        window.addEventListener('pageshow', () => {
+            pageTransition.classList.remove('opacity-100');
+            pageTransition.classList.add('opacity-0');
+        });
+
+        // 點擊內部連結時淡出 (透明度變 1)
+        document.querySelectorAll('a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                const target = this.getAttribute('target');
+                
+                // 判斷是否為站內跳轉連結 (不包含 target="_blank" 且有 href)
+                if (href && !href.startsWith('#') && !href.startsWith('javascript') && target !== '_blank' && !this.hasAttribute('download')) {
+                    e.preventDefault(); 
+                    pageTransition.classList.remove('opacity-0');
+                    pageTransition.classList.add('opacity-100');
+                    
+                    // 等待過渡動畫結束後跳轉 (500ms 需與 CSS transition duration 一致)
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 500);
+                }
+            });
+        });
+
+        // ================= 回到頂部按鈕邏輯 =================
+        const backToTopBtn = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+                backToTopBtn.classList.add('opacity-100', 'translate-y-0');
+            } else {
+                backToTopBtn.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+                backToTopBtn.classList.remove('opacity-100', 'translate-y-0');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
 
     </script>
 </body>
