@@ -19,7 +19,7 @@
             overflow-x: hidden;
         }
 
-        /* ================= 科技感自訂游標 (僅限電腦版 - 效能優化版) ================= */
+        /* ================= 科技感自訂游標 (極致流暢版 - 移除 blend-mode 殺手) ================= */
         @media (pointer: fine) {
             body, a, button, .food-item {
                 cursor: none !important;
@@ -28,19 +28,21 @@
         .custom-cursor {
             position: fixed; top: 0; left: 0; width: 6px; height: 6px; margin-top: -3px; margin-left: -3px;
             background: #fff; border-radius: 50%; pointer-events: none; z-index: 10000;
-            transition: width 0.3s, height 0.3s, background-color 0.3s, margin 0.3s;
-            mix-blend-mode: difference;
-            will-change: transform; /* 強制開啟 GPU 硬體加速 */
+            box-shadow: 0 0 4px rgba(0,0,0,0.6); /* 加入微陰影，確保在白照片上也能看見 */
+            transition: width 0.3s, height 0.3s, background-color 0.3s, margin 0.3s, box-shadow 0.3s;
+            will-change: transform; 
         }
         .custom-cursor-follower {
             position: fixed; top: 0; left: 0; width: 40px; height: 40px; margin-top: -20px; margin-left: -20px;
-            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; pointer-events: none; z-index: 9999;
+            border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 50%; pointer-events: none; z-index: 9999;
             transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s, margin 0.3s;
-            will-change: transform, width, height; /* 強制開啟 GPU 硬體加速 */
+            will-change: transform, width, height; 
         }
-        /* 游標懸停狀態 */
+        /* 游標懸停狀態 (放大並發出香檳金光芒) */
         .custom-cursor.hovered {
-            width: 12px; height: 12px; margin-top: -6px; margin-left: -6px; background: #f3e5ab; mix-blend-mode: normal;
+            width: 12px; height: 12px; margin-top: -6px; margin-left: -6px; 
+            background: #f3e5ab; 
+            box-shadow: 0 0 10px rgba(243, 229, 171, 0.8);
         }
         .custom-cursor-follower.hovered {
             width: 60px; height: 60px; margin-top: -30px; margin-left: -30px; 
@@ -296,19 +298,19 @@
             <div class="flex flex-col gap-3 max-w-md mx-auto">
                 <a href="https://www.youtube.com/watch?v=R8OsDnJ_6wI" target="_blank" class="menu-link-item group">
                     <div class="flex items-center gap-4">
-                <div class="absolute inset-0 bg-white/20 transform -translate-x-full skew-x-12 group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
-                <i class="fa-brands fa-instagram text-2xl"></i>
-                <span>聯絡我 / Follow IG</span>
-            </a>
-        </div>
-    <!-- ==================================================================== -->
-
-    <!-- 回到頂部按鈕 -->
-    <button id="back-to-top" class="fixed bottom-24 right-6 md:bottom-8 md:right-8 z-[850] w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-lg flex items-center justify-center opacity-0 translate-y-10 pointer-events-none transition-all duration-300 hover:bg-white/20 hover:scale-110">
-        <i class="fa-solid fa-arrow-up"></i>
-    </button>
-
-    <!-- 照片放大用的 Lightbox 容器 (加入左右箭頭) -->
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-images text-lg group-hover:scale-110 transition-transform"></i></div>
+                        <span class="font-bold tracking-wide text-sm md:text-base">影像作品集</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="https://www.instagram.com/kshen_life?igsh=OWZ4ZGs4cHhzb3Rz&utm_source=qr" target="_blank" class="menu-link-item group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-brands fa-instagram text-xl group-hover:scale-110 transition-transform"></i></div>
+                        <span class="font-bold tracking-wide text-sm md:text-base">短影音 Reels</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="https://youtu.be/YLsqzahcr3g" target="_blank" class="menu-link-item group">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-scissors text-lg group-hover:scale-110 transition-transform"></i></div>
                         <span class="font-bold tracking-wide text-sm md:text-base">美髮商業</span>
