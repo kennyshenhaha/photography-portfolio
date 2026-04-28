@@ -87,9 +87,6 @@
             background: rgba(255,255,255,0.08); transform: translateY(-2px); border-color: rgba(255,255,255,0.2);
         }
 
-        /* 懸浮按鈕過渡動畫 */
-        #fab-container { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-
         /* 背景發光 */
         .bg-glow {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -146,15 +143,15 @@
 
     <div class="frame-ui"></div>
 
-    <!-- ================= 懸浮選單按鈕區 ================= -->
-    <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center justify-center gap-3 w-max">
+    <!-- ================= 懸浮選單按鈕區 (加入 transition-all duration-500 確保動畫滑順) ================= -->
+    <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center justify-center gap-3 w-max transition-all duration-500 ease-out">
         <!-- 關於我 (跳轉至輪播區) -->
-        <a onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all cursor-pointer">
+        <a onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors cursor-pointer">
             <i class="fa-solid fa-user text-base group-hover:scale-110 transition-transform"></i>
             <span class="text-xs md:text-sm font-bold tracking-widest">關於我</span>
         </a>
         <!-- 探索作品 -->
-        <button id="fab-menu" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all">
+        <button id="fab-menu" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors">
             <i class="fa-solid fa-layer-group text-base group-hover:scale-110 transition-transform"></i>
             <span class="text-xs md:text-sm font-bold tracking-widest">探索作品</span>
         </button>
@@ -423,15 +420,20 @@
         function openMenu() {
             menuOverlay.classList.remove('opacity-0', 'pointer-events-none');
             bottomSheet.classList.remove('translate-y-full');
-            fabContainer.classList.add('translate-y-[150%]', 'opacity-0'); 
+            
+            // 打開選單時隱藏主按鈕
+            fabContainer.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none'); 
             document.body.style.overflow = 'hidden'; 
         }
 
         function closeMenu() {
             menuOverlay.classList.add('opacity-0', 'pointer-events-none');
             bottomSheet.classList.add('translate-y-full');
-            fabContainer.classList.remove('translate-y-[150%]', 'opacity-0'); 
+            
+            // 關閉選單時復原按鈕，並喚醒它
+            fabContainer.classList.remove('translate-y-12', 'opacity-0', 'pointer-events-none'); 
             document.body.style.overflow = '';
+            wakeUpFab();
         }
 
         fabMenu.addEventListener('click', openMenu);
@@ -444,31 +446,42 @@
             if (e.touches[0].clientY - menuTouchStartY > 60) closeMenu();
         });
 
-        // ================= 滾動半隱藏按鈕邏輯 =================
-        let lastScrollY = window.scrollY;
-        window.addEventListener('scroll', () => {
-            const currentScrollY = window.scrollY;
-            
+        // ================= 閒置自動隱藏按鈕邏輯 (仿 IG 限動體驗) =================
+        let idleTimer;
+
+        function wakeUpFab() {
+            // 如果底部選單是打開的，就不要動作
             if (!bottomSheet.classList.contains('translate-y-full')) return;
 
-            if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                fabContainer.classList.add('opacity-40', 'translate-y-4', 'scale-90');
-                fabContainer.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
-            } else {
-                fabContainer.classList.remove('opacity-40', 'translate-y-4', 'scale-90');
-                fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
-            }
-            lastScrollY = currentScrollY;
-        });
+            // 喚醒按鈕 (移除所有隱藏相關的 class)
+            fabContainer.classList.remove('opacity-0', 'translate-y-8', 'scale-95', 'pointer-events-none');
+            fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
 
-        fabContainer.addEventListener('mouseenter', () => {
-            fabContainer.classList.remove('opacity-40', 'translate-y-4', 'scale-90');
-            fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
-        });
-        fabContainer.addEventListener('touchstart', () => {
-            fabContainer.classList.remove('opacity-40', 'translate-y-4', 'scale-90');
-            fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
-        }, {passive: true});
+            // 清除舊的計時器
+            clearTimeout(idleTimer);
+
+            // 判斷：如果畫面已經滾動到下方的輪播區 (離開首頁大標題了)
+            if (window.scrollY > window.innerHeight * 0.3) {
+                // 設定 2.5 秒後自動隱藏按鈕，不擋住履歷
+                idleTimer = setTimeout(() => {
+                    // 再次確認選單沒開才隱藏
+                    if (bottomSheet.classList.contains('translate-y-full')) {
+                        fabContainer.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+                        fabContainer.classList.add('opacity-0', 'translate-y-8', 'scale-95', 'pointer-events-none');
+                    }
+                }, 2500);
+            }
+        }
+
+        // 監聽各種螢幕互動來喚醒按鈕 (滑動、觸碰、游標移動)
+        window.addEventListener('scroll', wakeUpFab, {passive: true});
+        window.addEventListener('touchstart', wakeUpFab, {passive: true});
+        window.addEventListener('touchmove', wakeUpFab, {passive: true});
+        window.addEventListener('mousemove', wakeUpFab, {passive: true});
+        window.addEventListener('click', wakeUpFab, {passive: true});
+
+        // 頁面載入時初始化一次
+        wakeUpFab();
 
         // ================= 頁面過渡動畫邏輯 =================
         const pageTransition = document.getElementById('page-transition');
