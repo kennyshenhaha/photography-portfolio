@@ -76,53 +76,19 @@
             transform: scale(1.05);
         }
 
-        /* 底部導覽列 */
-        .category-nav {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 8px; z-index: 1000;
-            background: rgba(15, 15, 15, 0.8); padding: 6px; border-radius: 50px;
-            backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1);
-            width: max-content;
-            max-width: 96vw; /* 加上這行，確保最大不超過螢幕寬度 */
+        /* 底部選單項目 hover 效果 (新增) */
+        .menu-link-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 20px; background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05); border-radius: 16px;
+            color: #fff; text-decoration: none; transition: all 0.3s ease;
         }
-        .nav-item {
-            padding: 10px 24px; border-radius: 40px; font-size: 13px;
-            letter-spacing: 0.1em; color: rgba(255,255,255,0.6);
-            text-decoration: none; transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-        .nav-item:hover { color: #fff; background: rgba(255,255,255,0.1); }
-        
-        /* 當前頁面的反白樣式 */
-        .nav-item.active {
-            background: #fff;
-            color: #000;
-            font-weight: 700;
+        .menu-link-item:hover {
+            background: rgba(255,255,255,0.08); transform: translateY(-2px); border-color: rgba(255,255,255,0.2);
         }
 
-        /* === 新增：手機版導覽列防跑版設定 === */
-        @media (max-width: 768px) {
-            .category-nav {
-                gap: 4px;
-                padding: 4px;
-                bottom: 20px;
-            }
-            .nav-item {
-                padding: 8px 14px;
-                font-size: 12px;
-                letter-spacing: 0.05em;
-            }
-        }
-
-        /* 針對更小螢幕(如舊款 iPhone)的微調 */
-        @media (max-width: 380px) {
-            .nav-item {
-                padding: 6px 10px;
-                font-size: 11px;
-                letter-spacing: 0;
-            }
-        }
-        /* ================================= */
+        /* 懸浮按鈕過渡動畫 (新增) */
+        #fab-container { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
         @keyframes fadeInUp { 
             from { opacity: 0; transform: translateY(30px); } 
@@ -145,9 +111,23 @@
 
     <div class="bg-glow"></div>
 
+    <!-- ================= 懸浮選單按鈕區 (電腦版透白 / 手機版深黑 + 滾動半隱藏) ================= -->
+    <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center justify-center gap-3 w-max">
+        <!-- 回首頁 -->
+        <a href="https://kennyshenhaha.github.io/photography-portfolio/index.html" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all">
+            <i class="fa-solid fa-house text-base group-hover:scale-110 transition-transform"></i>
+            <span class="text-xs md:text-sm font-bold tracking-widest">回首頁</span>
+        </a>
+        <!-- 探索作品 -->
+        <button id="fab-menu" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all">
+            <i class="fa-solid fa-layer-group text-base group-hover:scale-110 transition-transform"></i>
+            <span class="text-xs md:text-sm font-bold tracking-widest">探索作品</span>
+        </button>
+    </div>
+
     <!-- 移除了強制置中的 class，讓手機版與電腦版都維持靠左對齊 -->
     <header class="container-custom mb-12 md:mb-20 animate-fade-in">
-        <a href="index.html" class="text-[10px] tracking-[0.4em] text-white/40 hover:text-white transition-colors mb-4 inline-block uppercase">
+        <a href="https://kennyshenhaha.github.io/photography-portfolio/index.html" class="text-[10px] tracking-[0.4em] text-white/40 hover:text-white transition-colors mb-4 inline-block uppercase">
             <i class="fa-solid fa-arrow-left mr-2"></i> Back to Main
         </a>
         <h1 class="text-4xl md:text-6xl font-bold tracking-tight">
@@ -201,16 +181,6 @@
         </div>
     </main>
 
-    <!-- 更新後的導覽列 -->
-    <nav class="category-nav">
-        <a href="index.html" class="nav-item">回首頁</a>
-        <!-- 將連結改為 YouTube 網址，並設定 target="_blank" 在新分頁開啟 -->
-        <a href="https://youtu.be/YLsqzahcr3g" target="_blank" class="nav-item">美髮商業</a>
-        <a href="food.html" class="nav-item">美食影像</a>
-        <!-- 新增婚禮攝影並加上 active class 產生反白效果 -->
-        <a href="wedding.html" class="nav-item active">婚禮攝影</a>
-    </nav>
-
     <!-- 照片放大用的 Lightbox 容器 (預設隱藏) -->
     <div id="lightbox" class="fixed inset-0 bg-black/95 z-[2000] hidden flex-col items-center justify-center opacity-0">
         <!-- 關閉按鈕 -->
@@ -221,24 +191,86 @@
         <img id="lightbox-img" src="" alt="Enlarged view" class="max-w-[95vw] max-h-[90vh] object-contain scale-95 shadow-2xl">
     </div>
 
-    <!-- Lightbox 互動邏輯 -->
+    <!-- ================= 底部滑動選單 (Bottom Sheet) ================= -->
+    <div id="menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[1000] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <div id="bottom-sheet" class="fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-white/10 rounded-t-3xl z-[1001] transform translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] flex flex-col max-h-[85vh] shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+        
+        <div class="w-full flex justify-center py-5 cursor-pointer hover:bg-white/5 transition-colors rounded-t-3xl" id="drag-handle">
+            <div class="w-12 h-1.5 bg-white/20 rounded-full"></div>
+        </div>
+        
+        <div class="px-6 pb-12 overflow-y-auto">
+            <h3 class="text-white/40 text-[10px] md:text-xs tracking-[0.3em] mb-6 text-center">PORTFOLIO CATEGORIES</h3>
+            <div class="flex flex-col gap-3 max-w-md mx-auto">
+                <a href="https://www.youtube.com/watch?v=R8OsDnJ_6wI" target="_blank" class="menu-link-item group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-images text-lg group-hover:scale-110 transition-transform"></i></div>
+                        <span class="font-bold tracking-wide text-sm md:text-base">影像作品集</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="https://www.instagram.com/kshen_life?igsh=OWZ4ZGs4cHhzb3Rz&utm_source=qr" target="_blank" class="menu-link-item group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-brands fa-instagram text-xl group-hover:scale-110 transition-transform"></i></div>
+                        <span class="font-bold tracking-wide text-sm md:text-base">短影音 Reels</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="https://youtu.be/YLsqzahcr3g" target="_blank" class="menu-link-item group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-scissors text-lg group-hover:scale-110 transition-transform"></i></div>
+                        <span class="font-bold tracking-wide text-sm md:text-base">美髮商業</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="https://photos.google.com/share/AF1QipOcqOXF-cWqF4ASgcmQkWf2sZieUTP7I8cJAiC6oycsSuxs85urrxEGt_gHnFftbQ?pli=1&key=WFd6U0Q3ckV4Ylh2STl6Ty1iaVBZV2VSNGh2ZGVB" target="_blank" class="menu-link-item group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0ea5e9] via-[#2563eb] to-[#3730a3] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-camera-retro text-lg group-hover:scale-110 transition-transform"></i></div>
+                        <span class="font-bold tracking-wide text-sm md:text-base">人像創作</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="https://kennyshenhaha.github.io/photography-portfolio/food.html" class="menu-link-item group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0ea5e9] via-[#2563eb] to-[#3730a3] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-utensils text-lg group-hover:scale-110 transition-transform"></i></div>
+                        <span class="font-bold tracking-wide text-sm md:text-base">美食影像</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="https://kennyshenhaha.github.io/photography-portfolio/wedding.html" class="menu-link-item group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0ea5e9] via-[#2563eb] to-[#3730a3] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-ring text-lg group-hover:scale-110 transition-transform"></i></div>
+                        <span class="font-bold tracking-wide text-sm md:text-base">婚禮攝影</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox 互動與選單邏輯 -->
     <script>
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const closeBtn = document.getElementById('lightbox-close');
         const weddingItems = document.querySelectorAll('.wedding-item');
 
-        // 開啟放大圖片
+        // 選單與懸浮按鈕變數
+        const fabContainer = document.getElementById('fab-container');
+        const fabMenu = document.getElementById('fab-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+        const bottomSheet = document.getElementById('bottom-sheet');
+        const dragHandle = document.getElementById('drag-handle');
+
+        // ================= Lightbox 圖片放大邏輯 =================
         weddingItems.forEach(item => {
             item.addEventListener('click', () => {
                 const imgSrc = item.querySelector('img').src;
                 lightboxImg.src = imgSrc;
                 
-                // 移除 hidden，並加入 flex 確保置中生效
                 lightbox.classList.remove('hidden');
                 lightbox.classList.add('flex');
                 
-                // 使用 requestAnimationFrame 確保瀏覽器能正確渲染過渡效果
                 requestAnimationFrame(() => {
                     lightbox.classList.remove('opacity-0');
                     lightboxImg.classList.remove('scale-95');
@@ -247,13 +279,11 @@
             });
         });
 
-        // 關閉放大圖片函式
         const closeLightbox = () => {
             lightbox.classList.add('opacity-0');
             lightboxImg.classList.remove('scale-100');
             lightboxImg.classList.add('scale-95');
             
-            // 等待動畫結束後隱藏元素並移除 flex
             setTimeout(() => {
                 lightbox.classList.add('hidden');
                 lightbox.classList.remove('flex');
@@ -261,22 +291,76 @@
             }, 300);
         };
 
-        // 點擊關閉按鈕
         closeBtn.addEventListener('click', closeLightbox);
         
-        // 點擊背景黑幕也能關閉
         lightbox.addEventListener('click', (e) => {
             if (e.target === lightbox) {
                 closeLightbox();
             }
         });
 
-        // 支援按 ESC 鍵關閉
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
                 closeLightbox();
             }
         });
+
+        // ================= 底部滑動選單邏輯 =================
+        function openMenu() {
+            menuOverlay.classList.remove('opacity-0', 'pointer-events-none');
+            bottomSheet.classList.remove('translate-y-full');
+            fabContainer.classList.add('translate-y-[150%]', 'opacity-0'); // 打開選單時隱藏按鈕
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeMenu() {
+            menuOverlay.classList.add('opacity-0', 'pointer-events-none');
+            bottomSheet.classList.add('translate-y-full');
+            fabContainer.classList.remove('translate-y-[150%]', 'opacity-0'); // 關閉選單時顯示按鈕
+            document.body.style.overflow = '';
+        }
+
+        fabMenu.addEventListener('click', openMenu);
+        menuOverlay.addEventListener('click', closeMenu);
+        dragHandle.addEventListener('click', closeMenu);
+
+        let touchStartY = 0;
+        bottomSheet.addEventListener('touchstart', (e) => touchStartY = e.touches[0].clientY);
+        bottomSheet.addEventListener('touchmove', (e) => {
+            if (e.touches[0].clientY - touchStartY > 60) closeMenu();
+        });
+
+        // ================= 滾動半隱藏按鈕邏輯 =================
+        let lastScrollY = window.scrollY;
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+            
+            // 如果畫面正處於選單打開的狀態，或有圖片放大中，不做任何事
+            if (!bottomSheet.classList.contains('translate-y-full') || !lightbox.classList.contains('hidden')) return;
+
+            // 往下滾動時，按鈕半透明微降
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                fabContainer.classList.add('opacity-40', 'translate-y-4', 'scale-90');
+                fabContainer.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+            } 
+            // 往上滾動時，恢復顯示
+            else {
+                fabContainer.classList.remove('opacity-40', 'translate-y-4', 'scale-90');
+                fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+            }
+            lastScrollY = currentScrollY;
+        });
+
+        // 當手指碰到或滑鼠移過去半透明按鈕時，自動恢復狀態
+        fabContainer.addEventListener('mouseenter', () => {
+            fabContainer.classList.remove('opacity-40', 'translate-y-4', 'scale-90');
+            fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+        });
+        fabContainer.addEventListener('touchstart', () => {
+            fabContainer.classList.remove('opacity-40', 'translate-y-4', 'scale-90');
+            fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+        }, {passive: true});
+
     </script>
 </body>
 </html>
