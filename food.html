@@ -19,6 +19,32 @@
             overflow-x: hidden;
         }
 
+        /* ================= 科技感自訂游標 (僅限電腦版) ================= */
+        @media (pointer: fine) {
+            body, a, button, .food-item {
+                cursor: none !important;
+            }
+        }
+        .custom-cursor {
+            position: fixed; top: 0; left: 0; width: 6px; height: 6px; margin-top: -3px; margin-left: -3px;
+            background: #fff; border-radius: 50%; pointer-events: none; z-index: 10000;
+            transition: width 0.3s, height 0.3s, background-color 0.3s, margin 0.3s;
+            mix-blend-mode: difference;
+        }
+        .custom-cursor-follower {
+            position: fixed; top: 0; left: 0; width: 40px; height: 40px; margin-top: -20px; margin-left: -20px;
+            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; pointer-events: none; z-index: 9999;
+            transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s, margin 0.3s;
+        }
+        /* 游標懸停狀態 */
+        .custom-cursor.hovered {
+            width: 12px; height: 12px; margin-top: -6px; margin-left: -6px; background: #f3e5ab; mix-blend-mode: normal;
+        }
+        .custom-cursor-follower.hovered {
+            width: 60px; height: 60px; margin-top: -30px; margin-left: -30px; 
+            border-color: rgba(243, 229, 171, 0.6); background: rgba(243, 229, 171, 0.05);
+        }
+
         /* 輝光背景 */
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -147,20 +173,24 @@
 </head>
 <body class="p-6 md:p-12 lg:p-20">
 
-    <!-- 頁面過渡動畫遮罩 -->
-    <div id="page-transition" class="fixed inset-0 bg-[#050505] z-[9999] transition-opacity duration-500 pointer-events-none opacity-100"></div>
+    <!-- ================= 電腦版專屬自訂游標 ================= -->
+    <div id="cursor-dot" class="custom-cursor hidden md:block"></div>
+    <div id="cursor-ring" class="custom-cursor-follower hidden md:block"></div>
+
+    <!-- ================= 頁面過渡動畫遮罩 ================= -->
+    <div id="page-transition" class="fixed inset-0 bg-[#050505] z-[9999] transition-opacity duration-500 opacity-100 pointer-events-none"></div>
 
     <div class="bg-glow"></div>
 
     <!-- ================= 懸浮選單按鈕區 ================= -->
-    <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center justify-center gap-3 w-max">
+    <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center justify-center gap-3 w-max transition-all duration-500 ease-out">
         <!-- 回首頁 -->
-        <a href="https://kennyshenhaha.github.io/photography-portfolio/index.html" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all">
+        <a href="https://kennyshenhaha.github.io/photography-portfolio/index.html" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors">
             <i class="fa-solid fa-house text-base group-hover:scale-110 transition-transform"></i>
             <span class="text-xs md:text-sm font-bold tracking-widest">回首頁</span>
         </a>
         <!-- 探索作品 -->
-        <button id="fab-menu" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all">
+        <button id="fab-menu" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors">
             <i class="fa-solid fa-layer-group text-base group-hover:scale-110 transition-transform"></i>
             <span class="text-xs md:text-sm font-bold tracking-widest">探索作品</span>
         </button>
@@ -215,7 +245,7 @@
         </div>
     </main>
 
-    <!-- ================= 新增：底部聯絡區 (Call To Action) ================= -->
+    <!-- ================= 底部聯絡區 (Call To Action) ================= -->
     <div class="mt-20 border-t border-white/10 pt-20 pb-40 md:pb-24 text-center px-4">
         <h2 class="text-3xl md:text-4xl font-bold tracking-[0.2em] mb-4">LET'S CREATE</h2>
         <p class="text-white/40 text-sm md:text-base font-light tracking-widest mb-10">期待能為您記錄下最珍貴的時刻</p>
@@ -226,6 +256,11 @@
         </a>
     </div>
     <!-- ==================================================================== -->
+
+    <!-- 回到頂部按鈕 -->
+    <button id="back-to-top" class="fixed bottom-24 right-6 md:bottom-8 md:right-8 z-[850] w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-lg flex items-center justify-center opacity-0 translate-y-10 pointer-events-none transition-all duration-300 hover:bg-white/20 hover:scale-110">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
 
     <!-- 照片放大用的 Lightbox 容器 (加入左右箭頭) -->
     <div id="lightbox" class="fixed inset-0 bg-black/95 z-[2000] hidden flex-col items-center justify-center opacity-0">
@@ -245,11 +280,6 @@
         <!-- 顯示的照片 -->
         <img id="lightbox-img" src="" alt="Enlarged view" class="max-w-[100vw] max-h-[90vh] md:max-w-[85vw] object-contain scale-95 drop-shadow-2xl pointer-events-none select-none">
     </div>
-
-    <!-- 回到頂部按鈕 -->
-    <button id="back-to-top" class="fixed bottom-24 right-6 md:bottom-8 md:right-8 z-[850] w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-lg flex items-center justify-center opacity-0 translate-y-10 pointer-events-none transition-all duration-300 hover:bg-white/20 hover:scale-110">
-        <i class="fa-solid fa-arrow-up"></i>
-    </button>
 
     <!-- ================= 底部滑動選單 (Bottom Sheet) ================= -->
     <div id="menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[1000] opacity-0 pointer-events-none transition-opacity duration-300"></div>
@@ -308,8 +338,48 @@
         </div>
     </div>
 
-    <!-- Lightbox 互動與選單邏輯 -->
     <script>
+        // ================= 自訂游標邏輯 (僅電腦版) =================
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorRing = document.getElementById('cursor-ring');
+        
+        if (window.matchMedia("(pointer: fine)").matches && cursorDot && cursorRing) {
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            let ringX = mouseX;
+            let ringY = mouseY;
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+            });
+
+            function animateCursor() {
+                ringX += (mouseX - ringX) * 0.15;
+                ringY += (mouseY - ringY) * 0.15;
+                cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            // 確保游標在這些元素上時，會自動放大發光
+            const interactiveSelectors = 'a, button, .menu-link-item, .food-item, #lightbox-close, #lightbox-prev, #lightbox-next, #back-to-top';
+            
+            document.addEventListener('mouseover', (e) => {
+                if (e.target.closest(interactiveSelectors)) {
+                    cursorDot.classList.add('hovered');
+                    cursorRing.classList.add('hovered');
+                }
+            });
+            document.addEventListener('mouseout', (e) => {
+                if (e.target.closest(interactiveSelectors)) {
+                    cursorDot.classList.remove('hovered');
+                    cursorRing.classList.remove('hovered');
+                }
+            });
+        }
+
         // ================= Lightbox 升級邏輯 =================
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
@@ -321,18 +391,16 @@
         let currentImgIndex = 0;
         const imgSources = Array.from(foodItems).map(item => item.querySelector('img').src);
 
-        // 更新圖片
         function updateLightboxImage() {
-            lightboxImg.style.opacity = '0'; // 先淡出
+            lightboxImg.style.opacity = '0'; 
             setTimeout(() => {
                 lightboxImg.src = imgSources[currentImgIndex];
                 lightboxImg.onload = () => {
-                    lightboxImg.style.opacity = '1'; // 載入完成後淡入
+                    lightboxImg.style.opacity = '1'; 
                 };
             }, 200);
         }
 
-        // 開啟
         foodItems.forEach((item, index) => {
             item.addEventListener('click', () => {
                 currentImgIndex = index;
@@ -350,7 +418,6 @@
             });
         });
 
-        // 關閉
         const closeLightbox = () => {
             lightbox.classList.add('opacity-0');
             lightboxImg.classList.remove('scale-100');
@@ -363,7 +430,6 @@
             }, 300);
         };
 
-        // 上一張 / 下一張
         const showPrev = (e) => { if(e) e.stopPropagation(); currentImgIndex = (currentImgIndex - 1 + imgSources.length) % imgSources.length; updateLightboxImage(); };
         const showNext = (e) => { if(e) e.stopPropagation(); currentImgIndex = (currentImgIndex + 1) % imgSources.length; updateLightboxImage(); };
 
@@ -375,7 +441,6 @@
             if (e.target === lightbox) closeLightbox();
         });
 
-        // 鍵盤支援
         document.addEventListener('keydown', (e) => {
             if (!lightbox.classList.contains('hidden')) {
                 if (e.key === 'Escape') closeLightbox();
@@ -384,7 +449,7 @@
             }
         });
 
-        // 手機版滑動支援 (左右切換、下滑關閉)
+        // 手機版滑動支援
         let touchStartX = 0;
         let touchStartY = 0;
 
@@ -399,15 +464,13 @@
             const deltaX = touchStartX - touchEndX;
             const deltaY = touchStartY - touchEndY;
 
-            // 判斷是水平滑動還是垂直滑動
             if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                if (deltaX > 50) showNext(); // 往左滑 (看下一張)
-                else if (deltaX < -50) showPrev(); // 往右滑 (看上一張)
+                if (deltaX > 50) showNext(); 
+                else if (deltaX < -50) showPrev(); 
             } else {
-                if (deltaY < -60) closeLightbox(); // 往下滑 (關閉)
+                if (deltaY < -60) closeLightbox(); 
             }
         }, {passive: true});
-
 
         // ================= 底部滑動選單邏輯 =================
         const fabContainer = document.getElementById('fab-container');
@@ -419,15 +482,17 @@
         function openMenu() {
             menuOverlay.classList.remove('opacity-0', 'pointer-events-none');
             bottomSheet.classList.remove('translate-y-full');
-            fabContainer.classList.add('translate-y-[150%]', 'opacity-0'); 
+            fabContainer.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none'); 
             document.body.style.overflow = 'hidden'; 
         }
 
         function closeMenu() {
             menuOverlay.classList.add('opacity-0', 'pointer-events-none');
             bottomSheet.classList.add('translate-y-full');
-            fabContainer.classList.remove('translate-y-[150%]', 'opacity-0'); 
+            fabContainer.classList.remove('translate-y-12', 'opacity-0', 'pointer-events-none'); 
             document.body.style.overflow = '';
+            setFabState('full');
+            resetIdleTimer();
         }
 
         fabMenu.addEventListener('click', openMenu);
@@ -440,60 +505,57 @@
             if (e.touches[0].clientY - menuTouchStartY > 60) closeMenu();
         });
 
-        // ================= 滾動半隱藏按鈕邏輯 =================
+        // ================= 進階按鈕顯示邏輯 (1秒閒置消失) =================
+        let idleTimer;
         let lastScrollY = window.scrollY;
+
+        function setFabState(state) {
+            if (!bottomSheet.classList.contains('translate-y-full')) return;
+            
+            fabContainer.classList.remove(
+                'opacity-100', 'translate-y-0', 'scale-100', 
+                'opacity-40', 'translate-y-4', 'scale-90', 
+                'opacity-0', 'translate-y-12', 'pointer-events-none'
+            );
+
+            if (state === 'full') {
+                fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+            } else if (state === 'semi') {
+                fabContainer.classList.add('opacity-40', 'translate-y-4', 'scale-90');
+            } else if (state === 'hidden') {
+                fabContainer.classList.add('opacity-0', 'translate-y-12', 'scale-90', 'pointer-events-none');
+            }
+        }
+
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            if (window.scrollY > window.innerHeight * 0.3) {
+                idleTimer = setTimeout(() => {
+                    setFabState('hidden');
+                }, 1000); 
+            }
+        }
+
         window.addEventListener('scroll', () => {
             const currentScrollY = window.scrollY;
-            
-            if (!bottomSheet.classList.contains('translate-y-full') || !lightbox.classList.contains('hidden')) return;
-
             if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                fabContainer.classList.add('opacity-40', 'translate-y-4', 'scale-90');
-                fabContainer.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+                setFabState('semi');
             } else {
-                fabContainer.classList.remove('opacity-40', 'translate-y-4', 'scale-90');
-                fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+                setFabState('full');
             }
             lastScrollY = currentScrollY;
-        });
-
-        fabContainer.addEventListener('mouseenter', () => {
-            fabContainer.classList.remove('opacity-40', 'translate-y-4', 'scale-90');
-            fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
-        });
-        fabContainer.addEventListener('touchstart', () => {
-            fabContainer.classList.remove('opacity-40', 'translate-y-4', 'scale-90');
-            fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+            resetIdleTimer();
         }, {passive: true});
 
-        // ================= 頁面過渡動畫邏輯 =================
-        const pageTransition = document.getElementById('page-transition');
-        
-        // 進入頁面時淡入 (透明度變 0)
-        window.addEventListener('pageshow', () => {
-            pageTransition.classList.remove('opacity-100');
-            pageTransition.classList.add('opacity-0');
+        ['touchstart', 'mousemove', 'click'].forEach(event => {
+            window.addEventListener(event, () => {
+                setFabState('full');
+                resetIdleTimer();
+            }, {passive: true});
         });
 
-        // 點擊內部連結時淡出 (透明度變 1)
-        document.querySelectorAll('a').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                const target = this.getAttribute('target');
-                
-                // 判斷是否為站內跳轉連結 (不包含 target="_blank" 且有 href)
-                if (href && !href.startsWith('#') && !href.startsWith('javascript') && target !== '_blank' && !this.hasAttribute('download')) {
-                    e.preventDefault(); 
-                    pageTransition.classList.remove('opacity-0');
-                    pageTransition.classList.add('opacity-100');
-                    
-                    // 等待過渡動畫結束後跳轉 (500ms 需與 CSS transition duration 一致)
-                    setTimeout(() => {
-                        window.location.href = href;
-                    }, 500);
-                }
-            });
-        });
+        setFabState('full');
+        resetIdleTimer();
 
         // ================= 回到頂部按鈕邏輯 =================
         const backToTopBtn = document.getElementById('back-to-top');
@@ -512,7 +574,38 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
+        // ================= 頁面過渡動畫邏輯 =================
+        const pageTransition = document.getElementById('page-transition');
+        
+        function hideTransition() {
+            pageTransition.classList.remove('opacity-100');
+            pageTransition.classList.add('opacity-0');
+        }
+
+        document.addEventListener('DOMContentLoaded', hideTransition);
+        window.addEventListener('load', hideTransition);
+        window.addEventListener('pageshow', hideTransition);
+        setTimeout(hideTransition, 500); 
+
+        document.addEventListener('click', function(e) {
+            const anchor = e.target.closest('a');
+            if (!anchor) return; 
+
+            const href = anchor.getAttribute('href');
+            const target = anchor.getAttribute('target');
+            const onclick = anchor.getAttribute('onclick');
+            
+            if (href && !href.startsWith('#') && !href.startsWith('javascript') && target !== '_blank' && !anchor.hasAttribute('download') && !onclick) {
+                e.preventDefault(); 
+                pageTransition.classList.remove('opacity-0');
+                pageTransition.classList.add('opacity-100');
+                
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 400);
+            }
+        });
+
     </script>
 </body>
 </html>
- 
