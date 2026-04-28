@@ -146,7 +146,7 @@
 
     <div class="frame-ui"></div>
 
-    <!-- ================= 懸浮選單按鈕區 (電腦版透白 / 手機版深黑 + 滾動半隱藏) ================= -->
+    <!-- ================= 懸浮選單按鈕區 ================= -->
     <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center justify-center gap-3 w-max">
         <!-- 關於我 (跳轉至輪播區) -->
         <a onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all cursor-pointer">
@@ -250,11 +250,6 @@
             </div>
         </div>
     </section>
-
-    <!-- ================= 回到頂部按鈕 ================= -->
-    <button id="back-to-top" class="fixed bottom-24 right-6 md:bottom-8 md:right-8 z-[850] w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-lg flex items-center justify-center opacity-0 translate-y-10 pointer-events-none transition-all duration-300 hover:bg-white/20 hover:scale-110">
-        <i class="fa-solid fa-arrow-up"></i>
-    </button>
 
     <!-- ================= 底部滑動選單 (Bottom Sheet) ================= -->
     <div id="menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[1000] opacity-0 pointer-events-none transition-opacity duration-300"></div>
@@ -501,23 +496,6 @@
                     }, 500);
                 }
             });
-        });
-
-        // ================= 回到頂部按鈕邏輯 =================
-        const backToTopBtn = document.getElementById('back-to-top');
-        
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                backToTopBtn.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
-                backToTopBtn.classList.add('opacity-100', 'translate-y-0');
-            } else {
-                backToTopBtn.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
-                backToTopBtn.classList.remove('opacity-100', 'translate-y-0');
-            }
-        });
-
-        backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
     </script>
