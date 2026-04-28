@@ -38,24 +38,37 @@
             height: auto;
         }
 
-        /* 作品單元通用樣式 */
+        /* 骨架屏載入動畫與作品單元通用樣式 */
         .food-item {
             position: relative;
             overflow: hidden;
             border-radius: 4px;
-            background: #111;
+            background: linear-gradient(90deg, #111 25%, #222 50%, #111 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite linear;
             transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
             width: 100%;
             height: 100%;
             cursor: pointer;
         }
 
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* 圖片載入過渡效果 */
         .food-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.8s ease;
             display: block;
+            opacity: 0; /* 預設隱藏，等待 onload */
+            transition: opacity 0.6s ease, transform 0.8s ease;
+        }
+
+        .food-item img.loaded {
+            opacity: 1; /* 載入完成後顯示 */
         }
 
         /* 桌面版對齊邏輯 */
@@ -90,7 +103,7 @@
             z-index: 20;
         }
 
-        .food-item:hover img {
+        .food-item:hover img.loaded {
             transform: scale(1.05);
         }
 
@@ -106,7 +119,7 @@
             opacity: 1;
         }
 
-        /* 底部選單項目 hover 效果 (新增) */
+        /* 底部選單項目 hover 效果 */
         .menu-link-item {
             display: flex; align-items: center; justify-content: space-between;
             padding: 16px 20px; background: rgba(255,255,255,0.03);
@@ -117,7 +130,7 @@
             background: rgba(255,255,255,0.08); transform: translateY(-2px); border-color: rgba(255,255,255,0.2);
         }
 
-        /* 懸浮按鈕過渡動畫 (新增) */
+        /* 懸浮按鈕過渡動畫 */
         #fab-container { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
         @keyframes fadeInUp {
@@ -128,19 +141,15 @@
         .animate-fade-in { animation: fadeInUp 1s ease forwards; }
 
         /* 放大視窗 (Lightbox) 的過渡動畫 */
-        #lightbox {
-            transition: opacity 0.3s ease;
-        }
-        #lightbox-img {
-            transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
+        #lightbox { transition: opacity 0.3s ease; overscroll-behavior: contain; touch-action: none;}
+        #lightbox-img { transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); }
     </style>
 </head>
 <body class="p-6 md:p-12 lg:p-20">
 
     <div class="bg-glow"></div>
 
-    <!-- ================= 懸浮選單按鈕區 (電腦版透白 / 手機版深黑 + 滾動半隱藏) ================= -->
+    <!-- ================= 懸浮選單按鈕區 ================= -->
     <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center justify-center gap-3 w-max">
         <!-- 回首頁 -->
         <a href="https://kennyshenhaha.github.io/photography-portfolio/index.html" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all">
@@ -164,51 +173,74 @@
         <div class="h-[1px] w-12 bg-[#f3e5ab] mt-6 opacity-60"></div>
     </header>
 
-    <!-- 網格區 -->
-    <main class="grid-container mb-40 animate-fade-in" style="animation-delay: 0.2s;">
+    <!-- 網格區 (加入 loading="lazy" 與 onload="this.classList.add('loaded')") -->
+    <main class="grid-container animate-fade-in" style="animation-delay: 0.2s;">
         <div class="food-item food-01">
-            <img src="Food-01.jpg" alt="Food 01" onerror="this.src='https://via.placeholder.com/600x800/111/fff?text=Food+01'">
+            <img src="Food-01.jpg" alt="Food 01" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x800/111/fff?text=Food+01'">
             <div class="overlay">
                 <span class="text-[9px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Signature</span>
                 <h3 class="text-lg font-bold">Dessert Project 01</h3>
             </div>
         </div>
         <div class="food-item food-02">
-            <img src="Food-02.jpg" alt="Food 02" onerror="this.src='https://via.placeholder.com/600x800/111/fff?text=Food+02'">
+            <img src="Food-02.jpg" alt="Food 02" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x800/111/fff?text=Food+02'">
             <div class="overlay"><h3 class="text-lg font-bold">02</h3></div>
         </div>
         <div class="food-item food-03 col-ref">
-            <img src="Food-03.jpg" alt="Food 03" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+03'">
+            <img src="Food-03.jpg" alt="Food 03" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+03'">
             <div class="overlay"><h3 class="text-sm font-bold">03</h3></div>
         </div>
         <div class="food-item food-04 col-ref">
-            <img src="Food-04.jpg" alt="Food 04" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+04'">
+            <img src="Food-04.jpg" alt="Food 04" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+04'">
             <div class="overlay"><h3 class="text-sm font-bold">04</h3></div>
         </div>
         <div class="food-item food-05 col-ref">
-            <img src="Food-05.jpg" alt="Food 05" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+05'">
+            <img src="Food-05.jpg" alt="Food 05" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+05'">
             <div class="overlay"><h3 class="text-sm font-bold">05</h3></div>
         </div>
         <div class="food-item food-06 col-ref">
-            <img src="Food-06.jpg" alt="Food 06" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+06'">
+            <img src="Food-06.jpg" alt="Food 06" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+06'">
             <div class="overlay"><h3 class="text-sm font-bold">06</h3></div>
         </div>
         <div class="food-item food-07 col-ref">
-            <img src="Food-07.jpg" alt="Food 07" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+07'">
+            <img src="Food-07.jpg" alt="Food 07" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+07'">
             <div class="overlay"><h3 class="text-sm font-bold">07</h3></div>
         </div>
         <div class="food-item food-08 col-ref">
-            <img src="Food-08.jpg" alt="Food 08" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+08'">
+            <img src="Food-08.jpg" alt="Food 08" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+08'">
             <div class="overlay"><h3 class="text-sm font-bold">08</h3></div>
         </div>
     </main>
 
-    <!-- 照片放大用的 Lightbox 容器 (預設隱藏) -->
+    <!-- ================= 新增：底部聯絡區 (Call To Action) ================= -->
+    <div class="mt-20 border-t border-white/10 pt-20 pb-40 md:pb-24 text-center px-4">
+        <h2 class="text-3xl md:text-4xl font-bold tracking-[0.2em] mb-4">LET'S CREATE</h2>
+        <p class="text-white/40 text-sm md:text-base font-light tracking-widest mb-10">期待能為您記錄下最珍貴的時刻</p>
+        <a href="https://www.instagram.com/kshen_life?igsh=OWZ4ZGs4cHhzb3Rz&utm_source=qr" target="_blank" class="inline-flex items-center gap-4 px-8 py-4 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] hover:scale-105 transition-transform duration-300 shadow-[0_10px_30px_rgba(225,48,108,0.3)] text-white font-bold tracking-wider relative overflow-hidden group">
+            <div class="absolute inset-0 bg-white/20 transform -translate-x-full skew-x-12 group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
+            <i class="fa-brands fa-instagram text-2xl"></i>
+            <span>聯絡我 / Follow IG</span>
+        </a>
+    </div>
+    <!-- ==================================================================== -->
+
+    <!-- 照片放大用的 Lightbox 容器 (加入左右箭頭) -->
     <div id="lightbox" class="fixed inset-0 bg-black/95 z-[2000] hidden flex-col items-center justify-center opacity-0">
+        <!-- 關閉按鈕 -->
         <button id="lightbox-close" class="absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white text-4xl cursor-pointer z-50 transition-colors">
             &times;
         </button>
-        <img id="lightbox-img" src="" alt="Enlarged view" class="max-w-[95vw] max-h-[90vh] object-contain scale-95 shadow-2xl">
+        <!-- 上一張按鈕 -->
+        <button id="lightbox-prev" class="absolute left-2 md:left-10 top-1/2 -translate-y-1/2 text-white/30 hover:text-white text-4xl md:text-5xl cursor-pointer z-50 p-4 transition-colors">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <!-- 下一張按鈕 -->
+        <button id="lightbox-next" class="absolute right-2 md:right-10 top-1/2 -translate-y-1/2 text-white/30 hover:text-white text-4xl md:text-5xl cursor-pointer z-50 p-4 transition-colors">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        
+        <!-- 顯示的照片 -->
+        <img id="lightbox-img" src="" alt="Enlarged view" class="max-w-[100vw] max-h-[90vh] md:max-w-[85vw] object-contain scale-95 drop-shadow-2xl pointer-events-none select-none">
     </div>
 
     <!-- ================= 底部滑動選單 (Bottom Sheet) ================= -->
@@ -270,23 +302,34 @@
 
     <!-- Lightbox 互動與選單邏輯 -->
     <script>
+        // ================= Lightbox 升級邏輯 =================
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const closeBtn = document.getElementById('lightbox-close');
+        const prevBtn = document.getElementById('lightbox-prev');
+        const nextBtn = document.getElementById('lightbox-next');
         const foodItems = document.querySelectorAll('.food-item');
+        
+        let currentImgIndex = 0;
+        const imgSources = Array.from(foodItems).map(item => item.querySelector('img').src);
 
-        // 選單與懸浮按鈕變數
-        const fabContainer = document.getElementById('fab-container');
-        const fabMenu = document.getElementById('fab-menu');
-        const menuOverlay = document.getElementById('menu-overlay');
-        const bottomSheet = document.getElementById('bottom-sheet');
-        const dragHandle = document.getElementById('drag-handle');
+        // 更新圖片
+        function updateLightboxImage() {
+            lightboxImg.style.opacity = '0'; // 先淡出
+            setTimeout(() => {
+                lightboxImg.src = imgSources[currentImgIndex];
+                lightboxImg.onload = () => {
+                    lightboxImg.style.opacity = '1'; // 載入完成後淡入
+                };
+            }, 200);
+        }
 
-        // ================= Lightbox 圖片放大邏輯 =================
-        foodItems.forEach(item => {
+        // 開啟
+        foodItems.forEach((item, index) => {
             item.addEventListener('click', () => {
-                const imgSrc = item.querySelector('img').src;
-                lightboxImg.src = imgSrc;
+                currentImgIndex = index;
+                lightboxImg.src = imgSources[currentImgIndex];
+                
                 lightbox.classList.remove('hidden');
                 lightbox.classList.add('flex');
                 
@@ -294,14 +337,17 @@
                     lightbox.classList.remove('opacity-0');
                     lightboxImg.classList.remove('scale-95');
                     lightboxImg.classList.add('scale-100');
+                    lightboxImg.style.opacity = '1';
                 });
             });
         });
 
+        // 關閉
         const closeLightbox = () => {
             lightbox.classList.add('opacity-0');
             lightboxImg.classList.remove('scale-100');
             lightboxImg.classList.add('scale-95');
+            
             setTimeout(() => {
                 lightbox.classList.add('hidden');
                 lightbox.classList.remove('flex');
@@ -309,22 +355,70 @@
             }, 300);
         };
 
+        // 上一張 / 下一張
+        const showPrev = (e) => { if(e) e.stopPropagation(); currentImgIndex = (currentImgIndex - 1 + imgSources.length) % imgSources.length; updateLightboxImage(); };
+        const showNext = (e) => { if(e) e.stopPropagation(); currentImgIndex = (currentImgIndex + 1) % imgSources.length; updateLightboxImage(); };
+
         closeBtn.addEventListener('click', closeLightbox);
-        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) closeLightbox(); });
+        prevBtn.addEventListener('click', showPrev);
+        nextBtn.addEventListener('click', showNext);
+        
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        // 鍵盤支援
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('hidden')) {
+                if (e.key === 'Escape') closeLightbox();
+                else if (e.key === 'ArrowLeft') showPrev();
+                else if (e.key === 'ArrowRight') showNext();
+            }
+        });
+
+        // 手機版滑動支援 (左右切換、下滑關閉)
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        lightbox.addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, {passive: true});
+
+        lightbox.addEventListener('touchend', e => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const deltaX = touchStartX - touchEndX;
+            const deltaY = touchStartY - touchEndY;
+
+            // 判斷是水平滑動還是垂直滑動
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                if (deltaX > 50) showNext(); // 往左滑 (看下一張)
+                else if (deltaX < -50) showPrev(); // 往右滑 (看上一張)
+            } else {
+                if (deltaY < -60) closeLightbox(); // 往下滑 (關閉)
+            }
+        }, {passive: true});
+
 
         // ================= 底部滑動選單邏輯 =================
+        const fabContainer = document.getElementById('fab-container');
+        const fabMenu = document.getElementById('fab-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+        const bottomSheet = document.getElementById('bottom-sheet');
+        const dragHandle = document.getElementById('drag-handle');
+
         function openMenu() {
             menuOverlay.classList.remove('opacity-0', 'pointer-events-none');
             bottomSheet.classList.remove('translate-y-full');
-            fabContainer.classList.add('translate-y-[150%]', 'opacity-0'); // 打開選單時隱藏按鈕
+            fabContainer.classList.add('translate-y-[150%]', 'opacity-0'); 
             document.body.style.overflow = 'hidden'; 
         }
 
         function closeMenu() {
             menuOverlay.classList.add('opacity-0', 'pointer-events-none');
             bottomSheet.classList.add('translate-y-full');
-            fabContainer.classList.remove('translate-y-[150%]', 'opacity-0'); // 關閉選單時顯示按鈕
+            fabContainer.classList.remove('translate-y-[150%]', 'opacity-0'); 
             document.body.style.overflow = '';
         }
 
@@ -332,10 +426,10 @@
         menuOverlay.addEventListener('click', closeMenu);
         dragHandle.addEventListener('click', closeMenu);
 
-        let touchStartY = 0;
-        bottomSheet.addEventListener('touchstart', (e) => touchStartY = e.touches[0].clientY);
+        let menuTouchStartY = 0;
+        bottomSheet.addEventListener('touchstart', (e) => menuTouchStartY = e.touches[0].clientY);
         bottomSheet.addEventListener('touchmove', (e) => {
-            if (e.touches[0].clientY - touchStartY > 60) closeMenu();
+            if (e.touches[0].clientY - menuTouchStartY > 60) closeMenu();
         });
 
         // ================= 滾動半隱藏按鈕邏輯 =================
@@ -343,23 +437,18 @@
         window.addEventListener('scroll', () => {
             const currentScrollY = window.scrollY;
             
-            // 如果畫面正處於選單打開的狀態，或有圖片放大中，不做任何事
             if (!bottomSheet.classList.contains('translate-y-full') || !lightbox.classList.contains('hidden')) return;
 
-            // 往下滾動時，按鈕半透明微降
             if (currentScrollY > lastScrollY && currentScrollY > 100) {
                 fabContainer.classList.add('opacity-40', 'translate-y-4', 'scale-90');
                 fabContainer.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
-            } 
-            // 往上滾動時，恢復顯示
-            else {
+            } else {
                 fabContainer.classList.remove('opacity-40', 'translate-y-4', 'scale-90');
                 fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
             }
             lastScrollY = currentScrollY;
         });
 
-        // 當手指碰到或滑鼠移過去半透明按鈕時，自動恢復狀態
         fabContainer.addEventListener('mouseenter', () => {
             fabContainer.classList.remove('opacity-40', 'translate-y-4', 'scale-90');
             fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
