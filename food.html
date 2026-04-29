@@ -19,7 +19,7 @@
             overflow-x: hidden;
         }
 
-        /* ================= 科技感自訂游標 (效能最優化版 - 移除 Mix-Blend-Mode) ================= */
+        /* ================= 科技感自訂游標 ================= */
         @media (pointer: fine) {
             body, a, button, .food-item, .nav-arrow, #lightbox-close {
                 cursor: none !important;
@@ -28,17 +28,17 @@
         .custom-cursor {
             position: fixed; top: 0; left: 0; width: 6px; height: 6px; margin-top: -3px; margin-left: -3px;
             background: #fff; border-radius: 50%; pointer-events: none; z-index: 10000;
-            box-shadow: 0 0 4px rgba(0,0,0,0.5); /* 加入微陰影確保在淺色圖上可見 */
-            transition: width 0.3s, height 0.3s, background-color 0.3s, margin 0.3s, box-shadow 0.3s;
+            box-shadow: 0 0 4px rgba(0,0,0,0.5); 
+            transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease, margin 0.3s ease, box-shadow 0.3s ease;
             will-change: transform; 
         }
         .custom-cursor-follower {
             position: fixed; top: 0; left: 0; width: 40px; height: 40px; margin-top: -20px; margin-left: -20px;
             border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; pointer-events: none; z-index: 9999;
-            transition: width 0.3s, height 0.3s, border-color 0.3s, background-color 0.3s, margin 0.3s;
-            will-change: transform, width, height; 
+            transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background-color 0.3s ease, margin 0.3s ease;
+            will-change: transform; 
         }
-        /* 游標懸停狀態：與 Wedding 頁面一致的放大與發光 */
+        /* 游標懸停狀態 */
         .custom-cursor.hovered {
             width: 12px; height: 12px; margin-top: -6px; margin-left: -6px; 
             background: #f3e5ab; 
@@ -50,12 +50,13 @@
             background: rgba(243, 229, 171, 0.05);
         }
 
-        /* 輝光背景 */
+        /* 輝光背景 (強制硬體加速) */
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at 10% 10%, rgba(243, 229, 171, 0.05) 0%, transparent 50%),
                         radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
             z-index: -1; pointer-events: none;
+            transform: translateZ(0); 
         }
 
         /* 網格核心容器 */
@@ -77,9 +78,12 @@
             background: linear-gradient(90deg, #111 25%, #222 50%, #111 75%);
             background-size: 200% 100%;
             animation: skeleton-loading 1.5s infinite linear;
-            transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            /* 效能優化：明確指定過渡屬性，移除 all */
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
             width: 100%;
             height: 100%;
+            will-change: transform; /* 提示瀏覽器優化動畫 */
+            transform: translateZ(0);
         }
 
         @keyframes skeleton-loading {
@@ -93,7 +97,8 @@
             object-fit: cover;
             display: block;
             opacity: 0; 
-            transition: opacity 0.6s ease, transform 0.8s ease;
+            transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+            will-change: transform, opacity;
         }
 
         .food-item img.loaded {
@@ -138,13 +143,11 @@
 
         .overlay {
             position: absolute; inset: 0;
-            /* 修改處：將背景設為透明，移除反黑漸層 */
             background: transparent;
             opacity: 0; transition: opacity 0.4s ease;
             display: flex; flex-direction: column; justify-content: flex-end;
             padding: 1.5rem;
             pointer-events: none;
-            /* 可選：為文字加入陰影確保在亮色圖片上依然清晰 */
             text-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
 
@@ -157,14 +160,16 @@
             display: flex; align-items: center; justify-content: space-between;
             padding: 16px 20px; background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.05); border-radius: 16px;
-            color: #fff; text-decoration: none; transition: all 0.3s ease;
+            color: #fff; text-decoration: none; 
+            /* 效能優化：移除 all */
+            transition: background-color 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
         }
         .menu-link-item:hover {
             background: rgba(255,255,255,0.08); transform: translateY(-2px); border-color: rgba(255,255,255,0.2);
         }
 
-        /* 懸浮按鈕過渡動畫 */
-        #fab-container { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* 懸浮按鈕過渡動畫 (效能優化：移除 all) */
+        #fab-container { transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
@@ -175,7 +180,7 @@
 
         /* 放大視窗 (Lightbox) 的過渡動畫 */
         #lightbox { transition: opacity 0.3s ease; overscroll-behavior: contain; touch-action: none;}
-        #lightbox-img { transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        #lightbox-img { transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); will-change: transform, opacity; }
     </style>
 </head>
 <body class="p-6 md:p-12 lg:p-20">
@@ -190,7 +195,7 @@
     <div class="bg-glow"></div>
 
     <!-- ================= 懸浮選單按鈕區 ================= -->
-    <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center justify-center gap-3 w-max transition-all duration-500 ease-out">
+    <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center justify-center gap-3 w-max">
         <!-- 回首頁 -->
         <a href="https://kennyshenhaha.github.io/photography-portfolio/index.html" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors">
             <i class="fa-solid fa-house text-base group-hover:scale-110 transition-transform"></i>
@@ -215,44 +220,45 @@
 
     <!-- 網格區 -->
     <main class="grid-container animate-fade-in" style="animation-delay: 0.2s;">
+        <!-- 效能優化：onload 時移除 parentElement 的 skeleton 動畫，釋放 GPU 資源 -->
         <div class="food-item food-01">
-            <img src="Food-01.jpg" alt="Food 01" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x800/111/fff?text=Food+01'">
+            <img src="Food-01.jpg" alt="Food 01" loading="lazy" onload="this.classList.add('loaded'); this.parentElement.style.animation='none'; this.parentElement.style.background='transparent';" onerror="this.src='https://via.placeholder.com/600x800/111/fff?text=Food+01'">
             <div class="overlay">
                 <span class="text-[9px] tracking-[0.3em] text-[#f3e5ab] mb-2 uppercase">Signature</span>
                 <h3 class="text-lg font-bold">Dessert Project 01</h3>
             </div>
         </div>
         <div class="food-item food-02">
-            <img src="Food-02.jpg" alt="Food 02" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x800/111/fff?text=Food+02'">
+            <img src="Food-02.jpg" alt="Food 02" loading="lazy" onload="this.classList.add('loaded'); this.parentElement.style.animation='none'; this.parentElement.style.background='transparent';" onerror="this.src='https://via.placeholder.com/600x800/111/fff?text=Food+02'">
             <div class="overlay"><h3 class="text-lg font-bold">02</h3></div>
         </div>
         <div class="food-item food-03 col-ref">
-            <img src="Food-03.jpg" alt="Food 03" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+03'">
+            <img src="Food-03.jpg" alt="Food 03" loading="lazy" onload="this.classList.add('loaded'); this.parentElement.style.animation='none'; this.parentElement.style.background='transparent';" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+03'">
             <div class="overlay"><h3 class="text-sm font-bold">03</h3></div>
         </div>
         <div class="food-item food-04 col-ref">
-            <img src="Food-04.jpg" alt="Food 04" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+04'">
+            <img src="Food-04.jpg" alt="Food 04" loading="lazy" onload="this.classList.add('loaded'); this.parentElement.style.animation='none'; this.parentElement.style.background='transparent';" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+04'">
             <div class="overlay"><h3 class="text-sm font-bold">04</h3></div>
         </div>
         <div class="food-item food-05 col-ref">
-            <img src="Food-05.jpg" alt="Food 05" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+05'">
+            <img src="Food-05.jpg" alt="Food 05" loading="lazy" onload="this.classList.add('loaded'); this.parentElement.style.animation='none'; this.parentElement.style.background='transparent';" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+05'">
             <div class="overlay"><h3 class="text-sm font-bold">05</h3></div>
         </div>
         <div class="food-item food-06 col-ref">
-            <img src="Food-06.jpg" alt="Food 06" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+06'">
+            <img src="Food-06.jpg" alt="Food 06" loading="lazy" onload="this.classList.add('loaded'); this.parentElement.style.animation='none'; this.parentElement.style.background='transparent';" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+06'">
             <div class="overlay"><h3 class="text-sm font-bold">06</h3></div>
         </div>
         <div class="food-item food-07 col-ref">
-            <img src="Food-07.jpg" alt="Food 07" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+07'">
+            <img src="Food-07.jpg" alt="Food 07" loading="lazy" onload="this.classList.add('loaded'); this.parentElement.style.animation='none'; this.parentElement.style.background='transparent';" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+07'">
             <div class="overlay"><h3 class="text-sm font-bold">07</h3></div>
         </div>
         <div class="food-item food-08 col-ref">
-            <img src="Food-08.jpg" alt="Food 08" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+08'">
+            <img src="Food-08.jpg" alt="Food 08" loading="lazy" onload="this.classList.add('loaded'); this.parentElement.style.animation='none'; this.parentElement.style.background='transparent';" onerror="this.src='https://via.placeholder.com/600x600/111/fff?text=Food+08'">
             <div class="overlay"><h3 class="text-sm font-bold">08</h3></div>
         </div>
     </main>
 
-    <!-- ================= 底部聯絡區 (Call To Action) ================= -->
+    <!-- ================= 底部聯絡區 ================= -->
     <div class="mt-20 border-t border-white/10 pt-20 pb-40 md:pb-24 text-center px-4">
         <h2 class="text-3xl md:text-4xl font-bold tracking-[0.2em] mb-4">LET'S CREATE</h2>
         <p class="text-white/40 text-sm md:text-base font-light tracking-widest mb-10">期待能為您記錄下最珍貴的時刻</p>
@@ -268,7 +274,7 @@
         <i class="fa-solid fa-arrow-up"></i>
     </button>
 
-    <!-- 照片放大用的 Lightbox 容器 -->
+    <!-- 照片放大用的 Lightbox -->
     <div id="lightbox" class="fixed inset-0 bg-black/95 z-[2000] hidden flex-col items-center justify-center opacity-0">
         <button id="lightbox-close" class="absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white text-4xl cursor-pointer z-50 transition-colors">
             &times;
@@ -282,7 +288,7 @@
         <img id="lightbox-img" src="" alt="Enlarged view" class="max-w-[100vw] max-h-[90vh] md:max-w-[85vw] object-contain scale-95 drop-shadow-2xl pointer-events-none select-none">
     </div>
 
-    <!-- ================= 底部滑動選單 (Bottom Sheet) ================= -->
+    <!-- ================= 底部滑動選單 ================= -->
     <div id="menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[1000] opacity-0 pointer-events-none transition-opacity duration-300"></div>
     <div id="bottom-sheet" class="fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-white/10 rounded-t-3xl z-[1001] transform translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] flex flex-col max-h-[85vh] shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
         
@@ -340,7 +346,7 @@
     </div>
 
     <script>
-        // ================= 自訂游標邏輯 =================
+        // ================= 自訂游標邏輯 (效能優化版) =================
         const cursorDot = document.getElementById('cursor-dot');
         const cursorRing = document.getElementById('cursor-ring');
         
@@ -349,6 +355,8 @@
             let mouseY = window.innerHeight / 2;
             let ringX = mouseX;
             let ringY = mouseY;
+            // 加入快取變數，避免無意義的 DOM 操作
+            let currentDotX = -1, currentDotY = -1;
 
             window.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
@@ -356,11 +364,19 @@
             }, {passive: true});
 
             function animateCursor() {
-                ringX += (mouseX - ringX) * 0.15;
-                ringY += (mouseY - ringY) * 0.15;
-                
-                cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-                cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+                // 只有當游標移動或追隨圈尚未到達目標時才執行 DOM 更新
+                if (Math.abs(mouseX - currentDotX) > 0.1 || Math.abs(mouseY - currentDotY) > 0.1 || 
+                    Math.abs(mouseX - ringX) > 0.1 || Math.abs(mouseY - ringY) > 0.1) {
+                    
+                    ringX += (mouseX - ringX) * 0.15;
+                    ringY += (mouseY - ringY) * 0.15;
+                    
+                    cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+                    cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+                    
+                    currentDotX = mouseX;
+                    currentDotY = mouseY;
+                }
                 
                 requestAnimationFrame(animateCursor);
             }
@@ -570,7 +586,7 @@
                 backToTopBtn.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
                 backToTopBtn.classList.remove('opacity-100', 'translate-y-0');
             }
-        });
+        }, {passive: true});
 
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
