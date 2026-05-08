@@ -1,1 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>短影音 REELS | KENNY SHEN</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        body { background-color: #050505; color: #fff; font-family: 'Urbanist', 'Noto Sans TC', sans-serif; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
 
+        .back-btn {
+            position: fixed; top: 30px; left: 30px; z-index: 100; width: 45px; height: 45px; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); transition: all 0.3s ease;
+        }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.2); transform: translateX(-5px); border-color: rgba(255, 255, 255, 0.3); }
+
+        .video-wrapper {
+            position: relative; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08);
+            background: #000; transition: transform 0.4s ease, border-color 0.4s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .video-wrapper:hover { border-color: rgba(255,255,255,0.3); transform: translateY(-8px); }
+
+        .video-tag {
+            position: absolute; top: 16px; left: 16px; z-index: 10; padding: 6px 14px; border-radius: 20px;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1);
+            font-size: 11px; letter-spacing: 0.1em; color: rgba(255,255,255,0.9); pointer-events: none;
+        }
+
+        /* ================= 折疊選單 (Accordion) 特效 ================= */
+        .accordion-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .accordion-content.is-open { grid-template-rows: 1fr; }
+        .accordion-inner { overflow: hidden; }
+
+        /* 黑幕過場 */
+        #page-transition { transition: opacity 0.5s ease; }
+    </style>
+</head>
+<body class="antialiased pb-32 pt-24 min-h-screen flex flex-col items-center">
+
+    <!-- 頁面過渡動畫遮罩 -->
+    <div id="page-transition" class="fixed inset-0 bg-[#050505] z-[9999] opacity-100 pointer-events-none"></div>
+
+    <a href="index.html" class="back-btn group">
+        <i class="fa-solid fa-arrow-left text-white/90 group-hover:text-white transition-colors"></i>
+    </a>
+
+    <div class="w-full max-w-6xl px-6 relative z-10">
+        <div class="text-center mb-16">
+            <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-[0_0_30px_rgba(230,104,60,0.3)] mb-6">
+                <i class="fa-brands fa-instagram text-3xl"></i>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-widest mb-3">短影音創作</h1>
+            <p class="text-sm tracking-[0.4em] text-white/40 uppercase">Social Media Reels</p>
+        </div>
+
+        <!-- 恢復 3 欄網格排版 -->
+        <section class="w-full">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+                
+                <!-- 短影音 1: Fireball (新增) -->
+                <div class="flex flex-col group cursor-pointer">
+                    <div class="video-wrapper aspect-[9/16] w-full mb-6">
+                        <div class="video-tag"><i class="fa-solid fa-fire mr-1 text-white/70"></i> VFX</div>
+                        <video src="https://github.com/kennyshenhaha/photography-portfolio/releases/download/v1.0/fireball.mp4" controls preload="metadata" playsinline class="w-full h-full object-contain bg-[#0a0a0a]"></video>
+                    </div>
+                    <h3 class="text-lg font-bold tracking-wide text-center text-white/80 group-hover:text-white transition-colors">媽媽說不要亂玩火</h3>
+                </div>
+
+                <!-- 短影音 2: boling -->
+                <div class="flex flex-col group cursor-pointer">
+                    <div class="video-wrapper aspect-[9/16] w-full mb-6">
+                        <div class="video-tag"><i class="fa-solid fa-bolt mr-1 text-white/70"></i> DYNAMIC</div>
+                        <video src="https://github.com/kennyshenhaha/photography-portfolio/releases/download/v1.0/boling.mp4" controls preload="metadata" playsinline class="w-full h-full object-contain bg-[#0a0a0a]"></video>
+                    </div>
+                    <h3 class="text-lg font-bold tracking-wide text-center text-white/80 group-hover:text-white transition-colors">攝影好物推薦</h3>
+                </div>
+
+                <!-- 短影音 3: photovsai (極大反差) -->
+                <div class="flex flex-col group cursor-pointer">
+                    <div class="video-wrapper aspect-[9/16] w-full mb-6">
+                        <div class="video-tag"><i class="fa-solid fa-palette mr-1 text-white/70"></i> CREATIVE</div>
+                        <video src="https://github.com/kennyshenhaha/photography-portfolio/releases/download/v1.0/photovsai.mp4" controls preload="metadata" playsinline class="w-full h-full object-contain bg-[#0a0a0a]"></video>
+                    </div>
+                    <h3 class="text-lg font-bold tracking-wide text-center text-white/80 group-hover:text-white transition-colors">攝影對決AI明顯我輸爛</h3>
+                </div>
+                
+            </div>
+        </section>
+    </div>
+
+    <!-- ================= 懸浮膠囊按鈕 (回首頁 / 探索作品) ================= -->
+    <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center justify-center gap-3 w-max transition-all duration-500 ease-out">
+        
+        <!-- 回首頁 -->
+        <a href="index.html" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors cursor-pointer">
+            <i class="fa-solid fa-house text-base group-hover:-translate-y-0.5 transition-transform"></i>
+            <span class="text-xs md:text-sm font-bold tracking-widest">回首頁</span>
+        </a>
+        
+        <!-- 探索作品 (展開選單) -->
+        <button id="fab-menu" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors">
+            <i class="fa-solid fa-layer-group text-base group-hover:-translate-y-0.5 transition-transform"></i>
+            <span class="text-xs md:text-sm font-bold tracking-widest">探索作品</span>
+        </button>
+
+    </div>
+
+    <!-- ================= 底部滑動選單 (Bottom Sheet) ================= -->
+    <div id="menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[1000] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <div id="bottom-sheet" class="fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-white/10 rounded-t-3xl z-[1001] transform translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] flex flex-col max-h-[85vh] shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+        
+        <!-- 頂部拖曳把手 -->
+        <div class="w-full flex justify-center py-5 cursor-pointer hover:bg-white/5 transition-colors rounded-t-3xl" id="drag-handle">
+            <div class="w-12 h-1.5 bg-white/20 rounded-full"></div>
+        </div>
+        
+        <div class="px-6 pb-12 overflow-y-auto">
+            <h3 class="text-white/40 text-[10px] md:text-xs tracking-[0.3em] mb-6 text-center">PORTFOLIO CATEGORIES</h3>
+            
+            <div class="flex flex-col gap-4 max-w-md mx-auto">
+                
+                <!-- 1. 動態作品 (折疊群組) -->
+                <div class="accordion-group bg-[#111] border border-white/5 rounded-2xl transition-colors duration-300">
+                    <button class="accordion-toggle w-full flex items-center justify-between p-4 md:p-5 rounded-2xl hover:bg-white/5 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg">
+                                <i class="fa-solid fa-clapperboard text-xl"></i>
+                            </div>
+                            <span class="font-bold tracking-wide text-sm md:text-base">動態作品</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-white/30 text-sm transition-transform duration-300 accordion-icon"></i>
+                    </button>
+                    
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <div class="flex flex-col gap-1 px-4 pb-4 pl-[72px]">
+                                <a href="showreel.html" class="flex items-center justify-between p-3 rounded-xl hover:bg-white/10 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-film text-[#f09433]/70 text-sm w-5 text-center"></i>
+                                        <span class="text-sm font-medium text-white/80 group-hover:text-white transition-colors">影像作品集</span>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right text-white/30 text-xs group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+                                </a>
+                                <a href="reels.html" class="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-brands fa-instagram text-[#e6683c]/70 text-sm w-5 text-center"></i>
+                                        <span class="text-sm font-bold text-white transition-colors">短影音 Reels</span>
+                                    </div>
+                                    <div class="w-1.5 h-1.5 rounded-full bg-[#e6683c] mr-1"></div>
+                                </a>
+                                <a href="commercial.html" class="flex items-center justify-between p-3 rounded-xl hover:bg-white/10 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-scissors text-[#bc1888]/70 text-sm w-5 text-center"></i>
+                                        <span class="text-sm font-medium text-white/80 group-hover:text-white transition-colors">美髮教學</span>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right text-white/30 text-xs group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 平面作品 (折疊群組) -->
+                <div class="accordion-group bg-[#111] border border-white/5 rounded-2xl transition-colors duration-300">
+                    <button class="accordion-toggle w-full flex items-center justify-between p-4 md:p-5 rounded-2xl hover:bg-white/5 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0ea5e9] via-[#2563eb] to-[#3730a3] flex items-center justify-center text-white shadow-lg">
+                                <i class="fa-solid fa-camera-retro text-xl"></i>
+                            </div>
+                            <span class="font-bold tracking-wide text-sm md:text-base">平面作品</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-white/30 text-sm transition-transform duration-300 accordion-icon"></i>
+                    </button>
+                    
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <div class="flex flex-col gap-1 px-4 pb-4 pl-[72px]">
+                                <a href="https://photos.google.com/share/AF1QipOcqOXF-cWqF4ASgcmQkWf2sZieUTP7I8cJAiC6oycsSuxs85urrxEGt_gHnFftbQ?pli=1&key=WFd6U0Q3ckV4Ylh2STl6Ty1iaVBZV2VSNGh2ZGVB" target="_blank" class="flex items-center justify-between p-3 rounded-xl hover:bg-white/10 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-user-astronaut text-[#0ea5e9]/70 text-sm w-5 text-center"></i>
+                                        <span class="text-sm font-medium text-white/80 group-hover:text-white transition-colors">人像創作</span>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right text-white/30 text-xs group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+                                </a>
+                                <a href="food.html" class="flex items-center justify-between p-3 rounded-xl hover:bg-white/10 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-utensils text-[#2563eb]/70 text-sm w-5 text-center"></i>
+                                        <span class="text-sm font-medium text-white/80 group-hover:text-white transition-colors">美食影像</span>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right text-white/30 text-xs group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+                                </a>
+                                <a href="wedding.html" class="flex items-center justify-between p-3 rounded-xl hover:bg-white/10 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-ring text-[#3730a3]/70 text-sm w-5 text-center"></i>
+                                        <span class="text-sm font-medium text-white/80 group-hover:text-white transition-colors">婚禮攝影</span>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right text-white/30 text-xs group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================= 頁面過渡黑幕效果 =================
+        const pageTransition = document.getElementById('page-transition');
+        
+        function hideTransition() {
+            pageTransition.classList.remove('opacity-100');
+            pageTransition.classList.add('opacity-0');
+        }
+        
+        document.addEventListener('DOMContentLoaded', hideTransition);
+        window.addEventListener('load', hideTransition);
+        window.addEventListener('pageshow', hideTransition);
+        setTimeout(hideTransition, 500); 
+
+        document.addEventListener('click', function(e) {
+            const anchor = e.target.closest('a');
+            if (!anchor) return; 
+
+            const href = anchor.getAttribute('href');
+            const target = anchor.getAttribute('target');
+            const onclick = anchor.getAttribute('onclick');
+            
+            if (href && !href.startsWith('#') && !href.startsWith('javascript') && target !== '_blank' && !anchor.hasAttribute('download') && !onclick) {
+                e.preventDefault(); 
+                pageTransition.classList.remove('opacity-0');
+                pageTransition.classList.add('opacity-100'); 
+                
+                setTimeout(() => { window.location.href = href; }, 400);
+            }
+        });
+
+        // ================= 折疊選單 (Accordion) 邏輯 =================
+        document.querySelectorAll('.accordion-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                const group = button.closest('.accordion-group');
+                const content = group.querySelector('.accordion-content');
+                const icon = group.querySelector('.accordion-icon');
+                const isOpen = content.classList.contains('is-open');
+                
+                document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('is-open'));
+                document.querySelectorAll('.accordion-icon').forEach(i => i.classList.remove('rotate-180'));
+                document.querySelectorAll('.accordion-group').forEach(g => g.classList.remove('bg-white/5'));
+
+                if (!isOpen) {
+                    content.classList.add('is-open');
+                    icon.classList.add('rotate-180');
+                    group.classList.add('bg-white/5');
+                }
+            });
+        });
+
+        // ================= 底部滑動選單 (Bottom Sheet) 邏輯 =================
+        const fabContainer = document.getElementById('fab-container');
+        const fabMenu = document.getElementById('fab-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+        const bottomSheet = document.getElementById('bottom-sheet');
+        const dragHandle = document.getElementById('drag-handle');
+
+        function openMenu() {
+            menuOverlay.classList.remove('opacity-0', 'pointer-events-none');
+            bottomSheet.classList.remove('translate-y-full');
+            fabContainer.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none'); 
+            document.body.style.overflow = 'hidden'; 
+            
+            // 自動展開動態作品選單
+            setTimeout(() => {
+                const dynamicGroup = document.querySelector('.accordion-group:first-child');
+                if(dynamicGroup && !dynamicGroup.querySelector('.accordion-content').classList.contains('is-open')) {
+                    dynamicGroup.querySelector('.accordion-toggle').click();
+                }
+            }, 300);
+        }
+
+        function closeMenu() {
+            menuOverlay.classList.add('opacity-0', 'pointer-events-none');
+            bottomSheet.classList.add('translate-y-full');
+            fabContainer.classList.remove('translate-y-12', 'opacity-0', 'pointer-events-none'); 
+            document.body.style.overflow = '';
+            
+            setTimeout(() => {
+                document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('is-open'));
+                document.querySelectorAll('.accordion-icon').forEach(i => i.classList.remove('rotate-180'));
+            }, 300);
+        }
+
+        fabMenu.addEventListener('click', openMenu);
+        menuOverlay.addEventListener('click', closeMenu);
+        dragHandle.addEventListener('click', closeMenu);
+
+        let menuTouchStartY = 0;
+        bottomSheet.addEventListener('touchstart', (e) => {
+            if(e.target.closest('.overflow-y-auto')) return;
+            menuTouchStartY = e.touches[0].clientY;
+        });
+        bottomSheet.addEventListener('touchmove', (e) => {
+            if(e.target.closest('.overflow-y-auto')) return;
+            if (e.touches[0].clientY - menuTouchStartY > 60) closeMenu();
+        });
+
+        // ================= 進階按鈕顯示邏輯 =================
+        let idleTimer;
+        let lastScrollY = window.scrollY;
+
+        function setFabState(state) {
+            if (!bottomSheet.classList.contains('translate-y-full')) return;
+            
+            fabContainer.classList.remove(
+                'opacity-100', 'translate-y-0', 'scale-100', 
+                'opacity-40', 'translate-y-4', 'scale-90', 
+                'opacity-0', 'translate-y-12', 'pointer-events-none'
+            );
+
+            if (state === 'full') {
+                fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+            } else if (state === 'semi') {
+                fabContainer.classList.add('opacity-40', 'translate-y-4', 'scale-90');
+            } else if (state === 'hidden') {
+                fabContainer.classList.add('opacity-0', 'translate-y-12', 'pointer-events-none');
+            }
+        }
+
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            if (window.scrollY > 50) {
+                idleTimer = setTimeout(() => {
+                    setFabState('semi'); 
+                }, 1500); 
+            }
+        }
+        
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+            if (currentScrollY > lastScrollY && currentScrollY > 50) {
+                setFabState('semi'); 
+            } else {
+                setFabState('full'); 
+            }
+            lastScrollY = currentScrollY;
+            resetIdleTimer();
+        }, {passive: true});
+
+        ['touchstart', 'mousemove', 'click'].forEach(event => {
+            window.addEventListener(event, () => {
+                setFabState('full'); 
+                resetIdleTimer();
+            }, {passive: true});
+        });
+        
+        setFabState('full');
+        resetIdleTimer();
+
+    </script>
+</body>
+</html>
