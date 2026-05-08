@@ -1,1 +1,82 @@
 
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美髮商業 | KENNY SHEN</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        body { background-color: #050505; color: #fff; font-family: 'Urbanist', 'Noto Sans TC', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        .back-btn {
+            position: fixed; top: 30px; left: 30px; z-index: 100; width: 45px; height: 45px; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); transition: all 0.3s ease;
+        }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.2); transform: translateX(-5px); border-color: rgba(255, 255, 255, 0.3); }
+
+        .video-wrapper {
+            position: relative; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8); background: #000; transition: border-color 0.4s ease, transform 0.4s ease;
+        }
+        .video-wrapper:hover {
+            border-color: rgba(188, 24, 136, 0.4); /* 配合美髮分類的紫紅色光澤 */
+            transform: translateY(-5px);
+        }
+
+        .video-tag {
+            position: absolute; top: 16px; left: 16px; z-index: 10; padding: 6px 14px; border-radius: 20px;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1);
+            font-size: 11px; letter-spacing: 0.1em; color: rgba(255,255,255,0.9); pointer-events: none;
+        }
+        
+        .titanium-text {
+            background: linear-gradient(135deg, #f3e5ab 0%, #e5e4e2 30%, #b8a99a 50%, #d1c4b2 70%, #a89f91 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col items-center justify-center pt-24 pb-12">
+
+    <!-- 返回首頁按鈕 -->
+    <a href="index.html" class="back-btn group">
+        <i class="fa-solid fa-arrow-left text-white/70 group-hover:text-white transition-colors"></i>
+    </a>
+
+    <div class="w-full max-w-5xl px-6">
+        <!-- 標題區 -->
+        <div class="text-center mb-10 flex flex-col items-center">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg mb-6">
+                <i class="fa-solid fa-scissors text-3xl"></i>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-bold tracking-widest titanium-text mb-4">COMMERCIAL</h1>
+            <p class="text-sm tracking-[0.5em] text-white/40 uppercase">美髮商業攝影</p>
+        </div>
+
+        <!-- 影片播放區 -->
+        <div class="video-wrapper aspect-video w-full">
+            <div class="video-tag"><i class="fa-solid fa-gem mr-1 text-white/70"></i> BRANDING</div>
+            <!-- 等你上傳後，把 src 裡面的網址換掉 -->
+            <video 
+                src="https://pub-38628f04e153407b8b51ab0cafe2b0c8.r2.dev/Portfolio/這邊請替換成美髮影片的R2網址.mp4" 
+                controls preload="metadata" playsinline
+                class="w-full h-full object-cover">
+            </video>
+        </div>
+        
+        <!-- 底部資訊 -->
+        <div class="mt-8 flex justify-between items-center px-2">
+            <div class="text-xs text-white/30 tracking-[0.2em]">HAIR SALON COMMERCIAL</div>
+            <div class="text-xs text-[#bc1888]/70 tracking-[0.2em] border border-[#bc1888]/30 px-3 py-1 rounded-full">COMMERCIAL</div>
+        </div>
+    </div>
+</body>
+</html>
