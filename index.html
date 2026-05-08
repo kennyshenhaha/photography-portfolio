@@ -13,8 +13,8 @@
     <meta property="og:type" content="website" />
     <!-- ================================================================ -->
 
-    <!-- 引入字體與圖示 -->
-    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;700&display=swap" rel="stylesheet">
+    <!-- 引入字體與圖示 (補上 Noto Sans TC 400與500 字重讓選單文字更平滑) -->
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -25,32 +25,6 @@
             font-family: 'Urbanist', 'Noto Sans TC', sans-serif;
             scroll-behavior: smooth;
             overflow-x: hidden;
-        }
-
-        /* ================= 科技感自訂游標 (僅限電腦版) ================= */
-        @media (pointer: fine) {
-            body, a, button, .tap-zone, .nav-arrow, .play-btn-pulse, .metal-btn, .accordion-toggle {
-                cursor: none !important;
-            }
-        }
-        .custom-cursor {
-            position: fixed; top: 0; left: 0; width: 6px; height: 6px; margin-top: -3px; margin-left: -3px;
-            background: #fff; border-radius: 50%; pointer-events: none; z-index: 10000;
-            transition: width 0.3s, height 0.3s, background-color 0.3s, margin 0.3s;
-            mix-blend-mode: difference;
-        }
-        .custom-cursor-follower {
-            position: fixed; top: 0; left: 0; width: 40px; height: 40px; margin-top: -20px; margin-left: -20px;
-            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; pointer-events: none; z-index: 9999;
-            transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s, margin 0.3s;
-        }
-        /* 游標懸停狀態 */
-        .custom-cursor.hovered {
-            width: 12px; height: 12px; margin-top: -6px; margin-left: -6px; background: #f3e5ab; mix-blend-mode: normal;
-        }
-        .custom-cursor-follower.hovered {
-            width: 60px; height: 60px; margin-top: -30px; margin-left: -30px; 
-            border-color: rgba(243, 229, 171, 0.6); background: rgba(243, 229, 171, 0.05);
         }
 
         /* ================= 電影級進場動畫 ================= */
@@ -174,13 +148,12 @@
         .accordion-inner {
             overflow: hidden;
         }
+
+        /* 強制選單區塊使用思源黑體 */
+        #bottom-sheet { font-family: 'Noto Sans TC', sans-serif; }
     </style>
 </head>
 <body>
-
-    <!-- ================= 電腦版專屬自訂游標 ================= -->
-    <div id="cursor-dot" class="custom-cursor hidden md:block"></div>
-    <div id="cursor-ring" class="custom-cursor-follower hidden md:block"></div>
 
     <!-- ================= 頁面過渡動畫遮罩 ================= -->
     <div id="page-transition" class="fixed inset-0 bg-[#050505] z-[9999] transition-opacity duration-500 opacity-100 pointer-events-none"></div>
@@ -436,46 +409,6 @@
                 }
             });
         });
-
-        // ================= 自訂游標邏輯 (僅電腦版) =================
-        const cursorDot = document.getElementById('cursor-dot');
-        const cursorRing = document.getElementById('cursor-ring');
-        
-        if (window.matchMedia("(pointer: fine)").matches && cursorDot && cursorRing) {
-            let mouseX = window.innerWidth / 2;
-            let mouseY = window.innerHeight / 2;
-            let ringX = mouseX;
-            let ringY = mouseY;
-
-            window.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-                cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-            });
-
-            function animateCursor() {
-                ringX += (mouseX - ringX) * 0.15;
-                ringY += (mouseY - ringY) * 0.15;
-                cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
-                requestAnimationFrame(animateCursor);
-            }
-            animateCursor();
-
-            const interactiveSelectors = 'a, button, .tap-zone, .nav-arrow, .play-btn-pulse, .accordion-toggle';
-            
-            document.addEventListener('mouseover', (e) => {
-                if (e.target.closest(interactiveSelectors)) {
-                    cursorDot.classList.add('hovered');
-                    cursorRing.classList.add('hovered');
-                }
-            });
-            document.addEventListener('mouseout', (e) => {
-                if (e.target.closest(interactiveSelectors)) {
-                    cursorDot.classList.remove('hovered');
-                    cursorRing.classList.remove('hovered');
-                }
-            });
-        }
 
         // ================= 頁面過渡動畫與電影進場邏輯 =================
         const pageTransition = document.getElementById('page-transition');
