@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>短影音 REELS | KENNY SHEN</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;700&display=swap" rel="stylesheet">
+    <!-- 補上了 Noto Sans TC 的 400 與 500 字重，讓選單文字更平滑好看 -->
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -38,6 +39,9 @@
         .accordion-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .accordion-content.is-open { grid-template-rows: 1fr; }
         .accordion-inner { overflow: hidden; }
+        
+        /* 強制選單區塊使用思源黑體 */
+        #bottom-sheet { font-family: 'Noto Sans TC', sans-serif; }
 
         /* 黑幕過場 */
         #page-transition { transition: opacity 0.5s ease; }
