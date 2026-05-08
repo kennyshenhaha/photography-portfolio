@@ -61,33 +61,33 @@
             <p class="text-sm tracking-[0.4em] text-white/40 uppercase">Social Media Reels</p>
         </div>
 
-        <!-- 恢復 3 欄網格排版 -->
+        <!-- 3 欄網格排版 -->
         <section class="w-full">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
                 
-                <!-- 短影音 1: Fireball (更改檔名為 fireball_2.mp4 避免快取問題) -->
+                <!-- 短影音 1: Fireball (新增 poster 屬性) -->
                 <div class="flex flex-col group cursor-pointer">
                     <div class="video-wrapper aspect-[9/16] w-full mb-6">
                         <div class="video-tag"><i class="fa-solid fa-fire mr-1 text-white/70"></i> VFX</div>
-                        <video src="fireball_2.mp4" controls preload="none" playsinline class="w-full h-full object-contain bg-[#0a0a0a]"></video>
+                        <video src="fireball_2.mp4" poster="fireball_cover.jpg" controls preload="none" playsinline class="w-full h-full object-cover bg-[#0a0a0a]"></video>
                     </div>
                     <h3 class="text-lg font-bold tracking-wide text-center text-white/80 group-hover:text-white transition-colors">媽媽說不要亂玩火</h3>
                 </div>
 
-                <!-- 短影音 2: boling (這邊先保留 _1，如果你壓縮了記得改成 _2) -->
+                <!-- 短影音 2: boling (新增 poster 屬性) -->
                 <div class="flex flex-col group cursor-pointer">
                     <div class="video-wrapper aspect-[9/16] w-full mb-6">
                         <div class="video-tag"><i class="fa-solid fa-bolt mr-1 text-white/70"></i> DYNAMIC</div>
-                        <video src="boling_1.mp4" controls preload="none" playsinline class="w-full h-full object-contain bg-[#0a0a0a]"></video>
+                        <video src="boling_2.mp4" poster="boling_cover.jpg" controls preload="none" playsinline class="w-full h-full object-cover bg-[#0a0a0a]"></video>
                     </div>
                     <h3 class="text-lg font-bold tracking-wide text-center text-white/80 group-hover:text-white transition-colors">攝影好物推薦</h3>
                 </div>
 
-                <!-- 短影音 3: photovsai (極大反差) -->
+                <!-- 短影音 3: photovsai (極大反差) (新增 poster 屬性) -->
                 <div class="flex flex-col group cursor-pointer">
                     <div class="video-wrapper aspect-[9/16] w-full mb-6">
                         <div class="video-tag"><i class="fa-solid fa-palette mr-1 text-white/70"></i> CREATIVE</div>
-                        <video src="photovsai_1.mp4" controls preload="none" playsinline class="w-full h-full object-contain bg-[#0a0a0a]"></video>
+                        <video src="photovsai_2.mp4" poster="photovsai_cover.jpg" controls preload="none" playsinline class="w-full h-full object-cover bg-[#0a0a0a]"></video>
                     </div>
                     <h3 class="text-lg font-bold tracking-wide text-center text-white/80 group-hover:text-white transition-colors">攝影對決AI明顯我輸爛</h3>
                 </div>
