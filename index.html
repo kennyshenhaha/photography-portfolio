@@ -57,7 +57,7 @@
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 20px rgba(243, 229, 171, 0.3));
             letter-spacing: -0.02em;
-            margin-right: -0.02em; /* 絕對置中修正 */
+            margin-right: 0.02em; /* 終極修正：物理抵銷負字距偏移 */
             animation: shine-sweep 5s infinite linear;
         }
 
@@ -140,56 +140,60 @@
     <div class="frame-ui"></div>
 
     <!-- ================= 懸浮選單按鈕區 ================= -->
-    <!-- fixed 基準：對齊螢幕的 50vw -->
-    <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center justify-center gap-3 w-max transition-all duration-500 ease-out">
-        <!-- 關於我 (跳轉至輪播區) -->
-        <a onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors cursor-pointer">
-            <i class="fa-solid fa-user text-base group-hover:scale-110 transition-transform"></i>
-            <span class="text-xs md:text-sm font-bold tracking-widest">關於我</span>
-        </a>
-        <!-- 探索作品 -->
-        <button id="fab-menu" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors">
-            <i class="fa-solid fa-layer-group text-base group-hover:scale-110 transition-transform"></i>
-            <span class="text-xs md:text-sm font-bold tracking-widest">探索作品</span>
-        </button>
+    <!-- 終極修正：將 wrapper 設為 w-full flex justify-center，絕對置中於螢幕 -->
+    <div class="fixed bottom-8 left-0 w-full flex justify-center z-[900] pointer-events-none">
+        <div id="fab-container" class="flex items-center justify-center gap-3 w-max pointer-events-auto transition-all duration-500 ease-out">
+            <!-- 關於我 (跳轉至輪播區) -->
+            <a onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors cursor-pointer">
+                <i class="fa-solid fa-user text-base group-hover:scale-110 transition-transform"></i>
+                <span class="text-xs md:text-sm font-bold tracking-widest">關於我</span>
+            </a>
+            <!-- 探索作品 -->
+            <button id="fab-menu" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors">
+                <i class="fa-solid fa-layer-group text-base group-hover:scale-110 transition-transform"></i>
+                <span class="text-xs md:text-sm font-bold tracking-widest">探索作品</span>
+            </button>
+        </div>
     </div>
 
     <!-- ================= 首頁區塊 (完美留白對齊版) ================= -->
-    <section id="hero-section" class="relative w-full h-screen overflow-hidden">
+    <!-- 終極修正：統一使用 w-full flex justify-center，保證與下方按鈕中線 100% 吻合 -->
+    <section id="hero-section" class="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
         <div class="bg-glow"></div>
         
-        <!-- 終極修正：直接使用 left-[50vw] 讓中心點 100% 綁定螢幕正中央 (忽略捲軸誤差) -->
-        <div class="absolute inset-y-0 left-[50vw] -translate-x-1/2 flex flex-col items-center justify-center w-max mt-[-5vh] z-10">
-            <div class="mb-6 md:mb-8 cinematic-element delay-1">
-                <!-- 加入與 tracking 相等的 padding-left，實現文字物理絕對置中 -->
-                <div class="tracking-[0.5em] pl-[0.5em] text-[9px] md:text-xs text-gray-500 font-light opacity-80 uppercase text-center">
+        <div class="z-10 text-center w-full flex flex-col items-center mt-[-5vh]">
+            <div class="mb-6 md:mb-8 cinematic-element delay-1 w-full flex justify-center">
+                <!-- 終極修正：直接寫入 inline style margin-right 抵銷 letter-spacing -->
+                <div class="text-[9px] md:text-xs text-gray-500 font-light opacity-80 uppercase text-center" style="letter-spacing: 0.5em; margin-right: -0.5em;">
                     Visual Paranoia & Logic Engineering
                 </div>
             </div>
 
             <!-- 讓標題成為畫面唯一的視覺重心 -->
-            <h1 class="text-5xl md:text-[7.5rem] font-bold tracking-tight mb-4 md:mb-6 leading-none cinematic-element delay-2 text-center">
+            <h1 class="text-5xl md:text-[7.5rem] font-bold tracking-tight mb-4 md:mb-6 leading-none cinematic-element delay-2 w-full flex justify-center">
                 <span class="titanium-text">PORTFOLIO</span>
             </h1>
             
-            <div class="flex flex-col items-center cinematic-element delay-3 text-center">
-                <div class="text-xs md:text-base text-white/60 mb-2 tracking-[0.5em] pl-[0.5em]">2026 影像作品精選</div>
-                <div class="text-[9px] tracking-[0.6em] pl-[0.6em] text-white/30 uppercase">Kenny Shen</div>
+            <div class="flex flex-col items-center cinematic-element delay-3 w-full text-center">
+                <div class="text-xs md:text-base text-white/60 mb-2" style="letter-spacing: 0.5em; margin-right: -0.5em;">2026 影像作品精選</div>
+                <div class="text-[9px] text-white/30 uppercase" style="letter-spacing: 0.6em; margin-right: -0.6em;">Kenny Shen</div>
             </div>
         </div>
 
         <!-- 極簡動態下滑指示器 -->
-        <!-- 同步使用 left-[50vw] 對齊，保證 SCROLL 垂直線與底部雙按鈕縫隙完美連成一線 -->
-        <div class="absolute bottom-10 md:bottom-12 left-[50vw] -translate-x-1/2 flex flex-col items-center cursor-pointer z-20 cinematic-element delay-4 group w-max" onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})">
-            
-            <!-- 加入 pl-[0.4em] 抵銷右側隱形字距 -->
-            <span class="block text-[8px] md:text-[9px] tracking-[0.4em] pl-[0.4em] uppercase font-light text-white/30 group-hover:text-white/70 transition-colors mb-3 text-center">SCROLL</span>
-            
-            <!-- 垂直線 -->
-            <div class="w-px h-12 md:h-16 bg-white/10 relative overflow-hidden">
-                <div class="w-full h-1/2 bg-white/60 absolute top-0 left-0 animate-[scroll-line_2s_ease-in-out_infinite]"></div>
-            </div>
+        <!-- 終極修正：使用 w-full left-0 flex justify-center 絕對對齊按鈕縫隙 -->
+        <div class="absolute bottom-10 md:bottom-12 left-0 w-full flex justify-center z-20 cinematic-element delay-4">
+            <div class="flex flex-col items-center cursor-pointer group w-max" onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})">
+                
+                <!-- 終極修正：margin-right 切除右側隱形字距 -->
+                <span class="block text-[8px] md:text-[9px] uppercase font-light text-white/30 group-hover:text-white/70 transition-colors mb-3 text-center" style="letter-spacing: 0.4em; margin-right: -0.4em;">SCROLL</span>
+                
+                <!-- 垂直線 -->
+                <div class="w-px h-12 md:h-16 bg-white/10 relative overflow-hidden">
+                    <div class="w-full h-1/2 bg-white/60 absolute top-0 left-0 animate-[scroll-line_2s_ease-in-out_infinite]"></div>
+                </div>
 
+            </div>
         </div>
     </section>
 
@@ -261,7 +265,9 @@
         </div>
         
         <div class="px-6 pb-12 overflow-y-auto">
-            <h3 class="block text-white/40 text-[10px] md:text-xs tracking-[0.3em] pl-[0.3em] mb-6 text-center">PORTFOLIO CATEGORIES</h3>
+            <div class="w-full flex justify-center mb-6">
+                <h3 class="text-white/40 text-[10px] md:text-xs uppercase text-center" style="letter-spacing: 0.3em; margin-right: -0.3em;">PORTFOLIO CATEGORIES</h3>
+            </div>
             
             <div class="flex flex-col gap-4 max-w-md mx-auto">
                 
@@ -585,18 +591,21 @@
         function setFabState(state) {
             if (!bottomSheet.classList.contains('translate-y-full')) return;
             
-            fabContainer.classList.remove(
+            // 注意：這裡因為外層 wrapper 不動，我們修改內部的 #fab-container
+            const innerContainer = document.getElementById('fab-container');
+            
+            innerContainer.classList.remove(
                 'opacity-100', 'translate-y-0', 'scale-100', 
                 'opacity-40', 'translate-y-4', 'scale-90', 
                 'opacity-0', 'translate-y-12', 'pointer-events-none'
             );
 
             if (state === 'full') {
-                fabContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+                innerContainer.classList.add('opacity-100', 'translate-y-0', 'scale-100');
             } else if (state === 'semi') {
-                fabContainer.classList.add('opacity-40', 'translate-y-4', 'scale-90');
+                innerContainer.classList.add('opacity-40', 'translate-y-4', 'scale-90');
             } else if (state === 'hidden') {
-                fabContainer.classList.add('opacity-0', 'translate-y-12', 'scale-90', 'pointer-events-none');
+                innerContainer.classList.add('opacity-0', 'translate-y-12', 'scale-90', 'pointer-events-none');
             }
         }
 
