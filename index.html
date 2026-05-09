@@ -57,6 +57,7 @@
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 20px rgba(243, 229, 171, 0.3));
             letter-spacing: -0.02em;
+            margin-right: -0.02em; /* 絕對置中修正 */
             animation: shine-sweep 5s infinite linear;
         }
 
@@ -139,6 +140,7 @@
     <div class="frame-ui"></div>
 
     <!-- ================= 懸浮選單按鈕區 ================= -->
+    <!-- fixed 基準：對齊螢幕的 50vw -->
     <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center justify-center gap-3 w-max transition-all duration-500 ease-out">
         <!-- 關於我 (跳轉至輪播區) -->
         <a onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors cursor-pointer">
@@ -152,40 +154,42 @@
         </button>
     </div>
 
-    <!-- ================= 首頁區塊 (完美留白版) ================= -->
-    <section id="hero-section" class="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+    <!-- ================= 首頁區塊 (完美留白對齊版) ================= -->
+    <section id="hero-section" class="relative w-full h-screen overflow-hidden">
         <div class="bg-glow"></div>
         
-        <!-- 將文字內容稍微往上提一點，平衡下方指示器的比重 -->
-        <div class="z-10 text-center px-4 flex flex-col items-center mt-[-5vh]">
+        <!-- 終極修正：直接使用 left-[50vw] 讓中心點 100% 綁定螢幕正中央 (忽略捲軸誤差) -->
+        <div class="absolute inset-y-0 left-[50vw] -translate-x-1/2 flex flex-col items-center justify-center w-max mt-[-5vh] z-10">
             <div class="mb-6 md:mb-8 cinematic-element delay-1">
-                <!-- 修正：直接使用原生 style 抵銷 letter-spacing，保證絕對置中 -->
-                <div class="tracking-[0.5em] text-[9px] md:text-xs text-gray-500 font-light opacity-80 uppercase" style="margin-right: -0.5em;">
+                <!-- 加入與 tracking 相等的 padding-left，實現文字物理絕對置中 -->
+                <div class="tracking-[0.5em] pl-[0.5em] text-[9px] md:text-xs text-gray-500 font-light opacity-80 uppercase text-center">
                     Visual Paranoia & Logic Engineering
                 </div>
             </div>
 
             <!-- 讓標題成為畫面唯一的視覺重心 -->
-            <h1 class="text-5xl md:text-[7.5rem] font-bold tracking-tight mb-4 md:mb-6 leading-none cinematic-element delay-2">
+            <h1 class="text-5xl md:text-[7.5rem] font-bold tracking-tight mb-4 md:mb-6 leading-none cinematic-element delay-2 text-center">
                 <span class="titanium-text">PORTFOLIO</span>
             </h1>
             
-            <div class="flex flex-col items-center cinematic-element delay-3">
-                <div class="text-center">
-                    <!-- 修正：抵銷置中偏移 -->
-                    <div class="text-xs md:text-base text-white/60 mb-2 tracking-[0.5em]" style="margin-right: -0.5em;">2026 影像作品精選</div>
-                    <div class="text-[9px] tracking-[0.6em] text-white/30 uppercase" style="margin-right: -0.6em;">Kenny Shen</div>
-                </div>
+            <div class="flex flex-col items-center cinematic-element delay-3 text-center">
+                <div class="text-xs md:text-base text-white/60 mb-2 tracking-[0.5em] pl-[0.5em]">2026 影像作品精選</div>
+                <div class="text-[9px] tracking-[0.6em] pl-[0.6em] text-white/30 uppercase">Kenny Shen</div>
             </div>
         </div>
 
-        <!-- 極簡動態下滑指示器 (放置於畫面最下方邊緣) -->
-        <div class="absolute bottom-10 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 cursor-pointer z-20 cinematic-element delay-4 group" onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})">
-            <!-- 修正：完美對齊下方引導線 -->
-            <span class="text-[8px] md:text-[9px] tracking-[0.4em] uppercase font-light text-white/30 group-hover:text-white/70 transition-colors" style="margin-right: -0.4em;">Scroll</span>
+        <!-- 極簡動態下滑指示器 -->
+        <!-- 同步使用 left-[50vw] 對齊，保證 SCROLL 垂直線與底部雙按鈕縫隙完美連成一線 -->
+        <div class="absolute bottom-10 md:bottom-12 left-[50vw] -translate-x-1/2 flex flex-col items-center cursor-pointer z-20 cinematic-element delay-4 group w-max" onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})">
+            
+            <!-- 加入 pl-[0.4em] 抵銷右側隱形字距 -->
+            <span class="block text-[8px] md:text-[9px] tracking-[0.4em] pl-[0.4em] uppercase font-light text-white/30 group-hover:text-white/70 transition-colors mb-3 text-center">SCROLL</span>
+            
+            <!-- 垂直線 -->
             <div class="w-px h-12 md:h-16 bg-white/10 relative overflow-hidden">
                 <div class="w-full h-1/2 bg-white/60 absolute top-0 left-0 animate-[scroll-line_2s_ease-in-out_infinite]"></div>
             </div>
+
         </div>
     </section>
 
@@ -257,8 +261,7 @@
         </div>
         
         <div class="px-6 pb-12 overflow-y-auto">
-            <!-- 加入 pl-[0.3em] 修正置中偏移 -->
-            <h3 class="text-white/40 text-[10px] md:text-xs tracking-[0.3em] pl-[0.3em] mb-6 text-center">PORTFOLIO CATEGORIES</h3>
+            <h3 class="block text-white/40 text-[10px] md:text-xs tracking-[0.3em] pl-[0.3em] mb-6 text-center">PORTFOLIO CATEGORIES</h3>
             
             <div class="flex flex-col gap-4 max-w-md mx-auto">
                 
