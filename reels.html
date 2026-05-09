@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>短影音 REELS | KENNY SHEN</title>
     
-    <!-- 補上了 Noto Sans TC 的 400 與 500 字重，讓選單文字更平滑好看 -->
+    <!-- 補上了 Noto Sans TC 400與500 字重讓選單文字更平滑 -->
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -39,7 +39,7 @@
         .accordion-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .accordion-content.is-open { grid-template-rows: 1fr; }
         .accordion-inner { overflow: hidden; }
-        
+
         /* 強制選單區塊使用思源黑體 */
         #bottom-sheet { font-family: 'Noto Sans TC', sans-serif; }
 
@@ -69,7 +69,7 @@
         <section class="w-full">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
                 
-                <!-- 短影音 1: Fireball (新增 poster 屬性) -->
+                <!-- 短影音 1: Fireball -->
                 <div class="flex flex-col group cursor-pointer">
                     <div class="video-wrapper aspect-[9/16] w-full mb-6">
                         <div class="video-tag"><i class="fa-solid fa-fire mr-1 text-white/70"></i> VFX</div>
@@ -78,7 +78,7 @@
                     <h3 class="text-lg font-bold tracking-wide text-center text-white/80 group-hover:text-white transition-colors">媽媽說不要亂玩火</h3>
                 </div>
 
-                <!-- 短影音 2: boling (新增 poster 屬性) -->
+                <!-- 短影音 2: boling -->
                 <div class="flex flex-col group cursor-pointer">
                     <div class="video-wrapper aspect-[9/16] w-full mb-6">
                         <div class="video-tag"><i class="fa-solid fa-bolt mr-1 text-white/70"></i> DYNAMIC</div>
@@ -87,7 +87,7 @@
                     <h3 class="text-lg font-bold tracking-wide text-center text-white/80 group-hover:text-white transition-colors">攝影好物推薦</h3>
                 </div>
 
-                <!-- 短影音 3: photovsai (極大反差) (新增 poster 屬性) -->
+                <!-- 短影音 3: photovsai (極大反差) -->
                 <div class="flex flex-col group cursor-pointer">
                     <div class="video-wrapper aspect-[9/16] w-full mb-6">
                         <div class="video-tag"><i class="fa-solid fa-palette mr-1 text-white/70"></i> CREATIVE</div>
@@ -98,6 +98,18 @@
                 
             </div>
         </section>
+
+        <!-- ================= 底部聯絡區 (新增) ================= -->
+        <div class="mt-24 border-t border-white/10 pt-20 pb-12 text-center px-4 w-full">
+            <h2 class="text-3xl md:text-4xl font-bold tracking-[0.2em] mb-4">LET'S CREATE</h2>
+            <p class="text-white/40 text-sm md:text-base font-light tracking-widest mb-10">期待能為您記錄下最珍貴的時刻</p>
+            <!-- 配色對齊頂部的暖橘粉漸層 -->
+            <a href="https://www.instagram.com/kshen_life?igsh=OWZ4ZGs4cHhzb3Rz&utm_source=qr" target="_blank" class="inline-flex items-center gap-4 px-8 py-4 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] hover:scale-105 transition-transform duration-300 shadow-[0_10px_30px_rgba(230,104,60,0.3)] text-white font-bold tracking-wider relative overflow-hidden group">
+                <div class="absolute inset-0 bg-white/20 transform -translate-x-full skew-x-12 group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
+                <i class="fa-brands fa-instagram text-2xl"></i>
+                <span>聯絡我 / Follow IG</span>
+            </a>
+        </div>
     </div>
 
     <!-- ================= 懸浮膠囊按鈕 (回首頁 / 探索作品) ================= -->
@@ -153,9 +165,10 @@
                                     </div>
                                     <i class="fa-solid fa-arrow-right text-white/30 text-xs group-hover:text-white group-hover:translate-x-1 transition-all"></i>
                                 </a>
+                                <!-- 目前所在的頁面 (短影音 Reels) 標示高光 -->
                                 <a href="reels.html" class="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors group">
                                     <div class="flex items-center gap-3">
-                                        <i class="fa-brands fa-instagram text-[#e6683c]/70 text-sm w-5 text-center"></i>
+                                        <i class="fa-brands fa-instagram text-[#e6683c] text-sm w-5 text-center"></i>
                                         <span class="text-sm font-bold text-white transition-colors">短影音 Reels</span>
                                     </div>
                                     <div class="w-1.5 h-1.5 rounded-full bg-[#e6683c] mr-1"></div>
@@ -281,7 +294,7 @@
             fabContainer.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none'); 
             document.body.style.overflow = 'hidden'; 
             
-            // 自動展開動態作品選單
+            // 自動展開「動態作品」選單 (因為我們在短影音頁面)
             setTimeout(() => {
                 const dynamicGroup = document.querySelector('.accordion-group:first-child');
                 if(dynamicGroup && !dynamicGroup.querySelector('.accordion-content').classList.contains('is-open')) {
@@ -295,6 +308,8 @@
             bottomSheet.classList.add('translate-y-full');
             fabContainer.classList.remove('translate-y-12', 'opacity-0', 'pointer-events-none'); 
             document.body.style.overflow = '';
+            setFabState('full');
+            resetIdleTimer();
             
             setTimeout(() => {
                 document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('is-open'));
