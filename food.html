@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KENNY SHEN | FOOD PHOTOGRAPHY</title>
     
-    <!-- 引入字體與圖示 -->
-    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;700&display=swap" rel="stylesheet">
+    <!-- 引入字體與圖示 (補上了 Noto Sans TC 400與500 字重讓選單文字更平滑) -->
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -19,37 +19,6 @@
             overflow-x: hidden;
         }
 
-        /* ================= 科技感自訂游標 ================= */
-        @media (pointer: fine) {
-            body, a, button, .food-item, .nav-arrow, #lightbox-close {
-                cursor: none !important;
-            }
-        }
-        .custom-cursor {
-            position: fixed; top: 0; left: 0; width: 6px; height: 6px; margin-top: -3px; margin-left: -3px;
-            background: #fff; border-radius: 50%; pointer-events: none; z-index: 10000;
-            box-shadow: 0 0 4px rgba(0,0,0,0.5); 
-            transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease, margin 0.3s ease, box-shadow 0.3s ease;
-            will-change: transform; 
-        }
-        .custom-cursor-follower {
-            position: fixed; top: 0; left: 0; width: 40px; height: 40px; margin-top: -20px; margin-left: -20px;
-            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; pointer-events: none; z-index: 9999;
-            transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background-color 0.3s ease, margin 0.3s ease;
-            will-change: transform; 
-        }
-        /* 游標懸停狀態 */
-        .custom-cursor.hovered {
-            width: 12px; height: 12px; margin-top: -6px; margin-left: -6px; 
-            background: #f3e5ab; 
-            box-shadow: 0 0 10px rgba(243, 229, 171, 0.8);
-        }
-        .custom-cursor-follower.hovered {
-            width: 65px; height: 65px; margin-top: -32.5px; margin-left: -32.5px; 
-            border-color: rgba(243, 229, 171, 0.6); 
-            background: rgba(243, 229, 171, 0.05);
-        }
-
         /* 輝光背景 (強制硬體加速) */
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -58,6 +27,14 @@
             z-index: -1; pointer-events: none;
             transform: translateZ(0); 
         }
+
+        /* 左上角返回鍵 (極簡白箭頭) */
+        .back-btn {
+            position: fixed; top: 30px; left: 30px; z-index: 100; width: 45px; height: 45px; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); transition: all 0.3s ease;
+        }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.2); transform: translateX(-5px); border-color: rgba(255, 255, 255, 0.3); }
 
         /* 網格核心容器 */
         .grid-container {
@@ -78,11 +55,10 @@
             background: linear-gradient(90deg, #111 25%, #222 50%, #111 75%);
             background-size: 200% 100%;
             animation: skeleton-loading 1.5s infinite linear;
-            /* 效能優化：明確指定過渡屬性，移除 all */
             transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
             width: 100%;
             height: 100%;
-            will-change: transform; /* 提示瀏覽器優化動畫 */
+            will-change: transform; 
             transform: translateZ(0);
         }
 
@@ -155,20 +131,7 @@
             opacity: 1;
         }
 
-        /* 底部選單項目 hover 效果 */
-        .menu-link-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 16px 20px; background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.05); border-radius: 16px;
-            color: #fff; text-decoration: none; 
-            /* 效能優化：移除 all */
-            transition: background-color 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
-        }
-        .menu-link-item:hover {
-            background: rgba(255,255,255,0.08); transform: translateY(-2px); border-color: rgba(255,255,255,0.2);
-        }
-
-        /* 懸浮按鈕過渡動畫 (效能優化：移除 all) */
+        /* 懸浮按鈕過渡動畫 */
         #fab-container { transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
         @keyframes fadeInUp {
@@ -181,46 +144,53 @@
         /* 放大視窗 (Lightbox) 的過渡動畫 */
         #lightbox { transition: opacity 0.3s ease; overscroll-behavior: contain; touch-action: none;}
         #lightbox-img { transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); will-change: transform, opacity; }
+
+        /* ================= 折疊選單 (Accordion) 特效 ================= */
+        .accordion-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .accordion-content.is-open { grid-template-rows: 1fr; }
+        .accordion-inner { overflow: hidden; }
+
+        /* 強制選單區塊使用思源黑體 */
+        #bottom-sheet { font-family: 'Noto Sans TC', sans-serif; }
     </style>
 </head>
 <body class="p-6 md:p-12 lg:p-20">
-
-    <!-- ================= 電腦版專屬自訂游標 ================= -->
-    <div id="cursor-dot" class="custom-cursor hidden md:block"></div>
-    <div id="cursor-ring" class="custom-cursor-follower hidden md:block"></div>
 
     <!-- ================= 頁面過渡動畫遮罩 ================= -->
     <div id="page-transition" class="fixed inset-0 bg-[#050505] z-[9999] transition-opacity duration-500 opacity-100 pointer-events-none"></div>
 
     <div class="bg-glow"></div>
 
+    <!-- 左上角返回按鈕 -->
+    <a href="index.html" class="back-btn group animate-fade-in">
+        <i class="fa-solid fa-arrow-left text-white/90 group-hover:text-white transition-colors text-lg"></i>
+    </a>
+
     <!-- ================= 懸浮選單按鈕區 ================= -->
     <div id="fab-container" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[900] flex items-center justify-center gap-3 w-max">
         <!-- 回首頁 -->
-        <a href="https://kennyshenhaha.github.io/photography-portfolio/index.html" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors">
-            <i class="fa-solid fa-house text-base group-hover:scale-110 transition-transform"></i>
+        <a href="index.html" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors">
+            <i class="fa-solid fa-house text-base group-hover:-translate-y-0.5 transition-transform"></i>
             <span class="text-xs md:text-sm font-bold tracking-widest">回首頁</span>
         </a>
         <!-- 探索作品 -->
         <button id="fab-menu" class="group flex items-center justify-center gap-2 w-32 md:w-36 py-3.5 rounded-full bg-black/80 md:bg-white/10 backdrop-blur-xl border border-white/15 md:border-white/20 hover:bg-white/20 text-white/90 md:text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)] md:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors">
-            <i class="fa-solid fa-layer-group text-base group-hover:scale-110 transition-transform"></i>
+            <i class="fa-solid fa-layer-group text-base group-hover:-translate-y-0.5 transition-transform"></i>
             <span class="text-xs md:text-sm font-bold tracking-widest">探索作品</span>
         </button>
     </div>
 
-    <header class="mb-12 animate-fade-in">
-        <a href="https://kennyshenhaha.github.io/photography-portfolio/index.html" class="text-[10px] tracking-[0.4em] text-white/40 hover:text-white transition-colors mb-4 inline-block uppercase">
-            <i class="fa-solid fa-arrow-left mr-2"></i> Back to Main
-        </a>
-        <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
-            美食影像 <span class="text-white/20 ml-2 font-light italic text-xl md:text-3xl">Culinary Visuals</span>
-        </h1>
-        <div class="h-[1px] w-12 bg-[#f3e5ab] mt-6 opacity-60"></div>
+    <!-- 對齊短影音的置中標題區塊 -->
+    <header class="mb-16 animate-fade-in text-center flex flex-col items-center pt-8">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-[#0ea5e9] via-[#2563eb] to-[#3730a3] flex items-center justify-center text-white shadow-lg mb-6">
+            <i class="fa-solid fa-utensils text-3xl"></i>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-bold tracking-widest mb-3">美食影像</h1>
+        <p class="text-sm tracking-[0.4em] text-white/40 uppercase">Culinary Visuals</p>
     </header>
 
     <!-- 網格區 -->
     <main class="grid-container animate-fade-in" style="animation-delay: 0.2s;">
-        <!-- 效能優化：onload 時移除 parentElement 的 skeleton 動畫，釋放 GPU 資源 -->
         <div class="food-item food-01">
             <img src="Food-01.jpg" alt="Food 01" loading="lazy" onload="this.classList.add('loaded'); this.parentElement.style.animation='none'; this.parentElement.style.background='transparent';" onerror="this.src='https://via.placeholder.com/600x800/111/fff?text=Food+01'">
             <div class="overlay">
@@ -288,116 +258,107 @@
         <img id="lightbox-img" src="" alt="Enlarged view" class="max-w-[100vw] max-h-[90vh] md:max-w-[85vw] object-contain scale-95 drop-shadow-2xl pointer-events-none select-none">
     </div>
 
-    <!-- ================= 底部滑動選單 ================= -->
+    <!-- ================= 底部滑動選單 (Bottom Sheet) ================= -->
     <div id="menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[1000] opacity-0 pointer-events-none transition-opacity duration-300"></div>
     <div id="bottom-sheet" class="fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-white/10 rounded-t-3xl z-[1001] transform translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] flex flex-col max-h-[85vh] shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
         
+        <!-- 頂部拖曳把手 -->
         <div class="w-full flex justify-center py-5 cursor-pointer hover:bg-white/5 transition-colors rounded-t-3xl" id="drag-handle">
             <div class="w-12 h-1.5 bg-white/20 rounded-full"></div>
         </div>
         
         <div class="px-6 pb-12 overflow-y-auto">
             <h3 class="text-white/40 text-[10px] md:text-xs tracking-[0.3em] mb-6 text-center">PORTFOLIO CATEGORIES</h3>
-            <div class="flex flex-col gap-3 max-w-md mx-auto">
-                <a href="https://www.youtube.com/watch?v=R8OsDnJ_6wI" target="_blank" class="menu-link-item group">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-images text-lg group-hover:scale-110 transition-transform"></i></div>
-                        <span class="font-bold tracking-wide text-sm md:text-base">影像作品集</span>
+            
+            <div class="flex flex-col gap-4 max-w-md mx-auto">
+                
+                <!-- 1. 動態作品 (折疊群組) -->
+                <div class="accordion-group bg-[#111] border border-white/5 rounded-2xl transition-colors duration-300">
+                    <button class="accordion-toggle w-full flex items-center justify-between p-4 md:p-5 rounded-2xl hover:bg-white/5 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg">
+                                <i class="fa-solid fa-clapperboard text-xl"></i>
+                            </div>
+                            <span class="font-bold tracking-wide text-sm md:text-base">動態作品</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-white/30 text-sm transition-transform duration-300 accordion-icon"></i>
+                    </button>
+                    
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <div class="flex flex-col gap-1 px-4 pb-4 pl-[72px]">
+                                <a href="showreel.html" class="flex items-center justify-between p-3 rounded-xl hover:bg-white/10 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-film text-[#f09433]/70 text-sm w-5 text-center"></i>
+                                        <span class="text-sm font-medium text-white/80 group-hover:text-white transition-colors">影像作品集</span>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right text-white/30 text-xs group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+                                </a>
+                                <a href="reels.html" class="flex items-center justify-between p-3 rounded-xl hover:bg-white/10 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-brands fa-instagram text-[#e6683c]/70 text-sm w-5 text-center"></i>
+                                        <span class="text-sm font-medium text-white/80 group-hover:text-white transition-colors">短影音 Reels</span>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right text-white/30 text-xs group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+                                </a>
+                                <a href="commercial.html" class="flex items-center justify-between p-3 rounded-xl hover:bg-white/10 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-scissors text-[#bc1888]/70 text-sm w-5 text-center"></i>
+                                        <span class="text-sm font-medium text-white/80 group-hover:text-white transition-colors">美髮教學</span>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right text-white/30 text-xs group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <a href="https://www.instagram.com/kshen_life?igsh=OWZ4ZGs4cHhzb3Rz&utm_source=qr" target="_blank" class="menu-link-item group">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-brands fa-instagram text-xl group-hover:scale-110 transition-transform"></i></div>
-                        <span class="font-bold tracking-wide text-sm md:text-base">短影音 Reels</span>
+                </div>
+
+                <!-- 2. 平面作品 (折疊群組) -->
+                <div class="accordion-group bg-[#111] border border-white/5 rounded-2xl transition-colors duration-300">
+                    <button class="accordion-toggle w-full flex items-center justify-between p-4 md:p-5 rounded-2xl hover:bg-white/5 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0ea5e9] via-[#2563eb] to-[#3730a3] flex items-center justify-center text-white shadow-lg">
+                                <i class="fa-solid fa-camera-retro text-xl"></i>
+                            </div>
+                            <span class="font-bold tracking-wide text-sm md:text-base">平面作品</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-white/30 text-sm transition-transform duration-300 accordion-icon"></i>
+                    </button>
+                    
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <div class="flex flex-col gap-1 px-4 pb-4 pl-[72px]">
+                                <a href="https://photos.google.com/share/AF1QipOcqOXF-cWqF4ASgcmQkWf2sZieUTP7I8cJAiC6oycsSuxs85urrxEGt_gHnFftbQ?pli=1&key=WFd6U0Q3ckV4Ylh2STl6Ty1iaVBZV2VSNGh2ZGVB" target="_blank" class="flex items-center justify-between p-3 rounded-xl hover:bg-white/10 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-user-astronaut text-[#0ea5e9]/70 text-sm w-5 text-center"></i>
+                                        <span class="text-sm font-medium text-white/80 group-hover:text-white transition-colors">人像創作</span>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right text-white/30 text-xs group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+                                </a>
+                                <a href="food.html" class="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-utensils text-[#2563eb] text-sm w-5 text-center"></i>
+                                        <span class="text-sm font-bold text-white transition-colors">美食影像</span>
+                                    </div>
+                                    <div class="w-1.5 h-1.5 rounded-full bg-[#2563eb] mr-1"></div>
+                                </a>
+                                <a href="wedding.html" class="flex items-center justify-between p-3 rounded-xl hover:bg-white/10 transition-colors group">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-ring text-[#3730a3]/70 text-sm w-5 text-center"></i>
+                                        <span class="text-sm font-medium text-white/80 group-hover:text-white transition-colors">婚禮攝影</span>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right text-white/30 text-xs group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <a href="https://youtu.be/YLsqzahcr3g" target="_blank" class="menu-link-item group">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-scissors text-lg group-hover:scale-110 transition-transform"></i></div>
-                        <span class="font-bold tracking-wide text-sm md:text-base">美髮商業</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <a href="https://photos.google.com/share/AF1QipOcqOXF-cWqF4ASgcmQkWf2sZieUTP7I8cJAiC6oycsSuxs85urrxEGt_gHnFftbQ?pli=1&key=WFd6U0Q3ckV4Ylh2STl6Ty1iaVBZV2VSNGh2ZGVB" target="_blank" class="menu-link-item group">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0ea5e9] via-[#2563eb] to-[#3730a3] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-camera-retro text-lg group-hover:scale-110 transition-transform"></i></div>
-                        <span class="font-bold tracking-wide text-sm md:text-base">人像創作</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <a href="https://kennyshenhaha.github.io/photography-portfolio/food.html" class="menu-link-item group">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0ea5e9] via-[#2563eb] to-[#3730a3] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-utensils text-lg group-hover:scale-110 transition-transform"></i></div>
-                        <span class="font-bold tracking-wide text-sm md:text-base">美食影像</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <a href="https://kennyshenhaha.github.io/photography-portfolio/wedding.html" class="menu-link-item group">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0ea5e9] via-[#2563eb] to-[#3730a3] flex items-center justify-center text-white shadow-lg"><i class="fa-solid fa-ring text-lg group-hover:scale-110 transition-transform"></i></div>
-                        <span class="font-bold tracking-wide text-sm md:text-base">婚禮攝影</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-white/30 text-sm group-hover:translate-x-1 transition-transform"></i>
-                </a>
+                </div>
+
             </div>
         </div>
     </div>
 
     <script>
-        // ================= 自訂游標邏輯 (效能優化版) =================
-        const cursorDot = document.getElementById('cursor-dot');
-        const cursorRing = document.getElementById('cursor-ring');
-        
-        if (window.matchMedia("(pointer: fine)").matches && cursorDot && cursorRing) {
-            let mouseX = window.innerWidth / 2;
-            let mouseY = window.innerHeight / 2;
-            let ringX = mouseX;
-            let ringY = mouseY;
-            // 加入快取變數，避免無意義的 DOM 操作
-            let currentDotX = -1, currentDotY = -1;
-
-            window.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            }, {passive: true});
-
-            function animateCursor() {
-                // 只有當游標移動或追隨圈尚未到達目標時才執行 DOM 更新
-                if (Math.abs(mouseX - currentDotX) > 0.1 || Math.abs(mouseY - currentDotY) > 0.1 || 
-                    Math.abs(mouseX - ringX) > 0.1 || Math.abs(mouseY - ringY) > 0.1) {
-                    
-                    ringX += (mouseX - ringX) * 0.15;
-                    ringY += (mouseY - ringY) * 0.15;
-                    
-                    cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-                    cursorRing.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
-                    
-                    currentDotX = mouseX;
-                    currentDotY = mouseY;
-                }
-                
-                requestAnimationFrame(animateCursor);
-            }
-            animateCursor();
-
-            const interactiveSelectors = 'a, button, .menu-link-item, .food-item, #lightbox-close, #lightbox-prev, #lightbox-next, #back-to-top';
-            
-            document.addEventListener('mouseover', (e) => {
-                if (e.target.closest(interactiveSelectors)) {
-                    cursorDot.classList.add('hovered');
-                    cursorRing.classList.add('hovered');
-                }
-            });
-            document.addEventListener('mouseout', (e) => {
-                if (e.target.closest(interactiveSelectors)) {
-                    cursorDot.classList.remove('hovered');
-                    cursorRing.classList.remove('hovered');
-                }
-            });
-        }
-
         // ================= Lightbox 邏輯 =================
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
@@ -490,6 +451,26 @@
             }
         }, {passive: true});
 
+        // ================= 折疊選單 (Accordion) 邏輯 =================
+        document.querySelectorAll('.accordion-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                const group = button.closest('.accordion-group');
+                const content = group.querySelector('.accordion-content');
+                const icon = group.querySelector('.accordion-icon');
+                const isOpen = content.classList.contains('is-open');
+                
+                document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('is-open'));
+                document.querySelectorAll('.accordion-icon').forEach(i => i.classList.remove('rotate-180'));
+                document.querySelectorAll('.accordion-group').forEach(g => g.classList.remove('bg-white/5'));
+
+                if (!isOpen) {
+                    content.classList.add('is-open');
+                    icon.classList.add('rotate-180');
+                    group.classList.add('bg-white/5');
+                }
+            });
+        });
+
         // ================= 底部滑動選單邏輯 =================
         const fabContainer = document.getElementById('fab-container');
         const fabMenu = document.getElementById('fab-menu');
@@ -502,6 +483,14 @@
             bottomSheet.classList.remove('translate-y-full');
             fabContainer.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none'); 
             document.body.style.overflow = 'hidden'; 
+
+            // 自動展開「平面作品」選單 (因為我們在美食影像頁面)
+            setTimeout(() => {
+                const staticGroup = document.querySelectorAll('.accordion-group')[1];
+                if(staticGroup && !staticGroup.querySelector('.accordion-content').classList.contains('is-open')) {
+                    staticGroup.querySelector('.accordion-toggle').click();
+                }
+            }, 300);
         }
 
         function closeMenu() {
@@ -511,6 +500,12 @@
             document.body.style.overflow = '';
             setFabState('full');
             resetIdleTimer();
+
+            // 關閉選單時，將所有折疊收起
+            setTimeout(() => {
+                document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('is-open'));
+                document.querySelectorAll('.accordion-icon').forEach(i => i.classList.remove('rotate-180'));
+            }, 300);
         }
 
         fabMenu.addEventListener('click', openMenu);
@@ -518,8 +513,12 @@
         dragHandle.addEventListener('click', closeMenu);
 
         let menuTouchStartY = 0;
-        bottomSheet.addEventListener('touchstart', (e) => menuTouchStartY = e.touches[0].clientY);
+        bottomSheet.addEventListener('touchstart', (e) => {
+            if(e.target.closest('.overflow-y-auto')) return;
+            menuTouchStartY = e.touches[0].clientY;
+        });
         bottomSheet.addEventListener('touchmove', (e) => {
+            if(e.target.closest('.overflow-y-auto')) return;
             if (e.touches[0].clientY - menuTouchStartY > 60) closeMenu();
         });
 
