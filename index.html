@@ -13,7 +13,7 @@
     <meta property="og:type" content="website" />
     <!-- ================================================================ -->
 
-    <!-- 引入字體與圖示 (補上 Noto Sans TC 400與500 字重讓選單文字更平滑) -->
+    <!-- 引入字體與圖示 -->
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;700&family=Noto+Sans+TC:wght@100;300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -66,34 +66,18 @@
             100% { background-position-x: -60%, 0%, 0%; }
         }
 
-        /* 銀色金屬按鈕 */
-        .metal-btn {
-            position: relative;
-            background: 
-                repeating-linear-gradient(0deg, rgba(255, 255, 255, 0) 0px, rgba(255, 255, 255, 0.05) 1px, rgba(255, 255, 255, 0) 2px),
-                linear-gradient(145deg, #f5f5f5 0%, #cfcfcf 45%, #a1a1a1 55%, #7a7a7a 100%);
-            box-shadow: inset 0 2px 3px rgba(255,255,255,0.6), inset 0 -2px 3px rgba(0,0,0,0.5), 0 15px 35px rgba(255,255,255,0.1);
-            border: 1px solid #999;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 1;
-        }
-        .metal-btn::after {
-            content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%;
-            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-            transform: skewX(-20deg); z-index: 2;
-        }
-        .group:hover .metal-btn::after {
-            animation: metal-sweep 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-        }
-        @keyframes metal-sweep { 0% { left: -150%; } 100% { left: 200%; } }
-
         /* 背景發光 */
         .bg-glow {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 120vw; height: 120vw; max-width: 1000px;
             background: radial-gradient(circle at center, rgba(243, 229, 171, 0.3) 0%, rgba(255, 255, 255, 0.15) 25%, rgba(255, 255, 255, 0.05) 50%, transparent 75%);
             filter: blur(40px); mix-blend-mode: screen; z-index: 0; pointer-events: none;
+        }
+
+        /* 下滑指示器動畫 */
+        @keyframes scroll-line {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(200%); }
         }
 
         /* 作品集輪播區 */
@@ -129,12 +113,6 @@
         .arrow-right { right: 30px; }
 
         .frame-ui { position: fixed; inset: 20px; border: 1px solid rgba(255,255,255,0.03); pointer-events: none; z-index: 100; }
-
-        .play-btn-pulse::after {
-            content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.2); animation: ring 2.5s infinite;
-        }
-        @keyframes ring { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.6); opacity: 0; } }
 
         /* ================= 折疊選單 (Accordion) 特效 ================= */
         .accordion-content {
@@ -174,35 +152,36 @@
         </button>
     </div>
 
-    <!-- 首頁區塊 -->
-    <section id="hero-section" class="relative h-screen flex items-center justify-center overflow-hidden">
+    <!-- ================= 首頁區塊 (完美留白版) ================= -->
+    <section id="hero-section" class="relative h-screen flex flex-col items-center justify-center overflow-hidden">
         <div class="bg-glow"></div>
         
-        <div class="z-10 text-center px-4">
-            <div class="mb-8 cinematic-element delay-1">
+        <!-- 將文字內容稍微往上提一點，平衡下方指示器的比重 -->
+        <div class="z-10 text-center px-4 flex flex-col items-center mt-[-5vh]">
+            <div class="mb-6 md:mb-8 cinematic-element delay-1">
                 <div class="tracking-[0.5em] text-[9px] md:text-xs text-gray-500 font-light opacity-80 uppercase">
                     Visual Paranoia & Logic Engineering
                 </div>
             </div>
 
-            <div class="relative inline-block mb-12 group cinematic-scale delay-2">
-                <!-- 直接連往 showreel.html 欣賞大作 -->
-                <a href="showreel.html" class="play-btn-pulse relative w-32 h-32 md:w-44 md:h-44 bg-white/5 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center transition-all duration-700 group-hover:bg-white/10 cursor-pointer outline-none">
-                    <div class="metal-btn w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center">
-                        <i class="fa-solid fa-play text-black/80 text-3xl md:text-5xl translate-x-1 relative z-10"></i>
-                    </div>
-                </a>
-            </div>
-
-            <h1 class="text-5xl md:text-[7.5rem] font-bold tracking-tight mb-4 leading-none cinematic-element delay-3">
+            <!-- 讓標題成為畫面唯一的視覺重心 -->
+            <h1 class="text-5xl md:text-[7.5rem] font-bold tracking-tight mb-4 md:mb-6 leading-none cinematic-element delay-2">
                 <span class="titanium-text">PORTFOLIO</span>
             </h1>
             
-            <div class="mt-8 flex flex-col items-center gap-6 cinematic-element delay-4">
+            <div class="flex flex-col items-center cinematic-element delay-3">
                 <div class="text-center">
                     <div class="text-xs md:text-base text-white/60 mb-2 tracking-[0.5em]">2026 影像作品精選</div>
                     <div class="text-[9px] tracking-[0.6em] text-white/30 uppercase">Kenny Shen</div>
                 </div>
+            </div>
+        </div>
+
+        <!-- 極簡動態下滑指示器 (放置於畫面最下方邊緣) -->
+        <div class="absolute bottom-10 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 cursor-pointer z-20 cinematic-element delay-4 group" onclick="document.getElementById('works-slider').scrollIntoView({behavior: 'smooth'})">
+            <span class="text-[8px] md:text-[9px] tracking-[0.4em] uppercase font-light text-white/30 group-hover:text-white/70 transition-colors">Scroll</span>
+            <div class="w-px h-12 md:h-16 bg-white/10 relative overflow-hidden">
+                <div class="w-full h-1/2 bg-white/60 absolute top-0 left-0 animate-[scroll-line_2s_ease-in-out_infinite]"></div>
             </div>
         </div>
     </section>
