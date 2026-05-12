@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="zh-TW"><!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
@@ -115,6 +116,14 @@
 
         .frame-ui { position: fixed; inset: 20px; border: 1px solid rgba(255,255,255,0.03); pointer-events: none; z-index: 100; }
 
+        /* 針對支援滑鼠的裝置才顯示箭頭 (解決高解析度平板依然顯示的問題) */
+        @media (hover: hover) and (pointer: fine) {
+            .nav-arrow.desktop-only { display: flex !important; }
+        }
+        @media (hover: none) and (pointer: coarse) {
+            .nav-arrow.desktop-only { display: none !important; }
+        }
+
         /* ================= 折疊選單 (Accordion) 特效 ================= */
         .accordion-content {
             display: grid;
@@ -204,8 +213,9 @@
 
         <div class="reels-progress-bar" id="reels-progress"></div>
 
-        <div class="nav-arrow arrow-left hidden xl:flex" id="arrow-prev"><i class="fa-solid fa-chevron-left"></i></div>
-        <div class="nav-arrow arrow-right hidden xl:flex" id="arrow-next"><i class="fa-solid fa-chevron-right"></i></div>
+        <!-- 終極修正：移除原本的 Tailwind 斷點，改用自定義 class desktop-only 配合 CSS -->
+        <div class="nav-arrow arrow-left hidden desktop-only" id="arrow-prev"><i class="fa-solid fa-chevron-left"></i></div>
+        <div class="nav-arrow arrow-right hidden desktop-only" id="arrow-next"><i class="fa-solid fa-chevron-right"></i></div>
 
         <div class="tap-zone tap-left" id="tap-prev"></div>
         <div class="tap-zone tap-right" id="tap-next"></div>
